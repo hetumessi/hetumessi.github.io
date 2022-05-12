@@ -1,0 +1,528 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>构造函数、析构函数 | hetumessi's Blog</title><meta name="keywords" content="程序设计语言学习"><meta name="author" content="hetumessi"><meta name="copyright" content="hetumessi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="构造函数 自动解决数据成员的初始化问题 构造函数是类的一种特殊成员，本质上也是类的成员函数，函数名和类名相同，注意构造函数没有返回类型(因为没有变量来接收返回值)，可以有参数也可以没有 不论声明还是定义，构造函数名前面都不能出现返回值类型，函数体中不能有return语句">
+<meta property="og:type" content="article">
+<meta property="og:title" content="构造函数、析构函数">
+<meta property="og:url" content="http://hetumessi.github.io/2022/04/27/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="hetumessi&#39;s Blog">
+<meta property="og:description" content="构造函数 自动解决数据成员的初始化问题 构造函数是类的一种特殊成员，本质上也是类的成员函数，函数名和类名相同，注意构造函数没有返回类型(因为没有变量来接收返回值)，可以有参数也可以没有 不论声明还是定义，构造函数名前面都不能出现返回值类型，函数体中不能有return语句">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://hetumessi.github.io/img/newdefaultcover.jpeg">
+<meta property="article:published_time" content="2022-04-27T09:32:57.000Z">
+<meta property="article:modified_time" content="2022-05-10T01:20:02.686Z">
+<meta property="article:author" content="hetumessi">
+<meta property="article:tag" content="程序设计语言学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hetumessi.github.io/img/newdefaultcover.jpeg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://hetumessi.github.io/2022/04/27/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":"flase","highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '构造函数、析构函数',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-10 09:20:02'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/scroll.css"><link rel="stylesheet" href="/css/footer.css"><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="/css/fonts.css"><link rel="preconnect" href="https://fonts.gstatic.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@1,300&display=swap" rel="stylesheet"><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="hetumessi's Blog" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism.css" type="text/css"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/author.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">83</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></div><div class="menus_item"><a class="site-page" href="/sitemap.xml"><i class="fa-fw fa fa-sitemap"></i><span> sitemap</span></a></div><div class="menus_item"><a class="site-page" href="/404/"><i class="fa-fw fa fa-heartbeat"></i><span> commonweal</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/newdefaultcover.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">hetumessi's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></div><div class="menus_item"><a class="site-page" href="/sitemap.xml"><i class="fa-fw fa fa-sitemap"></i><span> sitemap</span></a></div><div class="menus_item"><a class="site-page" href="/404/"><i class="fa-fw fa fa-heartbeat"></i><span> commonweal</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">构造函数、析构函数</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-27T09:32:57.000Z" title="发表于 2022-04-27 17:32:57">2022-04-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-10T01:20:02.686Z" title="更新于 2022-05-10 09:20:02">2022-05-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/c-c-%E5%AD%A6%E4%B9%A0/">c&amp;c++学习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">9.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>NaN:aN分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="构造函数、析构函数"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="构造函数"><a class="markdownIt-Anchor" href="#构造函数"></a> 构造函数</h1>
+<p>自动解决数据成员的初始化问题<br>
+构造函数是类的一种特殊成员，本质上也是类的成员函数，函数名和类名相同，注意构造函数没有返回类型(因为没有变量来接收返回值)，可以有参数也可以没有<br>
+不论声明还是定义，构造函数名前面都不能出现返回值类型，函数体中不能有return语句</p>
+<span id="more"></span>
+<p>当创建类的一个新对象时，构造函数被自动调用，完成对象的初始化工作，例：</p>
+<pre class="line-numbers language-none"><code class="language-none">class Clock
+&#123;
+private:
+    int hour,minute,second;
+public:
+    Clock(int h,int m,int s):hour(h),minute(m),second(s)&#123;&#125;;
+&#125;;
+int main()&#123;
+    Clock clock(1,2,3);
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="实现构造函数"><a class="markdownIt-Anchor" href="#实现构造函数"></a> 实现构造函数</h2>
+<p>声明构造函数后需要实现构造函数：初始化数据成员</p>
+<p>有两种实现构造函数的方式<br>
+(在c++11的扩展以前，类的声明体内是不能初始化成员变量的，只有一个特例是static const int类型)</p>
+<ul>
+<li>赋值语句的方式：</li>
+</ul>
+<blockquote>
+<p>Clock(int h,int m,int s){hour=h,minte=m,second=s;}</p>
+</blockquote>
+<ul>
+<li>参数初始化表的方式：</li>
+</ul>
+<blockquote>
+<p>Clock(int h,int m,int s):hour(h),minute(m),second(s){}</p>
+</blockquote>
+<p>需要注意的是在函数首部的小括号后面，参数初始化表前加上’:’，定义函数需要加上花括号</p>
+<p>只对比两种构造方法本身的话，参数初始化表并没有效率上的优势，但是书写方便，尤其是成员变量较多时，这种写法非常简明明了，并且对于类的const成员，只能使用初始化列表，而不能在构造函数内部进行赋值操作。实际上更准确的来说，采用赋值语句的方式只能叫<strong>赋值</strong>而不能叫<strong>初始化</strong>，构造函数的初始化过程默认是在读取初始化表后完成的，因此如果不在初始化表中完成const成员的初始化，那么就相当于没有对const成员初始化，所以就产生错误了。<br>
+(当然也可以在类定义的时候，就对const成员变量进行赋值，但是这样操作的话这个变量有可能就失去了意义，因为基于这个类生成的所有对象const成员的值都为同一个常量)<br>
+另一方面，观察初始化表的形式可以发现对类对象成员的初始化可以直接调用其构造函数，反之如果要在构造函数中以赋值的形式对这些成员进行初始化的话，此时编译器已经调用默认构造函数(默认是无参数形式的，因为此时传入的参数默认是要在构造函数体内使用的)对该对象成员进行初始化了，无法对其再用拷贝构造函数进行初始化，因此往往只能重载=运算符进行赋值，造成其他不必要的开销。(实际上相当于无意义地多调用了一次默认构造函数)<br>
+综上，一个好的原则是能使用初始化列表的时候尽量使用初始化列表</p>
+<h2 id="使用构造函数进行对象初始化"><a class="markdownIt-Anchor" href="#使用构造函数进行对象初始化"></a> 使用构造函数进行对象初始化</h2>
+<h3 id="向构造函数传参"><a class="markdownIt-Anchor" href="#向构造函数传参"></a> 向构造函数传参</h3>
+<p>传给构造函数实参有两种方式</p>
+<ul>
+<li>如果构造函数只有一个参数，可以赋值的形式初始化，基本格式为：</li>
+</ul>
+<blockquote>
+<p>类名 对象名=实参，如：<br>
+class Counter{int value;Counter(int v):value(v){}};<br>
+Counter counter=10;</p>
+</blockquote>
+<ul>
+<li>如果构造函数有一个或多个参数，可以传入参数列表，</li>
+</ul>
+<blockquote>
+<p>基本格式为：类名 对象名(参数列表)，如：<br>
+Counter counter(10);<br>
+Clock clock1(1,2,3);</p>
+</blockquote>
+<ul>
+<li>如果构造函数有参数，但在创建对象时没有给出指定位置的参数，编译出错</li>
+</ul>
+<h2 id="重载构造函数"><a class="markdownIt-Anchor" href="#重载构造函数"></a> 重载构造函数</h2>
+<p>一个类可以提供多种不同形式的构造函数，即构造函数的重载<br>
+重载的目的是为了满足不同的初始化对象需要，如：</p>
+<blockquote>
+<p>Clock(int h,int m,int s);<br>
+Clock clock(23,12,0);</p>
+</blockquote>
+<blockquote>
+<p>Clock();<br>
+Clock clock;  最好不要写成clock(),有的编译环境下默认这是在声明返回类型为Clock的函数</p>
+</blockquote>
+<blockquote>
+<p>Clock(char *timestr);<br>
+Clock clock(“23:12:00”);</p>
+</blockquote>
+<h2 id="具有默认参数的构造函数"><a class="markdownIt-Anchor" href="#具有默认参数的构造函数"></a> 具有默认参数的构造函数</h2>
+<p>构造函数也可以有默认参数，如：</p>
+<blockquote>
+<p>Clock(int h=0,int m=0,int s=0);</p>
+</blockquote>
+<p>值得注意的是如果在类外实现构造函数时则一般不说明缺省值，因为之前已经声明过了，而构造函数的作用域一般又相同，但是如果两次声明不一致的话，编译器就不知道调用哪个构造函数了<br>
+另外也要注意不能与重载函数的匹配格式相同，以免发生冲突</p>
+<h2 id="默认构造函数"><a class="markdownIt-Anchor" href="#默认构造函数"></a> 默认构造函数</h2>
+<p>对于没有构造函数的类，编译器会自动为其生成一个没有参数，不做任何工作的合成默认构造函数(空构造函数)<br>
+但是只要声明了一个任何形式的构造函数，系统自定义的构造函数就没有了，此时如果还需要一个空构造函数的话，必须再重载一个<br>
+因此对于一个对象而言，无论是否定义了构造函数，在生成对象时都一定会有一个构造函数被调用</p>
+<p>注意：合成默认构造函数<strong>不会</strong>初始化类的内置类型及复合类型的数据成员<br>
+从本质上来说，对类中的内置变量和复合变量的初始化是编程者份内的事，并不应当作为编译器的任务，编译器要做的仅仅是合成一个构造函数能使对象创建起来并保证基本情况的运行，哪怕这个构造函数什么都没做，例：</p>
+<pre class="line-numbers language-none"><code class="language-none">class Test&#123;
+public:             &#x2F;&#x2F;没有显式定义的构造函数
+    int num;  
+    bool istrue;
+&#125;;
+int main()&#123;
+    Test test;
+    if(istrue)printf(&quot;%d&quot;,test.num); &#x2F;&#x2F; 这里程序运行的行为是未定义的
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>只有在编译器需要默认构造函数来<strong>完成编译任务</strong>的时候，编译器才会为没有任何构造函数的类合成一个默认构造函数，或者是把这些操作插入到已有的构造函数中去。</p>
+<ul>
+<li>调用对象成员或基类的默认构造函数</li>
+<li>为对象初始化虚表指针与虚基类指针</li>
+</ul>
+<p>合成的过程类似于在一个构造函数中嵌入另一个构造函数，如：</p>
+<blockquote>
+<p>A::A(int va):a(va);<br>
+假设B是A的成员对象类或基类等情况需要调用构造函数<br>
+当需要合成默认构造函数时，编译器的行为类似于在A()中嵌套一个空的构造函数<br>
+A::A(int va):a(va){B::B();};</p>
+</blockquote>
+<h1 id="析构函数"><a class="markdownIt-Anchor" href="#析构函数"></a> 析构函数</h1>
+<p>有时在释放类时需要做一些收尾工作，此时可能因为忘记调用这些做收尾工作的函数而出现问题，对此c++提供了析构函数专门用于处理对象销毁时的清理工作，与构造函数相对应<br>
+析构函数没有返回类型，没有参数，函数名是在类名前加’~’，调用方法与其他成员函数相同，例：</p>
+<pre class="line-numbers language-none"><code class="language-none">class Clock
+&#123;
+private:
+    int hour,minute,second;
+public:
+    Clock(int h,int m,int s);
+    ~Clock();
+&#125;;
+Clock::~Clock()&#123;cout&lt;&lt;&quot;对象已销毁&quot;&lt;&lt;endl;&#125;
+int main()&#123;
+    Clock clock(1,1,1);
+    clock.~Clock();
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>析构函数会在对象生存期结束后被自动调用<br>
+同构造函数，如果没有显示声明，编译器自动生成一个缺省的空析构函数<br>
+析构函数尤其在对象中成员的生命期不一致时具有较大的意义(这实际是因为默认析构函数的行为和正常的内存回收机制一样，不能回收堆内存，堆内存必须手动释放)</p>
+<blockquote>
+<p>如：对象初始化时使用指针指向动态内存，在对象生存期结束之前就应该释放掉该内存空间，因此这类操作一般在析构函数中进行处理</p>
+</blockquote>
+<p>此处再次强调！动态内存分配极容易出错，导致崩溃</p>
+<ul>
+<li>删除动态内存失败</li>
+<li>读写已删除的对象</li>
+<li>对同一内存空间使用多次delete(一个指针情况下多次删除)</li>
+</ul>
+<h1 id="拷贝构造函数"><a class="markdownIt-Anchor" href="#拷贝构造函数"></a> 拷贝构造函数</h1>
+<p>如果将与自己同类的对象的引用作为参数进行构造函数初始化，该构造函数称为拷贝构造函数，如：</p>
+<blockquote>
+<p>Clock(Clock &amp;obj):hour=obj.hour,minute=obj.minute,second=obj.second{}</p>
+</blockquote>
+<p>调用拷贝构造函数进行对象初始化同样也有两种方法：直接调用和赋值形式</p>
+<blockquote>
+<p>Clock clock1(1,2,3);<br>
+Clock clock2(clock1),clock3=clock1;</p>
+</blockquote>
+<p>注意用等号赋值的形式并不是真正的用对象赋值，而是调用了<strong>拷贝赋值函数</strong>(实质上这里的赋值运算符是编译器的默认运算重载符函数)<br>
+拷贝构造函数的特点：</p>
+<ul>
+<li>首先，拷贝构造函数实质上就是一个构造函数，创建对象时系统会自动调用</li>
+<li>其次，拷贝构造函数将一个已经创建好的对象作为参数，根据需要将该对象中的数据成员逐一对应地赋值给新对象</li>
+</ul>
+<p>如果没有定义拷贝构造函数，则编译器也会为该类定义一个<strong>缺省的拷贝构造函数</strong>，缺省的拷贝构造函数采用的是精确的<strong>位拷贝</strong>(拷贝内存)方法来完成对象到对象的复制，将第一个对象的数据成员值原封不动拷贝到第二个对象数据成员中，如：</p>
+<blockquote>
+<p>Clock clock1(1,2,3),clock2=clock1;<br>
+std::cout&lt;&lt;memcmp(&amp;clock1,&amp;clock2,sizeof(Clock));输出结果为0</p>
+</blockquote>
+<p>注意：这是在成员都没有自定义的拷贝构造函数时才这么做(其实这种情况和结构体很类似，因此都采用位拷贝模式)<br>
+如果一个类：</p>
+<ul>
+<li>本身包含、从基类继承、类的成员对象包含了虚函数</li>
+<li>成员变量有显式的拷贝构造函数</li>
+</ul>
+<p>那么显然不能采用位拷贝的模式，此时是按成员拷贝的</p>
+<p>除创建新对象时可能被调用外，拷贝构造函数还经常在以下情况被调用：</p>
+<ul>
+<li>对象作为函数参数</li>
+<li>函数返回对象</li>
+</ul>
+<p>构造函数，析构函数，拷贝构造函数实例程序：自定义简易的Cstring类</p>
+<pre class="line-numbers language-none"><code class="language-none">#include&lt;iostream&gt;
+#include&lt;cstring&gt;
+using namespace std;
+const int n&#x3D;64;
+class Cstring
+&#123;
+private:
+    int size;
+    char *str;
+public:
+    Cstring(int len);
+    Cstring(Cstring &amp;cstring);
+    void Copystring(char *string);
+    void Showstring();
+    ~Cstring();
+&#125;;
+Cstring::Cstring(int len):size(len)
+&#123;
+    str&#x3D;new char[size];
+&#125;
+Cstring::Cstring(Cstring &amp;cstring):size(cstring.size)
+&#123;
+    str&#x3D;new char[size];
+    strcpy(str,cstring.str);
+&#125;
+void Cstring::Copystring(char *string)
+&#123;
+    strcpy(str,string);
+    return;
+&#125;
+void Cstring::Showstring()
+&#123;
+    cout&lt;&lt;str;
+&#125;
+Cstring::~Cstring()
+&#123;
+    delete []str;                    &#x2F;&#x2F;析构函数中释放从堆中分配的内存
+&#125;
+void func1()
+&#123;
+    Cstring cstring1(n),cstring2&#x3D;cstring1;
+    cstring1.Copystring(&quot;hello&quot;);
+    cstring2.Copystring(&quot;world&quot;);
+    cstring1.Showstring();
+    cstring2.Showstring();
+    cstring1.~Cstring();
+    cstring2.~Cstring();             &#x2F;&#x2F;试想如果此处不释放内存的话，func函数被调用结束后，cstring对象被释放，但其中动态分配的空间并没有被释放
+&#125;                                    &#x2F;&#x2F;很可能发生崩溃
+Cstring func2(Cstring cstring)
+&#123;
+    cstring.Copystring(&quot;hello world&quot;);
+    return cstring;
+&#125;
+int main()
+&#123;
+    Cstring cstring1(n),cstring2(n);
+    func1();
+    cstring2&#x3D;func2(cstring1);       &#x2F;&#x2F;第一次缺省的拷贝构造函数调用：形参cstring初始化为实参cstring1的值
+    cstring2.Showstring();          &#x2F;&#x2F;第二次缺省的拷贝构造函数调用：func2()返回局部变量cstring时使用临时变量存储cstring的值
+&#125;                                   &#x2F;&#x2F;第三次缺省的拷贝构造函数调用：使用cstring2接受func2(cstring1)的值<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io">hetumessi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io/2022/04/27/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/">http://hetumessi.github.io/2022/04/27/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://hetumessi.github.io" target="_blank">hetumessi's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/">程序设计语言学习</a></div><div class="post_share"><div class="social-share" data-image="/img/newdefaultcover.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechatpay.png" target="_blank"><img class="post-qr-code-img" src="/img/wechatpay.png"/></a><div class="post-qr-code-desc"></div></li><li class="reward-item"><a href="/img/alipay.png" target="_blank"><img class="post-qr-code-img" src="/img/alipay.png"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/05/01/Solidity%E5%85%A5%E9%97%A8%E4%BA%86%E8%A7%A3/" title="Solidity入门了解"><img class="cover" src="https://s2.loli.net/2022/05/12/w6pOHIGoFMxrTEa.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-01</div><div class="title">Solidity入门了解</div></div></a></div><div><a href="/2022/04/30/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" title="异常处理"><img class="cover" src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">异常处理</div></div></a></div><div><a href="/2022/04/30/%E6%A8%A1%E6%9D%BF/" title="模板"><img class="cover" src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">模板</div></div></a></div><div><a href="/2022/04/30/%E8%99%9A%E5%87%BD%E6%95%B0%E4%B8%8E%E5%A4%9A%E6%80%81%E6%80%A7/" title="多态性与虚函数"><img class="cover" src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">多态性与虚函数</div></div></a></div><div><a href="/2022/04/30/%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD/" title="运算符重载"><img class="cover" src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">运算符重载</div></div></a></div><div><a href="/2022/04/28/%E5%8D%95%E7%BB%A7%E6%89%BF%E3%80%81%E5%A4%9A%E7%BB%A7%E6%89%BF/" title="单继承和多继承、派生类构造析构规则"><img class="cover" src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-28</div><div class="title">单继承和多继承、派生类构造析构规则</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/author.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">hetumessi</div><div class="author-info__description">个人博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">83</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hetumessi"><i class="fab fa-github"></i><span>要来gayhub瞧瞧嘛🤡</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/hetumessi" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/392384886@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！有任何问题或者意见，还请QQ：392384886，或者致信QQ邮箱：392384886@qq.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text"> 构造函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.</span> <span class="toc-text"> 实现构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E8%BF%9B%E8%A1%8C%E5%AF%B9%E8%B1%A1%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text"> 使用构造函数进行对象初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%91%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%BC%A0%E5%8F%82"><span class="toc-number">1.2.1.</span> <span class="toc-text"> 向构造函数传参</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E8%BD%BD%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.</span> <span class="toc-text"> 重载构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B7%E6%9C%89%E9%BB%98%E8%AE%A4%E5%8F%82%E6%95%B0%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">1.4.</span> <span class="toc-text"> 具有默认参数的构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.</span> <span class="toc-text"> 默认构造函数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text"> 析构函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text"> 拷贝构造函数</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/05/12/%E5%AF%B9%E8%AF%9Dlinus/" title="【转】对话Linus Torvalds：大多黑客甚至连指针都未理解"><img src="https://s2.loli.net/2022/05/12/eLAWbUxHw2gP3ME.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】对话Linus Torvalds：大多黑客甚至连指针都未理解"/></a><div class="content"><a class="title" href="/2022/05/12/%E5%AF%B9%E8%AF%9Dlinus/" title="【转】对话Linus Torvalds：大多黑客甚至连指针都未理解">【转】对话Linus Torvalds：大多黑客甚至连指针都未理解</a><time datetime="2022-05-12T03:39:27.023Z" title="发表于 2022-05-12 11:39:27">2022-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/05/11/Sort%20with%20Swap(0,%20i)/" title="15.Insert or Merge、Insertion or Heap Sort、Sort with Swap(0, i)"><img src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="15.Insert or Merge、Insertion or Heap Sort、Sort with Swap(0, i)"/></a><div class="content"><a class="title" href="/2022/05/11/Sort%20with%20Swap(0,%20i)/" title="15.Insert or Merge、Insertion or Heap Sort、Sort with Swap(0, i)">15.Insert or Merge、Insertion or Heap Sort、Sort with Swap(0, i)</a><time datetime="2022-05-11T10:24:30.529Z" title="发表于 2022-05-11 18:24:30">2022-05-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/05/11/%E5%85%AC%E8%B7%AF%E6%9D%91%E6%9D%91%E9%80%9A/" title="14.公路村村通、关键活动、How Long Does It Take"><img src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="14.公路村村通、关键活动、How Long Does It Take"/></a><div class="content"><a class="title" href="/2022/05/11/%E5%85%AC%E8%B7%AF%E6%9D%91%E6%9D%91%E9%80%9A/" title="14.公路村村通、关键活动、How Long Does It Take">14.公路村村通、关键活动、How Long Does It Take</a><time datetime="2022-05-11T10:01:41.503Z" title="发表于 2022-05-11 18:01:41">2022-05-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/05/11/Subway%20Map/" title="13.Subway Map、Public Bike Management"><img src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="13.Subway Map、Public Bike Management"/></a><div class="content"><a class="title" href="/2022/05/11/Subway%20Map/" title="13.Subway Map、Public Bike Management">13.Subway Map、Public Bike Management</a><time datetime="2022-05-11T09:45:54.813Z" title="发表于 2022-05-11 17:45:54">2022-05-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/05/11/%E6%95%91%E9%82%A6%E5%BE%B7%E5%A4%8D%E6%9D%82%E7%89%88/" title="12.救邦德复杂版、Gas Station、条条大路通罗马"><img src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="12.救邦德复杂版、Gas Station、条条大路通罗马"/></a><div class="content"><a class="title" href="/2022/05/11/%E6%95%91%E9%82%A6%E5%BE%B7%E5%A4%8D%E6%9D%82%E7%89%88/" title="12.救邦德复杂版、Gas Station、条条大路通罗马">12.救邦德复杂版、Gas Station、条条大路通罗马</a><time datetime="2022-05-11T09:25:31.677Z" title="发表于 2022-05-11 17:25:31">2022-05-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By hetumessi</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">欢迎光临小破站！🎉</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.css"><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'facd33fa531a29d93105',
+      clientSecret: '7c0e063309085031b84369f86c21bbbee8e77c64',
+      repo: 'blog_comments',
+      owner: 'hetumessi',
+      admin: ['hetumessi'],
+      id: '861fcc8e7e6033bf6b6583994ef370d8',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><div class="aplayer no-destroy" data-id="3180545941" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script defer src="/live2d-widget/autoload.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/null.js" async="async"></script><script>function onTidioChatApiReady() {
+  window.tidioChatApi.hide();
+  window.tidioChatApi.on("close", function() {
+    window.tidioChatApi.hide();
+  });
+}
+if (window.tidioChatApi) {
+  window.tidioChatApi.on("ready", onTidioChatApiReady);
+} else {
+  document.addEventListener("tidioChat-ready", onTidioChatApiReady);
+}
+
+var chatBtnFn = () => {
+  document.getElementById("chat_btn").addEventListener("click", function(){
+    window.tidioChatApi.show();
+    window.tidioChatApi.open();
+  });
+}
+chatBtnFn()
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
