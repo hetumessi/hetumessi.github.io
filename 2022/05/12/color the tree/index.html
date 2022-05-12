@@ -1,0 +1,752 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>17.Color the tree、Self-printable B+ Tree | hetumessi's Blog</title><meta name="keywords" content="数据结构与算法,PTA"><meta name="author" content="hetumessi"><meta name="copyright" content="hetumessi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Color the Tree There is a kind of balanced binary search tree named red-black tree in the data structure. It has the following 5 properties: (1) Every node is either red or black. (2) The root is bla">
+<meta property="og:type" content="article">
+<meta property="og:title" content="17.Color the tree、Self-printable B+ Tree">
+<meta property="og:url" content="http://hetumessi.github.io/2022/05/12/color%20the%20tree/index.html">
+<meta property="og:site_name" content="hetumessi&#39;s Blog">
+<meta property="og:description" content="Color the Tree There is a kind of balanced binary search tree named red-black tree in the data structure. It has the following 5 properties: (1) Every node is either red or black. (2) The root is bla">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg">
+<meta property="article:published_time" content="2022-05-12T13:41:35.099Z">
+<meta property="article:modified_time" content="2022-05-12T13:51:20.290Z">
+<meta property="article:author" content="hetumessi">
+<meta property="article:tag" content="数据结构与算法">
+<meta property="article:tag" content="PTA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://hetumessi.github.io/2022/05/12/color%20the%20tree/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":"flase","highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '17.Color the tree、Self-printable B+ Tree',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-12 21:51:20'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/scroll.css"><link rel="stylesheet" href="/css/footer.css"><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="/css/fonts.css"><link rel="preconnect" href="https://fonts.gstatic.com"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="hetumessi's Blog" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/author.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">86</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></div><div class="menus_item"><a class="site-page" href="/sitemap.xml"><i class="fa-fw fa fa-sitemap"></i><span> sitemap</span></a></div><div class="menus_item"><a class="site-page" href="/404/"><i class="fa-fw fa fa-heartbeat"></i><span> commonweal</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">hetumessi's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></div><div class="menus_item"><a class="site-page" href="/sitemap.xml"><i class="fa-fw fa fa-sitemap"></i><span> sitemap</span></a></div><div class="menus_item"><a class="site-page" href="/404/"><i class="fa-fw fa fa-heartbeat"></i><span> commonweal</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">17.Color the tree、Self-printable B+ Tree</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-05-12T13:41:35.099Z" title="发表于 2022-05-12 21:41:35">2022-05-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-12T13:51:20.290Z" title="更新于 2022-05-12 21:51:20">2022-05-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E4%BE%8B%E8%BF%90%E7%94%A8/">数据结构实例运用</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>16分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="17.Color the tree、Self-printable B+ Tree"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="color-the-tree"><a class="markdownIt-Anchor" href="#color-the-tree"></a> Color the Tree</h1>
+<p>There is a kind of balanced binary search tree named red-black tree in the data structure.<br>
+It has the following 5 properties:<br>
+(1) Every node is either red or black.<br>
+(2) The root is black.<br>
+(3) Every leaf (NULL) is black.<br>
+(4) If a node is red, then both its children are black.<br>
+(5) For each node, all simple paths from the node to descendant leaves contain the same number of black nodes.<br>
+For each given binary search tree, you are supposed to tell if it is possible to color the nodes and turn it into a legal red-black tree.</p>
+<h2 id="input-specification"><a class="markdownIt-Anchor" href="#input-specification"></a> Input Specification</h2>
+<p>Each input file contains several test cases. The first line gives a positive integer K (≤10) which is the total number of cases. For each case,the first line gives a positive integer <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mo stretchy="false">(</mo><mo>≤</mo><mn>30</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">N (≤30)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mopen">(</span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">3</span><span class="mord">0</span><span class="mclose">)</span></span></span></span>, the total number of nodes in the binary search tree. The second line gives the postorder traversal sequence of the tree. All the numbers in a line are separated by a space.</p>
+<h2 id="output-specification"><a class="markdownIt-Anchor" href="#output-specification"></a> Output Specification</h2>
+<p>For each test case, print in a line Yes if the given tree can be turned into a legal red-black tree, ## or No if not.</p>
+<h2 id="sample-input"><a class="markdownIt-Anchor" href="#sample-input"></a> Sample Input</h2>
+<pre class="line-numbers language-none"><code class="language-none">3
+9
+1 4 5 2 8 15 14 11 7
+9
+1 4 5 8 7 2 15 14 11
+8
+6 5 8 7 11 17 15 10<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="sample-output"><a class="markdownIt-Anchor" href="#sample-output"></a> Sample Output</h2>
+<pre class="line-numbers language-none"><code class="language-none">Yes
+No
+Yes<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h2 id="参考代码转"><a class="markdownIt-Anchor" href="#参考代码转"></a> 参考代码(转)</h2>
+<pre class="line-numbers language-none"><code class="language-none">#include &lt;bits&#x2F;stdc++.h&gt;
+#include &lt;cstdio&gt;
+using namespace std;
+typedef long long ll;
+const int maxn&#x3D;111;
+struct node
+&#123;
+    int l,r,tol;
+&#125;stu[maxn];
+int n,a[maxn],root,tot;
+void handle(int l,int r,int pre)
+&#123;
+    if(l&#x3D;&#x3D;r) return ;
+    int pos&#x3D;r;
+    for(int i&#x3D;r-1;i&gt;&#x3D;l;--i) if(a[i]&gt;a[r]) pos&#x3D;i;
+    if(pos&#x3D;&#x3D;r)&#123;
+        int cnt&#x3D;++tot;
+        stu[cnt].l&#x3D;0;
+        stu[cnt].r&#x3D;0;
+        handle(l,pos-1,cnt);
+        stu[pre].l&#x3D;cnt;
+    &#125;
+    else if(pos&#x3D;&#x3D;l)&#123;
+        int cnt&#x3D;++tot;
+        stu[cnt].l&#x3D;0;
+        stu[cnt].r&#x3D;0;
+        handle(pos,r-1,cnt);
+        stu[pre].r&#x3D;cnt;
+    &#125;
+    else&#123;
+        int cnt&#x3D;++tot;
+        stu[cnt].l&#x3D;0;
+        stu[cnt].r&#x3D;0;
+        handle(l,pos-1,cnt);
+        stu[pre].l&#x3D;cnt;
+        cnt&#x3D;++tot;
+        stu[cnt].l&#x3D;0;
+        stu[cnt].r&#x3D;0;
+        handle(pos,r-1,cnt);
+        stu[pre].r&#x3D;cnt;
+    &#125;
+&#125;
+vector&lt;int&gt; solve(vector&lt;int&gt; p,vector&lt;int&gt; q)
+&#123;
+    vector&lt;int&gt; res;
+    res.clear();
+    for(int i&#x3D;0;i&lt;(int)p.size();++i)&#123;
+        int u&#x3D;p[i];
+        for(int j&#x3D;0;j&lt;(int)q.size();++j)&#123;
+            if(u&#x3D;&#x3D;q[j])&#123;
+                res.push_back(u);
+                break;
+            &#125;
+        &#125;
+    &#125;
+    return res;
+&#125;
+int tol;
+vector&lt;int&gt; red[maxn],black[maxn];
+bool flag;
+void dfs(int cur)
+&#123;
+    if(flag&#x3D;&#x3D;false) return ;
+    if(stu[cur].l&gt;0 &amp;&amp; stu[cur].r&gt;0)&#123;
+        dfs(stu[cur].l);
+        if(flag&#x3D;&#x3D;false) return ;
+        dfs(stu[cur].r);
+        if(flag&#x3D;&#x3D;false) return ;
+        vector&lt;int&gt; x&#x3D;solve(black[stu[stu[cur].l].tol],black[stu[stu[cur].r].tol]);
+        int cnt&#x3D;++tol;
+        stu[cur].tol&#x3D;cnt;
+        red[cnt]&#x3D;x;
+        black[cnt].clear();
+        vector&lt;int&gt; y&#x3D;solve(black[stu[stu[cur].l].tol],red[stu[stu[cur].r].tol]);
+        vector&lt;int&gt; z&#x3D;solve(red[stu[stu[cur].l].tol],black[stu[stu[cur].r].tol]);
+        vector&lt;int&gt; w&#x3D;solve(red[stu[stu[cur].l].tol],red[stu[stu[cur].r].tol]);
+        set&lt;int&gt; se;
+        se.clear();
+        for(int i&#x3D;0;i&lt;(int)x.size();++i) se.insert(x[i]);
+        for(int i&#x3D;0;i&lt;(int)y.size();++i) se.insert(y[i]);
+        for(int i&#x3D;0;i&lt;(int)z.size();++i) se.insert(z[i]);
+        for(int i&#x3D;0;i&lt;(int)w.size();++i) se.insert(w[i]);
+        set&lt;int&gt;::iterator it;
+        for(it&#x3D;se.begin();it!&#x3D;se.end();++it)&#123;
+            black[cnt].push_back((*it)+1);
+        &#125;
+        if((int)red[cnt].size()&#x3D;&#x3D;0 &amp;&amp; (int)black[cnt].size()&#x3D;&#x3D;0)&#123;
+            flag&#x3D;false;
+            return ;
+        &#125;
+    &#125;
+    else if(stu[cur].l&gt;0)&#123;
+        dfs(stu[cur].l);
+        if(flag&#x3D;&#x3D;false) return ;
+        int id&#x3D;stu[stu[cur].l].tol;
+        bool have0&#x3D;false;
+        for(int i&#x3D;0;i&lt;(int)red[id].size();++i)&#123;
+            if(red[id][i]&#x3D;&#x3D;0)&#123;
+                have0&#x3D;true;
+                break;
+            &#125;
+        &#125;
+        if(have0&#x3D;&#x3D;false)&#123;
+            flag&#x3D;false;
+            return ;
+        &#125;
+        int cnt&#x3D;++tol;
+        stu[cur].tol&#x3D;cnt;
+        red[cnt].clear();
+        black[cnt].clear();
+        black[cnt].push_back(1);
+    &#125;
+    else if(stu[cur].r&gt;0)&#123;
+        dfs(stu[cur].r);
+        if(flag&#x3D;&#x3D;false) return ;
+        int id&#x3D;stu[stu[cur].r].tol;
+        bool have0&#x3D;false;
+        for(int i&#x3D;0;i&lt;(int)red[id].size();++i)&#123;
+            if(red[id][i]&#x3D;&#x3D;0)&#123;
+                have0&#x3D;true;
+                break;
+            &#125;
+        &#125;
+        if(have0&#x3D;&#x3D;false)&#123;
+            flag&#x3D;false;
+            return ;
+        &#125;
+        int cnt&#x3D;++tol;
+        stu[cur].tol&#x3D;cnt;
+        red[cnt].clear();
+        black[cnt].clear();
+        black[cnt].push_back(1);
+    &#125;
+    else&#123;
+        int cnt&#x3D;++tol;
+        stu[cur].tol&#x3D;cnt;
+        red[cnt].clear();
+        red[cnt].push_back(0);
+        black[cnt].clear();
+        black[cnt].push_back(1);
+    &#125;
+&#125;
+int main()
+&#123;
+    int t;
+    for(scanf(&quot;%d&quot;,&amp;t);t;--t)&#123;
+        scanf(&quot;%d&quot;,&amp;n);
+        for(int i&#x3D;1;i&lt;&#x3D;n;++i)&#123;
+            scanf(&quot;%d&quot;,&amp;a[i]);
+        &#125;
+        tot&#x3D;0;
+        root&#x3D;++tot;
+        stu[root].l&#x3D;0;
+        stu[root].r&#x3D;0;
+        handle(1,n,1);
+        flag&#x3D;true;
+        tol&#x3D;0;
+        dfs(root);
+        if(flag) printf(&quot;Yes\n&quot;);
+        else printf(&quot;No\n&quot;);
+    &#125;
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="我自己的版本有两个测试点过不去"><a class="markdownIt-Anchor" href="#我自己的版本有两个测试点过不去"></a> 我自己的版本(有两个测试点过不去)</h2>
+<pre class="line-numbers language-none"><code class="language-none">#include&lt;queue&gt;
+#include&lt;cstdlib&gt;
+#include&lt;cstdio&gt;
+#define MAXNODES 35
+using namespace std;
+typedef struct RBnode*nodeptr;
+struct RBnode&#123;
+    nodeptr parent,leftchild,rightchild;
+    int value,color;
+&#125;;
+enum color&#123;black,red&#125;;
+void posttolevel(int,int),solve(int);
+bool judgeRB(nodeptr);
+queue&lt;int&gt;levelorder;
+int postorder[MAXNODES];
+nodeptr buildRB(nodeptr),insertRB(nodeptr,int);
+int main()&#123;
+    int totalcases,nodes,nodevalue;
+    scanf(&quot;%d&quot;,&amp;totalcases);
+    for(int i&#x3D;0;i&lt;totalcases;i++)&#123;
+        scanf(&quot;%d&quot;,&amp;nodes);
+        for(int j&#x3D;0;j&lt;nodes;j++)scanf(&quot;%d&quot;,&amp;postorder[j]);
+        solve(nodes);
+    &#125;
+&#125;
+void solve(int nodes)&#123;
+    levelorder.push(postorder[nodes-1]);
+    posttolevel(0,nodes-1);
+    nodeptr btree&#x3D;nullptr;
+    btree&#x3D;buildRB(btree);
+    if(judgeRB(btree))printf(&quot;Yes\n&quot;);
+    else printf(&quot;No\n&quot;);
+&#125;
+bool judgeRB(nodeptr root)&#123;
+    if(root-&gt;value&gt;0)&#123;
+        if(root-&gt;color&#x3D;&#x3D;red&amp;&amp;root-&gt;parent-&gt;color&#x3D;&#x3D;red)return false;
+        return judgeRB(root-&gt;leftchild)&amp;&amp;judgeRB(root-&gt;rightchild);
+    &#125;
+    return true;
+&#125;
+void posttolevel(int start,int end)&#123;
+    if(start&gt;end)return;
+    int i&#x3D;start,pivot&#x3D;0;
+    for(;postorder[i]&lt;postorder[end];i++);
+    pivot&#x3D;i;
+    if(pivot&gt;start)levelorder.push(postorder[pivot-1]);
+    if(pivot&lt;end)levelorder.push(postorder[end-1]);
+    posttolevel(start,pivot-1);
+    posttolevel(pivot,end-1);
+&#125;
+nodeptr buildRB(nodeptr root)&#123;
+    while(!levelorder.empty())&#123;
+        root&#x3D;insertRB(root,levelorder.front());
+        levelorder.pop();
+    &#125;
+    return root;
+&#125;
+nodeptr insertRB(nodeptr root,int insertvalue)&#123;
+    if(!root)&#123;
+        root&#x3D;(nodeptr)malloc(sizeof(struct RBnode));
+        root-&gt;leftchild&#x3D;(nodeptr)malloc(sizeof(struct RBnode));
+        root-&gt;rightchild&#x3D;(nodeptr)malloc(sizeof(struct RBnode));
+        root-&gt;parent&#x3D;nullptr,root-&gt;leftchild-&gt;parent&#x3D;root-&gt;rightchild-&gt;parent&#x3D;root;
+        root-&gt;value&#x3D;insertvalue,root-&gt;leftchild-&gt;value&#x3D;root-&gt;rightchild-&gt;value&#x3D;-1;
+        root-&gt;color&#x3D;root-&gt;leftchild-&gt;color&#x3D;root-&gt;rightchild-&gt;color&#x3D;black;
+    &#125;
+    if(root-&gt;value&lt;0)&#123;
+        root-&gt;leftchild&#x3D;(nodeptr)malloc(sizeof(struct RBnode));
+        root-&gt;rightchild&#x3D;(nodeptr)malloc(sizeof(struct RBnode));
+        root-&gt;leftchild-&gt;parent&#x3D;root-&gt;rightchild-&gt;parent&#x3D;root;
+        root-&gt;value&#x3D;insertvalue,root-&gt;leftchild-&gt;value&#x3D;root-&gt;rightchild-&gt;value&#x3D;-1;
+        root-&gt;color&#x3D;red,root-&gt;leftchild-&gt;color&#x3D;root-&gt;rightchild-&gt;color&#x3D;black;
+        if(root-&gt;parent-&gt;color&#x3D;&#x3D;red)&#123;
+            nodeptr grandparent&#x3D;root-&gt;parent-&gt;parent,
+                    leftancle&#x3D;grandparent-&gt;leftchild,rightancle&#x3D;grandparent-&gt;rightchild;
+            if(root-&gt;parent-&gt;value&lt;grandparent-&gt;value&amp;&amp;rightancle-&gt;color&#x3D;&#x3D;red)&#123;
+                root-&gt;parent-&gt;color&#x3D;rightancle-&gt;color&#x3D;black;
+                if(grandparent-&gt;parent)grandparent-&gt;color&#x3D;red;
+            &#125;else if(root-&gt;parent-&gt;value&gt;grandparent-&gt;value&amp;&amp;leftancle-&gt;color&#x3D;&#x3D;red)&#123;
+                root-&gt;parent-&gt;color&#x3D;leftancle-&gt;color&#x3D;black;
+                if(grandparent-&gt;parent)root-&gt;parent-&gt;parent-&gt;color&#x3D;red;
+            &#125;
+        &#125;
+    &#125;else if(root-&gt;value&gt;insertvalue)root-&gt;leftchild&#x3D;insertRB(root-&gt;leftchild,insertvalue);
+    else if(root-&gt;value&lt;insertvalue)root-&gt;rightchild&#x3D;insertRB(root-&gt;rightchild,insertvalue);
+    return root;
+&#125; <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="self-printable-b-tree"><a class="markdownIt-Anchor" href="#self-printable-b-tree"></a> Self-printable B+ Tree</h1>
+<p>In this project, you are supposed to implement a B+ tree of order 3, with the following operations: initialize, insert (with splitting) and search. The B+ tree should be able to print out itself.</p>
+<h2 id="input-specification-2"><a class="markdownIt-Anchor" href="#input-specification-2"></a> Input Specification</h2>
+<p>Each input file contains one test case. For each case, the first line contains a positive number <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mo stretchy="false">(</mo><mo>≤</mo><mn>1</mn><msup><mn>0</mn><mn>4</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">N (≤10^4)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mopen">(</span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>, the number of integer keys to be inserted. Then a line of the N positive integer keys follows. All the numbers in a line are separated by spaces.</p>
+<h2 id="output-specification-2"><a class="markdownIt-Anchor" href="#output-specification-2"></a> Output Specification</h2>
+<p>For each test case, insert the keys into an initially empty B+ tree of order 3 according to the given order. Print in a line Key X is duplicated where X already exists when being inserted. After all the insertions, print out the B+ tree in a top-down lever-order format as shown by the samples.</p>
+<h2 id="sample-input-1"><a class="markdownIt-Anchor" href="#sample-input-1"></a> Sample Input 1</h2>
+<pre class="line-numbers language-none"><code class="language-none">6
+7 8 9 10 7 4<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="sample-output-1"><a class="markdownIt-Anchor" href="#sample-output-1"></a> Sample Output 1</h2>
+<pre class="line-numbers language-none"><code class="language-none">Key 7 is duplicated
+[9]
+[4,7,8][9,10]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h2 id="sample-input-2"><a class="markdownIt-Anchor" href="#sample-input-2"></a> Sample Input 2</h2>
+<pre class="line-numbers language-none"><code class="language-none">10
+3 1 4 5 9 2 6 8 7 0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="sample-output-2"><a class="markdownIt-Anchor" href="#sample-output-2"></a> Sample Output 2</h2>
+<pre class="line-numbers language-none"><code class="language-none">[6]
+[2,4][8]
+[0,1][2,3][4,5][6,7][8,9]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h2 id="sample-input-3"><a class="markdownIt-Anchor" href="#sample-input-3"></a> Sample Input 3</h2>
+<pre class="line-numbers language-none"><code class="language-none">3
+1 2 3<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="sample-output-3"><a class="markdownIt-Anchor" href="#sample-output-3"></a> Sample Output 3</h2>
+<pre class="line-numbers language-none"><code class="language-none">[1,2,3]    <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="ac代码"><a class="markdownIt-Anchor" href="#ac代码"></a> ac代码</h2>
+<pre class="line-numbers language-none"><code class="language-none">#include&lt;cstdio&gt;
+#include&lt;cstdlib&gt;
+#include&lt;queue&gt;
+#define MAXINPUT 10050
+#define INIFINITY 65535
+using namespace std;
+typedef struct Bplusnode*Bplusptr;
+struct Bplusnode&#123;
+    int keys[4];
+    bool flag;
+    Bplusptr parent,sibling,childs[4];
+&#125;;
+enum flag&#123;leaf,nonleaf&#125;;
+int inputvalue[MAXINPUT];
+queue&lt;Bplusptr&gt;printerqueque;
+Bplusptr initializeBplustree(int),searchBplustree(Bplusptr,int),insertBplustree(Bplusptr,int);
+void printBplustree(Bplusptr);
+int main()&#123;
+    int inputnodes;
+    scanf(&quot;%d&quot;,&amp;inputnodes);
+    for(int i&#x3D;0;i&lt;inputnodes;i++)scanf(&quot;%d&quot;,&amp;inputvalue[i]);
+    Bplusptr tree&#x3D;nullptr;
+    for(int i&#x3D;0;i&lt;inputnodes;i++)
+        tree&#x3D;insertBplustree(searchBplustree(tree,inputvalue[i]),inputvalue[i]);
+    printBplustree(tree);
+    return 0;
+&#125;
+Bplusptr initializeBplustree(int flag)&#123;
+    auto root&#x3D;(Bplusptr)malloc(sizeof(struct Bplusnode));
+    root-&gt;parent&#x3D;root-&gt;sibling&#x3D;nullptr;
+    root-&gt;flag&#x3D;flag;
+    for(int i&#x3D;0;i&lt;4;i++)root-&gt;keys[i]&#x3D;INIFINITY,root-&gt;childs[i]&#x3D;nullptr;
+    return root;
+&#125;
+Bplusptr searchBplustree(Bplusptr root,int searchvalue)&#123;
+    if(!root)return nullptr;
+    if(root-&gt;flag)&#123;
+        if(root-&gt;keys[0]&gt;searchvalue)root&#x3D;searchBplustree(root-&gt;childs[0],searchvalue);
+        else if(root-&gt;keys[1]&gt;searchvalue)root&#x3D;searchBplustree(root-&gt;childs[1],searchvalue);
+        else root&#x3D;searchBplustree(root-&gt;childs[2],searchvalue);
+    &#125;
+    return root;
+&#125;
+Bplusptr insertBplustree(Bplusptr root,int insertvalue)&#123;
+    if(!root)root&#x3D;initializeBplustree(leaf);
+    int insertpos&#x3D;0;
+    if(!root-&gt;flag)&#123;
+        for(;insertvalue&gt;&#x3D;root-&gt;keys[insertpos];insertpos++)if(root-&gt;keys[insertpos]&#x3D;&#x3D;insertvalue)&#123;
+                printf(&quot;Key %d is duplicated\n&quot;,insertvalue);
+                insertpos&#x3D;-1;break;
+            &#125;
+        if(insertpos&gt;&#x3D;0)&#123;
+            for(int i&#x3D;2;i&gt;&#x3D;insertpos;i--)root-&gt;keys[i+1]&#x3D;root-&gt;keys[i];
+            root-&gt;keys[insertpos]&#x3D;insertvalue;
+        &#125;
+        if(root-&gt;keys[3]&lt;INIFINITY)&#123;
+            Bplusptr nextleaf&#x3D;initializeBplustree(leaf),parent&#x3D;root-&gt;parent;
+            nextleaf-&gt;sibling&#x3D;root-&gt;sibling;
+            root-&gt;sibling&#x3D;nextleaf;
+            for(int i&#x3D;0;i&lt;2;i++)nextleaf-&gt;keys[i]&#x3D;root-&gt;keys[i+2],root-&gt;keys[i+2]&#x3D;INIFINITY;
+            if(parent)&#123;
+                nextleaf-&gt;parent&#x3D;parent;
+                for(insertpos&#x3D;0;root-&gt;keys[0]&gt;&#x3D;parent-&gt;keys[insertpos];insertpos++);
+                for(int i&#x3D;3;i&gt;insertpos;i--)parent-&gt;childs[i]&#x3D;parent-&gt;childs[i-1];
+                parent-&gt;childs[insertpos+1]&#x3D;nextleaf;
+                for(int i&#x3D;0;i&lt;3;i++)if(parent-&gt;childs[i+1])parent-&gt;keys[i]&#x3D;parent-&gt;childs[i+1]-&gt;keys[0];
+            &#125;else&#123;
+                root-&gt;parent&#x3D;nextleaf-&gt;parent&#x3D;initializeBplustree(nonleaf);
+                root-&gt;parent-&gt;childs[0]&#x3D;root,root-&gt;parent-&gt;childs[1]&#x3D;root-&gt;sibling;
+                root-&gt;parent-&gt;keys[0]&#x3D;nextleaf-&gt;keys[0];
+            &#125;
+        &#125;
+        if(root-&gt;parent)root&#x3D;insertBplustree(root-&gt;parent,insertvalue);
+    &#125;else&#123;
+        if(root-&gt;keys[2]&lt;INIFINITY)&#123;
+            Bplusptr nextnonleaf&#x3D;initializeBplustree(nonleaf),parent&#x3D;root-&gt;parent;
+            nextnonleaf-&gt;sibling&#x3D;root-&gt;sibling;
+            root-&gt;sibling&#x3D;nextnonleaf;
+            nextnonleaf-&gt;keys[0]&#x3D;root-&gt;keys[2],root-&gt;keys[2]&#x3D;INIFINITY;
+            for(int i&#x3D;0;i&lt;2;i++)&#123;
+                nextnonleaf-&gt;childs[i]&#x3D;root-&gt;childs[i+2],root-&gt;childs[i+2]-&gt;parent&#x3D;nextnonleaf;
+                root-&gt;childs[i+2]&#x3D;nullptr;
+            &#125;
+            if(parent)&#123;
+                nextnonleaf-&gt;parent&#x3D;parent;
+                for(;root-&gt;keys[1]&gt;parent-&gt;keys[insertpos];insertpos++);
+                for(int i&#x3D;2;i&gt;&#x3D;insertpos;i--)parent-&gt;keys[i]&#x3D;parent-&gt;keys[i-1];
+                parent-&gt;keys[insertpos]&#x3D;root-&gt;keys[1],root-&gt;keys[1]&#x3D;INIFINITY;
+                for(int i&#x3D;3;i&gt;insertpos;i--)parent-&gt;childs[i]&#x3D;parent-&gt;childs[i-1];
+                parent-&gt;childs[insertpos+1]&#x3D;nextnonleaf;
+            &#125;else&#123;
+                root-&gt;parent&#x3D;nextnonleaf-&gt;parent&#x3D;initializeBplustree(nonleaf);
+                root-&gt;parent-&gt;childs[0]&#x3D;root,root-&gt;parent-&gt;childs[1]&#x3D;nextnonleaf;
+                root-&gt;parent-&gt;keys[0]&#x3D;root-&gt;keys[1],root-&gt;keys[1]&#x3D;INIFINITY;
+            &#125;
+        &#125;
+        if(root-&gt;parent)root&#x3D;insertBplustree(root-&gt;parent,insertvalue);
+    &#125;
+    return root;
+&#125;
+void printBplustree(Bplusptr root)&#123;
+    printerqueque.push(root);
+    while(!printerqueque.empty())&#123;
+        int flag&#x3D;0;
+        printf(&quot;[&quot;);
+        for(int i&#x3D;0;i&lt;3;i++)&#123;
+            int printnum&#x3D;printerqueque.front()-&gt;keys[i];
+            if(printnum&lt;INIFINITY)&#123;
+                if(!flag)&#123;
+                    printf(&quot;%d&quot;,printnum);
+                    flag&#x3D;1;
+                &#125;else printf(&quot;,%d&quot;,printnum);
+            &#125;
+        &#125;
+        printf(&quot;]&quot;);
+        if(!printerqueque.front()-&gt;sibling)printf(&quot;\n&quot;);
+        for(int i&#x3D;0;i&lt;3;i++)&#123;
+            if(printerqueque.front()-&gt;childs[i])printerqueque.push(printerqueque.front()-&gt;childs[i]);
+            else break;
+        &#125;
+        printerqueque.pop();
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io">hetumessi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io/2022/05/12/color%20the%20tree/">http://hetumessi.github.io/2022/05/12/color%20the%20tree/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://hetumessi.github.io" target="_blank">hetumessi's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a><a class="post-meta__tags" href="/tags/PTA/">PTA</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechatpay.png" target="_blank"><img class="post-qr-code-img" src="/img/wechatpay.png"/></a><div class="post-qr-code-desc"></div></li><li class="reward-item"><a href="/img/alipay.png" target="_blank"><img class="post-qr-code-img" src="/img/alipay.png"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2022/05/12/Document%20Distance/" title="18.Document Distance"><img class="cover" src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-12</div><div class="title">18.Document Distance</div></div></a></div><div><a href="/2022/05/12/hashing/" title="16.hashing简单版、hashing复杂版、串的模式匹配"><img class="cover" src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-12</div><div class="title">16.hashing简单版、hashing复杂版、串的模式匹配</div></div></a></div><div><a href="/2022/05/11/Sort%20with%20Swap(0,%20i)/" title="15.Insert or Merge、Insertion or Heap Sort、Sort with Swap(0, i)"><img class="cover" src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-11</div><div class="title">15.Insert or Merge、Insertion or Heap Sort、Sort with Swap(0, i)</div></div></a></div><div><a href="/2022/05/11/%E5%85%AC%E8%B7%AF%E6%9D%91%E6%9D%91%E9%80%9A/" title="14.公路村村通、关键活动、How Long Does It Take"><img class="cover" src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-11</div><div class="title">14.公路村村通、关键活动、How Long Does It Take</div></div></a></div><div><a href="/2022/05/11/Subway%20Map/" title="13.Subway Map、Public Bike Management"><img class="cover" src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-11</div><div class="title">13.Subway Map、Public Bike Management</div></div></a></div><div><a href="/2022/05/11/%E6%95%91%E9%82%A6%E5%BE%B7%E5%A4%8D%E6%9D%82%E7%89%88/" title="12.救邦德复杂版、Gas Station、条条大路通罗马"><img class="cover" src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-11</div><div class="title">12.救邦德复杂版、Gas Station、条条大路通罗马</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/author.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">hetumessi</div><div class="author-info__description">个人博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">86</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hetumessi"><i class="fab fa-github"></i><span>要来gayhub瞧瞧嘛🤡</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/hetumessi" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/392384886@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！有任何问题或者意见，还请QQ：392384886，或者致信QQ邮箱：392384886@qq.com</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#color-the-tree"><span class="toc-number">1.</span> <span class="toc-text"> Color the Tree</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#input-specification"><span class="toc-number">1.1.</span> <span class="toc-text"> Input Specification</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#output-specification"><span class="toc-number">1.2.</span> <span class="toc-text"> Output Specification</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sample-input"><span class="toc-number">1.3.</span> <span class="toc-text"> Sample Input</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sample-output"><span class="toc-number">1.4.</span> <span class="toc-text"> Sample Output</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E4%BB%A3%E7%A0%81%E8%BD%AC"><span class="toc-number">1.5.</span> <span class="toc-text"> 参考代码(转)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E8%87%AA%E5%B7%B1%E7%9A%84%E7%89%88%E6%9C%AC%E6%9C%89%E4%B8%A4%E4%B8%AA%E6%B5%8B%E8%AF%95%E7%82%B9%E8%BF%87%E4%B8%8D%E5%8E%BB"><span class="toc-number">1.6.</span> <span class="toc-text"> 我自己的版本(有两个测试点过不去)</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#self-printable-b-tree"><span class="toc-number">2.</span> <span class="toc-text"> Self-printable B+ Tree</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#input-specification-2"><span class="toc-number">2.1.</span> <span class="toc-text"> Input Specification</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#output-specification-2"><span class="toc-number">2.2.</span> <span class="toc-text"> Output Specification</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sample-input-1"><span class="toc-number">2.3.</span> <span class="toc-text"> Sample Input 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sample-output-1"><span class="toc-number">2.4.</span> <span class="toc-text"> Sample Output 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sample-input-2"><span class="toc-number">2.5.</span> <span class="toc-text"> Sample Input 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sample-output-2"><span class="toc-number">2.6.</span> <span class="toc-text"> Sample Output 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sample-input-3"><span class="toc-number">2.7.</span> <span class="toc-text"> Sample Input 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sample-output-3"><span class="toc-number">2.8.</span> <span class="toc-text"> Sample Output 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ac%E4%BB%A3%E7%A0%81"><span class="toc-number">2.9.</span> <span class="toc-text"> ac代码</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/05/12/Document%20Distance/" title="18.Document Distance"><img src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="18.Document Distance"/></a><div class="content"><a class="title" href="/2022/05/12/Document%20Distance/" title="18.Document Distance">18.Document Distance</a><time datetime="2022-05-12T13:51:42.965Z" title="发表于 2022-05-12 21:51:42">2022-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/05/12/color%20the%20tree/" title="17.Color the tree、Self-printable B+ Tree"><img src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="17.Color the tree、Self-printable B+ Tree"/></a><div class="content"><a class="title" href="/2022/05/12/color%20the%20tree/" title="17.Color the tree、Self-printable B+ Tree">17.Color the tree、Self-printable B+ Tree</a><time datetime="2022-05-12T13:41:35.099Z" title="发表于 2022-05-12 21:41:35">2022-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/05/12/hashing/" title="16.hashing简单版、hashing复杂版、串的模式匹配"><img src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="16.hashing简单版、hashing复杂版、串的模式匹配"/></a><div class="content"><a class="title" href="/2022/05/12/hashing/" title="16.hashing简单版、hashing复杂版、串的模式匹配">16.hashing简单版、hashing复杂版、串的模式匹配</a><time datetime="2022-05-12T11:05:14.003Z" title="发表于 2022-05-12 19:05:14">2022-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/05/12/%E5%AF%B9%E8%AF%9Dlinus/" title="【转】对话Linus Torvalds：大多黑客甚至连指针都未理解"><img src="https://s2.loli.net/2022/05/12/eLAWbUxHw2gP3ME.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】对话Linus Torvalds：大多黑客甚至连指针都未理解"/></a><div class="content"><a class="title" href="/2022/05/12/%E5%AF%B9%E8%AF%9Dlinus/" title="【转】对话Linus Torvalds：大多黑客甚至连指针都未理解">【转】对话Linus Torvalds：大多黑客甚至连指针都未理解</a><time datetime="2022-05-12T03:39:27.023Z" title="发表于 2022-05-12 11:39:27">2022-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/05/11/Sort%20with%20Swap(0,%20i)/" title="15.Insert or Merge、Insertion or Heap Sort、Sort with Swap(0, i)"><img src="https://s2.loli.net/2022/05/12/RkWMs6VzwjIG8uL.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="15.Insert or Merge、Insertion or Heap Sort、Sort with Swap(0, i)"/></a><div class="content"><a class="title" href="/2022/05/11/Sort%20with%20Swap(0,%20i)/" title="15.Insert or Merge、Insertion or Heap Sort、Sort with Swap(0, i)">15.Insert or Merge、Insertion or Heap Sort、Sort with Swap(0, i)</a><time datetime="2022-05-11T10:24:30.529Z" title="发表于 2022-05-11 18:24:30">2022-05-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By hetumessi</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">欢迎光临小破站！🎉</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.css"><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'facd33fa531a29d93105',
+      clientSecret: '7c0e063309085031b84369f86c21bbbee8e77c64',
+      repo: 'blog_comments',
+      owner: 'hetumessi',
+      admin: ['hetumessi'],
+      id: '81cc975b2e269ee10e746dba3243d5b6',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Gitalk' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><div class="aplayer no-destroy" data-id="3180545941" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script defer src="/live2d-widget/autoload.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/null.js" async="async"></script><script>function onTidioChatApiReady() {
+  window.tidioChatApi.hide();
+  window.tidioChatApi.on("close", function() {
+    window.tidioChatApi.hide();
+  });
+}
+if (window.tidioChatApi) {
+  window.tidioChatApi.on("ready", onTidioChatApiReady);
+} else {
+  document.addEventListener("tidioChat-ready", onTidioChatApiReady);
+}
+
+var chatBtnFn = () => {
+  document.getElementById("chat_btn").addEventListener("click", function(){
+    window.tidioChatApi.show();
+    window.tidioChatApi.open();
+  });
+}
+chatBtnFn()
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?zfour";
+            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
+            var git_user ="zfour";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style></style><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-clock/clock/images/weather/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><!-- hexo injector body_end end --></body></html>
