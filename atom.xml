@@ -6,7 +6,7 @@
   <link href="http://hetumessi.github.io/atom.xml" rel="self"/>
   
   <link href="http://hetumessi.github.io/"/>
-  <updated>2022-05-12T14:34:54.127Z</updated>
+  <updated>2022-05-12T14:56:27.844Z</updated>
   <id>http://hetumessi.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://hetumessi.github.io/2022/05/12/Document%20Distance/"/>
     <id>http://hetumessi.github.io/2022/05/12/Document%20Distance/</id>
     <published>2022-05-12T13:51:42.965Z</published>
-    <updated>2022-05-12T14:34:54.127Z</updated>
+    <updated>2022-05-12T14:56:27.844Z</updated>
     
     
       
@@ -403,18 +403,18 @@
   </entry>
   
   <entry>
-    <title>Makefile基础</title>
+    <title>makefile介绍</title>
     <link href="http://hetumessi.github.io/2022/05/09/makefile/"/>
     <id>http://hetumessi.github.io/2022/05/09/makefile/</id>
     <published>2022-05-09T03:36:34.395Z</published>
-    <updated>2022-05-12T08:22:41.214Z</updated>
+    <updated>2022-05-13T03:55:55.513Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h1 id=&quot;makefile&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#makefile&quot;&gt;&lt;/a&gt; Makefile&lt;/h1&gt;
+    <summary type="html">&lt;h1 id=&quot;makefile&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#makefile&quot;&gt;&lt;/a&gt; makefile&lt;/h1&gt;
 &lt;h2 id=&quot;为什么使用makefile&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot;</summary>
         
       
