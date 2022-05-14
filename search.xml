@@ -44,6 +44,252 @@ Mash Kyrielight   マシュ・キリエライト</center>
       </tags>
   </entry>
   <entry>
+    <title>makefile编写</title>
+    <url>/2022/05/14/makefile%E8%BF%9B%E9%98%B6/</url>
+    <content><![CDATA[<p><strong>注：本文内容均是基于GNU make的标准</strong></p>
+<h1 id="makefile规则"><a class="markdownIt-Anchor" href="#makefile规则"></a> makefile规则</h1>
+<p>makefile规则包含两个部分，</p>
+<ul>
+<li>依赖关系</li>
+<li>生成目标的方法。</li>
+</ul>
+<p>下面用一个简单的规则来说明这两种组成部分：</p>
+<pre class="line-numbers language-none"><code class="language-none">foo.o: foo.c defs.h # foo模块
+    cc -c -g foo.c<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>此例中foo.o是目标，foo.c和defs.h是目标所依赖的源文件，其中foo.c包含了defs.h头文件，只有一个命令cc -c -g foo.c。这个规则的依赖关系和生成方法分别是：</p>
+<ul>
+<li>foo.o依赖于foo.c和defs.h，如果foo.c和defs.h的文件日期比foo.o文件日期要新或是foo.o不存在，那么依赖关系发生
+<ul>
+<li>这就是为什么要在依赖文件中加入.h文件，虽然不加一样可以编译(因为.h已经在预处理时被包含进.c中了)，但是此时.h中的修改将不会导致重新编译</li>
+</ul>
+</li>
+<li>后面的cc命令指示如何利用foo.c和defs.h生成foo.o文件的生成方法</li>
+</ul>
+<p>在makefile中，规则编写的顺序是很重要的，因为makefile中只应该有一个<strong>最终目标</strong>(也就是.DEFAULT_GOAL的值)，其它的目标都是被这个目标所依赖派生出来的，所以一定要让make知道你的最终目标是什么。一般来说定义在makefile中的目标可能会有很多，但是<strong>第一条规则</strong>中的目标将被确立为最终的目标，如果第一条规则中的目标有很多个，那么<strong>第一个目标</strong>(默认目标)会成为最终的目标，make最终完成的也就是这个目标。当然这是说的默认情况，是指直接使用make命令而没有显式指定目标文件名的情况，如果在make后加上目标名字就可以指定任何makefile中的目标。</p>
+<ul>
+<li>除了以-打头，或是包含了=的目标，因为有这些字符的目标会被解析成命令行参数或变量</li>
+<li>即使没有被明确写出来的目标也可以成为make的最终目标，也就是说只要make可以找到其隐含规则推导，那么这个隐含目标同样可以被指定成终极目标</li>
+</ul>
+<h2 id="makefile规则基本语法"><a class="markdownIt-Anchor" href="#makefile规则基本语法"></a> makefile规则基本语法</h2>
+<p>规则的基本语法：</p>
+<blockquote>
+<p>targets : prerequisites<br>
+[Tab键]command<br>
+…</p>
+</blockquote>
+<p>或是这样：</p>
+<blockquote>
+<p>targets : prerequisites ; command<br>
+[Tab键]command<br>
+…</p>
+</blockquote>
+<ul>
+<li>targets是文件名，以空格分开，可以使用通配符；一般来说，目标基本上是一个文件，但也有可能是多个文件
+<ul>
+<li>类unix的系统中波浪号~字符在文件名一般表示当前用户的$HOME目录，“~用户名”则表示某用户宿主目录
+<ul>
+<li>注意在Windows或是MS-DOS下，用户没有宿主目录，那么波浪号所指的目录则根据环境变量HOME而定</li>
+</ul>
+</li>
+<li>makefile中符号$有特殊的含义（表示变量或者函数的引用），在规则中需要使用符号$的地方，需要使用两个连续的$$</li>
+</ul>
+</li>
+<li>command是命令
+<ul>
+<li>如果其不与target:prerequisites在一行，那么必须以[Tab键]开头</li>
+<li>如果和prerequisites在一行，那么可以用分号做为分隔</li>
+<li>一般来说make会以UNIX的标准shell，也就是/bin/sh来作为命令执行环境</li>
+</ul>
+</li>
+<li>prerequisites也就是目标所依赖的文件（或依赖目标）</li>
+<li>如果规则太长可以使用反斜杠\作为换行符以便阅读，不过make本身对一行上有多少字符是没有限制的</li>
+</ul>
+<h3 id="规则中的通配符和模式字符"><a class="markdownIt-Anchor" href="#规则中的通配符和模式字符"></a> 规则中的通配符和模式字符</h3>
+<p>makefile支持shell通配符：*、?、[list]，(makefile支持shell命令，所以shell支持的通配符在makefile应该是同样适用的)。转义字符同样是有效的，比如文件名中有通配符*，那么可以用\*来表达*字符原本的意思，而不使用通配符*的语义。<br>
+注意通配符并不是可以用在任何地方，基本上只能用在makefile规则中，其它上下文中不应直接使用通配符(尤其是在变量定义中直接使用通配符是不会展开的)</p>
+<ul>
+<li>可以用在规则的目标依赖关系中，make在读取makefile时自动对其进行展开</li>
+<li>可以出现在规则的命令中(显然shell命令是支持通配符的)，在命令执行时展开</li>
+</ul>
+<p>除此外规则的依赖关系中还支持模式字符%，使用%定义的规则可以称为模式规则。带有模式字符%的目标被用来匹配一个目标文件名，可以匹配任何非空字符串。规则的依赖文件中同样可以使用%，<strong>依赖文件中%的取值情况由目标中的%来决定</strong>，如：</p>
+<pre class="line-numbers language-none"><code class="language-none">%.o : %.c
+    gcc -o $@ $&lt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>这个模式规则的含义是编译make搜索到的所有.c文件。如果模式规则的依赖不包含%时代表的是所有与模式匹配的目标都依赖于指定的依赖文件。</p>
+<p>注意：模式字符%和通配符*的功能看似很像，实则完全不同</p>
+<ul>
+<li>%可以表达一种特定的生成规则，它会同时影响规则中的目标和依赖</li>
+<li>而通配符只是文件名格式的匹配和扩展，实际上在规则层面上并没有任何影响</li>
+</ul>
+<h2 id="目标文件和依赖文件的搜索"><a class="markdownIt-Anchor" href="#目标文件和依赖文件的搜索"></a> 目标文件和依赖文件的搜索</h2>
+<p>在一些工程中有大量的源文件，通常的做法是把这许多的源文件分类，并存放在不同的目录中。当make需要去找寻文件的依赖关系时，虽然可以在文件前加上路径，但最好是把路径告诉make，让make自动去找。makefile文件中的特殊变量VPATH(看到这种格式就该知道是系统中的<strong>环境变量</strong>)就是完成这个功能的，如果没有指明这个变量，make只会在当前的目录中去找寻依赖文件和目标文件。如果定义了VPATH变量，那么make就会在当前目录找不到指定文件的情况下，到VPATH指定的目录中去寻找文件。</p>
+<ul>
+<li>注意当前目录永远是搜索优先权最高的地方</li>
+</ul>
+<p>VPATH的定义中，使用空格或者冒号:将多个目录分开，搜索的顺序按照定义中的目录顺序进行，如：</p>
+<blockquote>
+<p>VPATH = src:…/headers<br>
+VPATH = src:… headers</p>
+</blockquote>
+<p>此例的定义指定两个目录，src和…/headers，make会按照这个顺序进行搜索。</p>
+<p>另一个设置文件搜索路径的方法是使用make的vpath<strong>关键字</strong>，和上面提到的VPATH很类似。vpath可以指定不同模式的文件在不同的目录搜索，如果搜索条件中没有包含模式，那么搜索的文件就是具体的文件名称。它的使用方法主要有三种，假设&lt;pattern&gt;指定了要搜索文件集的模式(也就是带模式字符的文件名)，而&lt;directories&gt;则指定了的文件集的搜索目录：</p>
+<ul>
+<li>为符合模式的文件指定搜索目录，多路径的用法和VPATH差不多，都是使用空格或者是冒号将文件名分隔开</li>
+</ul>
+<blockquote>
+<p>vpath [&lt;pattern1&gt;:&lt;pattern2&gt;:…] &lt;directories&gt;</p>
+</blockquote>
+<ul>
+<li>清除符合模式的文件的搜索目录，vpath不加目标目录单独使用的意思是清除模式已被设置的文件搜索路径。</li>
+</ul>
+<blockquote>
+<p>vpath [&lt;pattern1&gt;:&lt;pattern2&gt;:…]</p>
+</blockquote>
+<ul>
+<li>清除所有已被设置好了的文件搜索目录</li>
+</ul>
+<blockquote>
+<p>vpath</p>
+</blockquote>
+<p>可以连续地使用vpath语句以指定不同搜索策略。如果连续的vpath语句中指定类相同的模式，那么make会按照vpath语句的先后顺序来执行搜索。如：</p>
+<blockquote>
+<p>vpath %.c foo:bar<br>
+vpath %.c blish</p>
+</blockquote>
+<p>表示匹配到的.c结尾的文件，先在foo目录搜索，然后是bar目录，最后是blish目录。</p>
+<p>使用VPATH还是vpath的搜索方法，主要是基于是否需要加入搜索条件。如果搜索路径下的文件较少，或者是搜索的文件不能使用模式符表示，可以考虑用VPATH，当然多数情况用vpath更好，因为可以过滤掉不符合条件的文件，搜索效率更高。</p>
+<h2 id="伪目标文件"><a class="markdownIt-Anchor" href="#伪目标文件"></a> 伪目标文件</h2>
+<p>伪目标文件并不是一个文件而只是一个标签。所谓的伪目标可以这样来理解，它并不会创建目标文件，定义它的目的只是<strong>单纯想去执行目标的命令</strong>。make无法生成伪目标文件的依赖关系，因此就没法通过默认目标的依赖关系链来执行，只有通过显式地指明这个“目标”才能让其生效。<br>
+伪目标文件的取名不能和已有文件名重名。为了避免和文件重名的这种情况，可以使用一个特殊的标记.PHONY来显示地指明一个目标是伪目标，以向make说明不管是否有这个文件，这个目标就是伪目标。最典型的一个例子就是make clean，由于考虑到项目可能要重编译，因此基本都会在makefile设定这个规则以便清楚之前生成的文件，如：</p>
+<pre class="line-numbers language-none"><code class="language-none">.PHONY : clean
+clean:
+    rm *.o temp<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>只要有.PHONY的声明，不管是否有clean文件，要运行clean的规则只有通过make clean命令。<br>
+伪目标一般没有依赖的文件，但是实际也可以为伪目标指定依赖文件。伪目标同样可以作为最终目标，只要将其放在第一个。一个典型应用就是，如果你的makefile需要一次生成若干个可执行文件，但是想简单地用一个make命令就完成所有最终目标文件的构建，并且都写在一个makefile中，那么可以使用伪目标all来实现，如：</p>
+<pre class="line-numbers language-none"><code class="language-none">all : prog1 prog2 prog3
+.PHONY : all
+prog1 : prog1.o utils.o
+    cc -o prog1 prog1.o utils.o
+prog2 : prog2.o
+    cc -o prog2 prog2.o
+prog3 : prog3.o sort.o utils.o
+    cc -o prog3 prog3.o sort.o utils.o<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在当前目录下创建了三个源文件，目的是把这三个源文件编译成为三个可执行文件，将重建规则放到makefile中，约定使用all伪目标来作为最终目标，它的依赖文件就是要生成的可执行文件。这样的话只需要一个make命令，就会同时生成三个可执行文件，并且由于伪目标all每次都是直接被执行，因此就相当于永远最新，所以每次它所依赖的三个可执行文件都会重新生成。all这个名字是GNU make里面约定俗称的命名，一般作为makefile的默认目标。在上例中可以使用以下命令生成三个目标：</p>
+<blockquote>
+<p>make<br>
+make all</p>
+</blockquote>
+<p>也可以单独编译这三个中的任意一个源文件：</p>
+<blockquote>
+<p>make prog1<br>
+make prog2<br>
+make prog3</p>
+</blockquote>
+<p>伪目标不仅有依赖文件，也可以成为别的文件的依赖。所以，伪目标同样也可成为依赖。看下面的例子：</p>
+<p>.PHONY: cleanall cleanobj cleandiff<br>
+cleanall : cleanobj cleandiff<br>
+rm program<br>
+cleanobj :<br>
+rm *.o<br>
+cleandiff :<br>
+rm *.diff<br>
+“makeclean”将清除所有要被清除的文件。“cleanobj”和“cleandiff”这两个伪目标有点像“子程序”的意思。<br>
+我们可以输入“makecleanall”和“make cleanobj”和“makecleandiff”命令来达到清除不同种类文件的目的</p>
+]]></content>
+      <categories>
+        <category>应用程序开发</category>
+      </categories>
+      <tags>
+        <tag>工具使用</tag>
+        <tag>编译</tag>
+        <tag>makefile</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【转】好好地做一万个小时比看起来更难完成</title>
+    <url>/2022/05/13/%E9%B8%A1%E6%B1%A46/</url>
+    <content><![CDATA[<p>Malcolm Gladwell在《离群索居》（Outliers）一书中说，要真正掌握某件事情，需要10000小时的练习。其实，10000只是一个粗略的数字，而且这句话的含义也被过度简化了。我已经断断续续进行了40多年的编程。可能已经写了10000个小时的代码，但我甚至还未能成为一个优秀的程序员，更别提成为大师级的程序员了。<br>
+　　我认为有以下几个原因。首先，在这10000小时中，我主要学习了4种不同的编程语言，以及其他一些辅助语言。我从一种语言换到另一种语言时，发现它们有的概念可以互通，有的完全不同。而有趣的是，在这种语言中没有意义的概念可能用来构建它。<br>
+　　例如，JavaScript没有本地链接列表实现，但如果在V8 GitHub库的src目录下搜索“链表”，会发现有76个commit提到了它。即使它们在语言本身中没有用C的链接列表，但会在引擎下使用C的链接列表。<br>
+　　每种语言都有自己的语法和特殊的实现方式，这些是必须要学习的，而不仅仅只是学习其概念。一种语言的最佳实践方式对于另一种语言来说可能不是最好的。在编译语言上我从来没有花过很多时间，几乎总是使用解释型语言，如BASIC、PHP、JavaScript、Python。我学习过C#和Java，用Rust做过Hello World，但在Linux中从源码编译对我来说十分困难，所以我通常只是下载源码，按照教程中的指示操作，然后祈祷代码能够运行。<br>
+　　其他的技能：<br>
+　　除了学习这些语言，我还学习了服务器技术和系统架构的基本概念，不是从编程的角度，而是从网络管理员或者说系统管理员的角度。而且无论是建立一个大型网站，在Flash中创建矢量图并将其渲染成位图，还是学习通过AWS解决方案架构师助理认证，我都已经做了很多次。但是很多东西我已经忘记了。我已经学会了这些语言的框架和库，如JavaScript的React和JQuery以及PHP的Laravel…然后也忘记了许多，因为我为完成一个项目学习了它们，然后就没有再使用它们。<br>
+　　<strong>遗忘是常态</strong><br>
+　　即使写了10000小时的代码，也不意味着你能够轻易地在不同语言之间转换。当你真的进行转换的时候，你会发现10000小时没有那样神奇的魔力，因为另一个不可避免的原因：记忆衰退。正如我所说的，如果我停止使用一种语言，甚至只是停止使用它的一个功能一段时间，我就会像忘记“高中西班牙语”一样忘记它。我在高中时读完了西班牙语3级，在大学时考过了西班牙语4级，并获得了A。而现在，我可能只记得不到10%的内容。<br>
+　　例如，我几乎完全忘记了怎样使用常规动词连接过去式，更不用说不规则动词了。但是因为我以前练习的足够多，我知道自己的不足之处，所以我可能比刚开始学习的人更快地恢复以前的知识，但可能需要几个月的强化练习才能全部恢复。<br>
+　　十年前，我精通PHP，在一个定制的MVC框架中工作（由其他人创建），使用Doxygen来映射类的继承层次，并使用JQuery来构建前端的交互性。但我在7年前没用过PHP了，转而使用Node。现在，我需要花5分钟并且改正了一些语法错误，才在刚才提到的PHP副本中正确地写出一个Hello World。<br>
+￼<br>
+<img src="https://s2.loli.net/2022/05/14/vVDL1TYQ7uNXBej.png"></p>
+<p>去年12月时，我为freeCodeCamp的前端库认证建立了五个React项目，但在那之后，我就没有再编码React项目了。过去了两个月，当我开始准备面试的时候，我觉得我就像是React新手。如果我看到自己写的代码，能够很快理解。但是因为很多东西都只是我准备的辅助工具，很多我都忘光了，所以我需要回到文档中去开始一个新的React项目再开始工作。和新手相比，我只是走得更快。<br>
+　　这就是新手和已经入门了的区别。一万个小时可以让你成为一个小提琴大师。但是如果你每隔500小时就换一次乐器，并想要成为整个交响乐团的主角，那你不一定能够更胜一筹。所以为了强化和拓展你的技能，<strong>练习不仅要广泛，而且要持续</strong>。<br>
+　　逻辑上的矛盾：<br>
+　　10000小时是什么样的概念？是5年每周工作40小时，两年休息1周（假期、病假和休假都在这2周内）。你会发现有的工作招聘时要求在一个3年的框架内有5年的经验。5年似乎是成为专家所需的标准时间。因为对框架的无知和这种简化的标准，就会产生逻辑上的矛盾，一言以蔽之。<br>
+　　<strong>工作中的一万个小时≠一万个小时的实践</strong><br>
+　　一个专业的开发人员，有多少的工作时间是花在电子邮件和会议上的？又有多少时间在真正编码和思考编码问题？当我在微软写文档的时候，我的经理说，不管怎么算，你一天中大概只有一半的时间花在实际的生产工作上。其余的时间会花在一些琐事上，比如回复电子邮件、开会、进度/状态报告、在IM上回答随机问题或者和别人闲聊…<br>
+　　所以我只有20%的时间是在写代码，因为其他80%的时间是在写文档和教程，这意味着我平均每天只写了一个小时的代码。在使用浏览器中的开发工具进行调试方面，我曾经是个天才，因为我在这方面经验丰富，还经常为新版本进行更新。但是，虽然当时所有的开发控制台的快捷键，我都烂熟于心，但在我离开微软的7年后，我基本上已经把它们忘得一干二净了。<br>
+　　事实上，自从我进入开发人员关系部后，我每天花了10-20%的时间写代码，其余的时间写教程，为会议讲座和网络研讨会制作文件，制定建立和培养开发人员社区的战略，制定展示新功能的最佳方法，以及处理各种人——产品经理、内部工程师、外部开发人员、产品营销经理、需求生成和社交媒体经理、律师、公关和公司政策执行者的问题。<br>
+　　一万小时不都用来学习新事物<br>
+　　最后要记住的是，你<strong>不会花整整一万个小时学习新东西</strong>。如果你在学习小提琴，你可能会花上几百个小时来学习一些初级的作品。在你学习新东西之前，你已经掌握了一些初级的东西，并且在反复练习直至完美的过程中，<br>
+　　学到很多，并且将你学到的这些用于学习新事物。所以这一万个小时中的大部分时间都是强化的。<br>
+　　在编程中，这就像多次编写相同的To Do单页应用程序。前几次你可以参考教程，但最终你必须能够在没有任何参考的情况下写出它。这就像一边看着乐谱一边慢慢演奏《欢乐颂》，然后记住如何演奏，然后准备在演奏会上演奏。<br>
+　　但是，当你需要在截止日期前交付一个项目时，你有多长时间来进行强化练习？在许多公司，不会给你提供扩展技能和强化编码的时间，需要你利用额外的时间来完成。一些公司会给你10%的时间或20%的时间来做独立的项目，但很少有公司希望你把这些时间花在单纯的练习上。<br>
+　　新的框架、新的最佳实践方法、新的语言、新的模式产生的速度不断加快，在这种情况下，仅仅是在新的方面取得合格的成绩，都会像和职业选手一样演奏《欢乐颂》的困难。<br>
+　　总结：<br>
+　　你需要平衡强化和探索的时间，特别是当你每天编码的时间少于50%的时候。你必须不断地通过练习来进行强化，建立心理肌肉记忆，直到你能在睡梦中解决它们。小提琴几百年来都没有实质性的变化，但编程却在不断变化。成为一个特定语言的大师级程序员意味着要坚持更长的时间。<strong>你不得不在非工作时间进行强化练习</strong>，完成任务，努力成为一个优秀的程序员，或者跳槽到另一个能够给你充足时间练习的公司。<br>
+　　哪怕你5年或者10年后都没有成为大师级的程序员，也没有关系，因为好好地做一万个小时比看起来更难完成。</p>
+]]></content>
+      <categories>
+        <category>杂记</category>
+      </categories>
+      <tags>
+        <tag>鸡汤</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>毕业论文-开题报告篇</title>
+    <url>/2022/05/13/%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87%E4%B8%93%E9%A2%98/</url>
+    <content><![CDATA[<p>毕业论文要开始准备了，虽然知道早晚躲不过，但还是一点动手开干的欲望也没有。今天早上8点到了图书馆就打开知网看论文，然后一上午四个半小时坐在桌子前看了三章，看完了连题目都忘了叫啥了。。。。明天早起开组会老师还说要拿出成熟方案，不过以目前的形势看估计把我砍成几个人用也拿不出所谓成熟报告了，估计又得拿东拼西凑的东西去糊弄她，哎生死由命了。。。。。</p>
+<p>一上午各种折腾，看看这看看那，反正就是不能静下心深入进去看文献本身。算算时间离开题报告汇报也不远了，也就是说几周内要写好大几千字，现在连点思路都没有，还不能水，真愁死个人。听说上届有外审没过的可能延毕了。。。。。。。。。。。。。。。</p>
+<hr>
+<p>下面是开题报告相关的一些资源和相关用法，记录在此以作备忘：</p>
+<hr>
+<p>开题报告格式，每个学校都不一样，我网上搜了几个latex模板，如果有学校要用latex或者有需要自定义模板的可以参考一下(反正学校肯定也有教程就是了)，当然基本上有名的学校肯定都会有自己公开的模板发不出来，随便搜下就可以了。可以提前写点东西什么的熟悉一下也行，LaTex本身也是标记语言，上手应该挺快的 (不过感觉完全没有md好用，尤其是编译套件我感觉lj的一批，可能也是没太深入接触的原因)</p>
+<p><a href="https://github.com/tuna/thuthesis">清华大学学位论文Latex模板</a><br>
+<a href="https://github.com/mohuangrui/ucasproposal">国科大官方开题报告LaTex模板</a><br>
+<a href="https://github.com/TheNetAdmin/zjuthesis">浙江大学学位论文Latex模板</a><br>
+<a href="https://github.com/BITNP/BIThesis">北理工非官方LaTeX模板集</a></p>
+<p>清华大学图书馆的LaTex讲座：<br>
+<a href="https://stu.cs.tsinghua.edu.cn/~harry/latex-talk.pdf">清华大学图书馆专题培训讲座《如何使用LaTeX排版论文》</a></p>
+<p>编辑器还有编译环境我用的是vsc的扩展插件(<s>这么看可能我的糟糕体验是微软的锅</s>)，也可以使用在线编辑环境<a href="https://cn.overleaf.com/">overleaf</a>，或者下载<a href="https://tug.org/texlive/">tex live</a>搭建本地编辑环境。(<a href="https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/Images/">清华镜像</a>)</p>
+<p>LaTex素材和模板网站推荐：<br>
+中文网站：<a href="https://www.latexstudio.net/">LaTex工作室</a><br>
+英文网站：<a href="http://www.latextemplates.com/">LaTeX Templates</a><br>
+推荐那个英文网站，不论是模板质量、用户友好度都远超国内那个，而且<strong>免费且不用注册</strong></p>
+<p>LaTex的使用教程：<br>
+<a href="https://www.latex-project.org/help/documentation/">LaTex官方文档</a>，没有中文的，看着太费劲了而且这玩意儿除非想自己开发否则没必要花太多精力死扣的。<br>
+具体的教程也可以参考这个网站<a href="https://www.latexstudio.net/hulatex/tutorial/ChineseBase.htm">LaTeX编辑部</a></p>
+<p>使用LaTex的主要难点：</p>
+<ul>
+<li>公式：推荐一个<a href="https://www.latexlive.com/">在线编辑网站</a>，无需注册在线就能用，主要是有在线预览功能可以写好公式后复制回自己的文章中</li>
+<li>表格：LaTex最反人类的一部分没有之一，原以为md的表格语法已经够恶心人的了，这个绝对要在md的基础乘∞次幂，<s>甚至我感觉不如用word的表格做完截图插进去</s>。不过一般模板里面这方面都会定制好，所以倒也不一定有那么麻烦，不过还是推荐一个<a href="https://www.tablesgenerator.com/">在线表格绘制网站</a>，这个个网站可以手动输入，同时也支持导入excel。</li>
+<li>包管理问题：很多模板的包依赖问题都没有处理好需要自己手动引入，导致编译各种报错，有时候完全莫名其妙，所以这种出了问题还是谨慎谷歌或百度吧</li>
+<li>参考文献：这一点倒确实是个人感觉下来LaTex最大的优势所在。主要有两种方法引入参考文献：
+<ul>
+<li>一是像md一样在文中直接列出文献信息，然后再引用地方插入标签就好</li>
+<li>二是使用BibTex，注意这是个额外的编译器专门用来编译.bib文件的，这种名字的文件里面存放的是要引入的参考文献，一般模板都会专门保留个目录找到就行了。找好参考文献后直接在文章里面要引用的部分插入标签，它就自动帮你按顺序插入文献，而且同时在后面你定义的文献列表中把刚插入的那篇列到最后。</li>
+<li>使用BibTex有个坑的地方在于国内多数学术数据库不支持导出这种格式。。。。这种个人建议直接中文的在百度学术上搜，英文的在谷歌学术上搜，这两个都是支持导出BibTex格式的。此外还有一个叫zotero的浏览器插件，可以抓取知网上论文信息，支持导出BibTex。</li>
+</ul>
+</li>
+</ul>
+<hr>
+]]></content>
+      <categories>
+        <category>毕业论文</category>
+      </categories>
+      <tags>
+        <tag>毕业论文</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>18.Document Distance</title>
     <url>/2022/05/12/Document%20Distance/</url>
     <content><![CDATA[<h1 id="document-distance"><a class="markdownIt-Anchor" href="#document-distance"></a> Document Distance</h1>
@@ -3527,13 +3773,13 @@ int main(int argc, char **argv)
 <p>在上个世纪八十年代，计算机都是奢侈品，操作系统里最著名的是Unix家族，当时还没有Windows、Linux之类的，Unix系统都是商业软件，里面的应用软件也是商业软件，全是封闭的环境。<br>
 系统程序员Richard M.Stallman(RMS)在此环境下创立了与众不同的GNU项目(GNU’s Not Unix)，以及推进自由软件发展的Free Software Foundation(FSF)自由软件基金会。GNU项目是为了创建自由的类Unix系统，也因此开发出来很多开源的系统工具，其中非常著名的就是GCC（GNU Compiler Collection，GNU编译器套件）。在GNU工具集里面，开发时常见到的几个罗列如下（这些工具通常位于Linux或Unix系统里的/usr/bin/目录）：</p>
 <ul>
-<li>gcc	GNU c语言编译器。</li>
-<li>g++	GNU c++语言编译器。</li>
-<li>ld	GNU 链接器，将目标文件和库文件链接起来，创建可执行程序和动态链接库。</li>
-<li>ar	生成静态库.a，可以编辑和管理静态链接库。</li>
+<li>gcc	  GNU c语言编译器。</li>
+<li>g++	  GNU c++语言编译器。</li>
+<li>ld	  GNU 链接器，将目标文件和库文件链接起来，创建可执行程序和动态链接库。</li>
+<li>ar	  生成静态库.a，可以编辑和管理静态链接库。(在Linux中.a和.o其实是差不多的东西，.a可由.o打包生成)</li>
 <li>make	生成器，可以根据makefile文件自动编译链接生成可执行程序或库文件。</li>
-<li>gdb	调试器，用于调试可执行程序。</li>
-<li>ldd	查看可执行文件依赖的共享库（<a href="http://xn--eqrp6qm7e.so">扩展名.so</a>，也叫动态链接库）。</li>
+<li>gdb	  调试器，用于调试可执行程序。</li>
+<li>ldd	  查看可执行文件依赖的共享库（也叫动态链接库）。</li>
 </ul>
 <p>GNU ：<a href="http://www.gnu.org/">项目主页</a><br>
 FSF ：<a href="http://www.fsf.org">基金会主页</a></p>
@@ -3559,14 +3805,14 @@ MSYS2 ： <a href="http://sourceforge.net/projects/msys2/">项目主页</a></p>
 <p>通常目标程序都不是独立个体，生成程序时都需要链接其他的库，要用到其他库的代码。对于多个程序同时运行而言，内存中就可能有同一个库的多个副本，占用了太多内存而实际调用的代码相同。为了优化内存运用效率，引入了动态链接库（Dynamic Link Library），或叫共享库（Shared Object）。<br>
 使用动态链接库时，内存中只需要一份该库文件，其他程序要使用该库文件时，只要链接过来就行了。由于动态库文件外置，链接到动态库的目标程序相对比较小，因为剥离了大量库代码，而只需要一些链接指针。使用动态库，也意味着程序需要链接到如*.dll或*.so文件，得提前装好动态库文件，然后目标程序才能正常运行。<br>
 静态库就是将链接库的代码和自己编写的代码都编译链接到一块，链接到静态库的程序通常比较大，但好处是运行时依赖的库文件很少，因为目标程序自己内部集成了很多库代码。</p>
-<p>Linux/Unix系统里静态库扩展名一般是.a，<a href="http://xn--4gq56iv4aj0s8zczwcivg5njo71e.so">动态库扩展名一般是.so</a>。Windows系统里VC编译器用的静态库扩展名一般是.lib，动态库扩展名一般是.dll。MinGW比较特殊，是将GNU工具集和链接库从Linux/Unix系统移植到Windows里，有意思的情况就出现了，MinGW使用的静态库扩展名为.a，而其动态库扩展名则为.dll，.a仅在生成目标程序过程中使用，.dll则是在目标程序运行时使用。</p>
+<p>Linux/Unix系统里静态库和动态库扩展名一般分别是是.a和.so。Windows系统里VC编译器用的静态库扩展名一般是.lib，动态库扩展名一般是.dll。MinGW比较特殊，是将GNU工具集和链接库从Linux/Unix系统移植到Windows里，有意思的情况就出现了，MinGW使用的静态库扩展名为.a，而其动态库扩展名则为.dll，.a仅在生成目标程序过程中使用，.dll则是在目标程序运行时使用。</p>
 <h3 id="显式链接和隐式链接"><a class="markdownIt-Anchor" href="#显式链接和隐式链接"></a> 显式链接和隐式链接</h3>
 <p>这两种都是动态链接库的使用方式。动态链接库通常都有其导出函数列表，告知其他可执行程序可以使用它的哪些函数。可执行程序使用这些导出函数有两种方式：</p>
 <ul>
-<li>一是在运行时使用，主动加载动态库的函数，Linux里比如用dlopen函数打开并加载动态库，Windows里一般用LoadLibrary打开并加载动态库，只有当程序代码执行到这些函数时，其参数里的动态库才会被加载，这就是显式链接。显式链接方式是在运行时加载动态库，其程序<strong>启动时并不检查这些动态库是否存在</strong>。</li>
-<li>隐式链接是最为常见的，所有的编译环境<strong>默认都是采用隐式链接</strong>的方式使用动态库。隐式链接会在链接生成可执行程序时就确立依赖关系，在该<strong>程序启动</strong>时，操作系统自动会检查它依赖的动态库，并一一加载到该程序的内存空间，程序员就不需要操心什么时候加载动态库了。</li>
+<li>一是在运行时使用，也就是<strong>应用程序主动加载</strong>动态库的函数，Linux里比如用dlopen函数打开并加载动态库，Windows里一般用LoadLibrary打开并加载动态库，只有当程序代码执行到这些函数时，其参数里的动态库才会被加载，这就是显式链接。显式链接方式是在运行时加载动态库，其程序<strong>启动时并不检查这些动态库是否存在</strong>。</li>
+<li>隐式链接是最为常见的，所有的编译环境<strong>默认都是采用隐式链接</strong>的方式使用动态库。隐式链接会在<strong>链接生成可执行程序</strong>时就确立依赖关系，在该程序<strong>启动时操作系统自动会检查</strong>它依赖的动态库，并一一加载到该程序的内存空间，程序员就不需要操心什么时候加载动态库了。</li>
 </ul>
-<p>比如VC编译环境，链接时使用动态库对应的.lib文件（包含动态库的导出函数声明，但没有实际功能代码），在.exe程序运行前系统会检查依赖的.dll，如果找不到某个动态库就会出现类似下图对话框：</p>
+<p>比如VC编译环境，链接某个qt程序时使用动态库对应的.lib文件（包含动态库的导出函数声明，但没有实际功能代码），在.exe程序运行前系统会检查依赖的.dll，如果找不到某个动态库就会出现类似下图对话框：</p>
 <img src="https://s2.loli.net/2022/05/10/EkP2ynMjwXCaz98.png">
 <p>请注意VC链接器使用的.lib文件分两类，一种是完整的静态库，体积比较大，另一种是动态库的导出声明，体积比较小。 MinGW链接器使用的.a文件也是类似的。MinGW是将动态库的导出函数声明放在了.a文件里，程序运行依赖的动态库也是.dll。</p>
 ]]></content>
@@ -3713,7 +3959,7 @@ rect.o: rect.cpp
 <blockquote>
 <p>make -f Make.Linux或make --file Make.AIX 等</p>
 </blockquote>
-<h3 id="makefile文件的构成"><a class="markdownIt-Anchor" href="#makefile文件的构成"></a> makefile文件的构成</h3>
+<h3 id="makefile的构成"><a class="markdownIt-Anchor" href="#makefile的构成"></a> makefile的构成</h3>
 <p>绝大多数的makefile里主要包含了五个东西：显式规则、隐式规则、变量定义、文件指示和注释。</p>
 <ul>
 <li>显式规则，显式规则说明了，如何生成一个或多的的目标文件，这是由makefile的编写者显式指定的，如要生成的文件，生成文件的依赖文件，生成的shell命令等。makefile中的命令必须要以[Tab]键开始。</li>
@@ -3746,9 +3992,10 @@ include的语法是：</p>
 <ul>
 <li>如果make执行时，有&quot;-I&quot;或&quot;--include-dir&quot;参数，那么make就会在这个参数所指定的目录下去找</li>
 <li>如果目录/include（一般是：/usr/local/bin/include或/usr/include）存在的话，make也会去这里找</li>
-<li>如果当前环境中定义了环境变量<strong>MAKEFILES</strong>，那么make会把这个变量中的值做一个类似于include的动作。这个变量中的值是其它的makefile路径，用空格分隔。只是它和include不同的是从这个环境变量中引入的makefile的“目标”不会起作用，如果环境变量中定义的文件发现错误，make也会不理。
+<li>如果当前环境中定义了环境变量<strong>MAKEFILES</strong>，那么make会把这个变量中的值做一个类似于include的操作。这个变量中的值是其它的makefile路径，用空格分隔。只是它和include不同的是从这个环境变量中引入的makefile的“目标”不会起作用，如果环境变量中定义的文件发现错误，make也会不理
 <ul>
-<li>最好慎重使用这个环境变量，因为只要这个默认保留的变量一被定义，那么使用make时所有makefile都会受其影响。(最明显的一点就是系统变量在makefile中都会被局部自定义的同名变量覆盖)</li>
+<li>makefile会自动读取系统中的环境变量，并复制一份一模一样的，如果用户在makefile中定义的同名的变量，那么原来的环境变量就会被覆盖</li>
+<li>最好慎重使用MAKEFILES这个环境变量，因为只要这个默认保留的变量一被定义，那么使用make时所有makefile都会受其影响。(也就是说所有mskefile都自动包含MAKEFILES中的文件，显然这是个很有问题的做法)</li>
 </ul>
 </li>
 </ul>
@@ -3788,6 +4035,7 @@ include的语法是：</p>
       <tags>
         <tag>工具使用</tag>
         <tag>编译</tag>
+        <tag>makefile</tag>
       </tags>
   </entry>
   <entry>
@@ -17778,7 +18026,7 @@ fabs(x)     x的绝对值</p>
 <li>最后在栈之后是用户进程空间中执行内核程序的保留空间</li>
 </ul>
 <span id="more"></span>
-<h2 id="存储分配函数"><a class="markdownIt-Anchor" href="#存储分配函数"></a> 存储分配函数</h2>
+<h2 id="内存分配函数"><a class="markdownIt-Anchor" href="#内存分配函数"></a> 内存分配函数</h2>
 <p>尽管动态存储分配函数需要为不同对象分配存储空间，但显然一般程序中只会设定一个内存分配函数，但是假定用一个分配程序来处理多种类型的请求，如:</p>
 <blockquote>
 <p>指向char类型的指针和指向struct tnode类型的指针</p>
@@ -20277,201 +20525,125 @@ int main()
       </tags>
   </entry>
   <entry>
-    <title>作用域、存储类型、初始化</title>
+    <title>变量作用域、存储类型</title>
     <url>/2022/04/25/%E4%BD%9C%E7%94%A8%E5%9F%9F,%E5%AD%98%E5%82%A8%E7%B1%BB%E5%9E%8B,%E5%88%9D%E5%A7%8B%E5%8C%96/</url>
-    <content><![CDATA[<blockquote>
-<p>c程序可以看作是一系列外部对象构成，这些外部对象可能是变量或函数</p>
-</blockquote>
+    <content><![CDATA[<p><strong>c程序可以看作是一系列外部对象构成</strong>，这些外部对象可能是变量或函数</p>
 <h1 id="外部对象和内部对象"><a class="markdownIt-Anchor" href="#外部对象和内部对象"></a> 外部对象和内部对象</h1>
-<pre><code>external和internal是相对应的，internal用于描述定义在函数内部的函数参数及变量，外部变量定义在函数之外，可以在许多函数中使用
-
-默认情况下，外部变量与函数(默认是external)具有下列性质：
-
-通过同一个名字引用的所有外部变量(即使这种引用来自单独编译的不同文件)实际上都是引用同一个对象(标准中将这一性质称为外部链接)
-
-在这个意义上，外部变量类似于Fortran语言的COMMON块或Pascal语言中在最外层程序块中声明的变量
-
-每个源文件中包含一个编译预处理命令和若干函数和变量定义，各个文件可以单独编译，并可以与库中已经编译过的函数一起加载
-
-源文件里的内容都是相对独立的，在编译时不需要与其他文件互通，只需要在编译成目标文件后再与其他的目标文件做一次链接就行了
-
-在不同系统中，保存在多个源文件中的c程序的编译和加载工作是不同的，在UNIX系统中可使用cc命令
-
-如:cc main.c geline.c strindex.c 编译文件后，将生成的目标代码分别放在文件main.o，geline.o与strindex.o中
-
-然后再将三个文件一起加载到a.out可执行文件中，若源程序存在错误(比如main.c存在错误)
-
-则可以通过 cc main.c geline.o strindex.o对main.c文件重新编译，
-
-并将编译的结果与以前已编译过的目标文件getline.o与strindex.o一起加载到可执行文件中
-
-cc命令使用'.c'与'.o'两种扩展名来区分源文件与目标文件
-</code></pre>
+<p>external和internal是相对应的，internal用于描述定义在函数内部的函数参数及变量，外部变量定义在函数之外，可以在许多函数中使用。默认情况下，外部变量与函数(默认是external)具有下列性质：</p>
+<ul>
+<li>通过同一个名字引用的所有外部变量(即使这种引用来自单独编译的不同文件)实际上都是引用同一个对象(标准中将这一性质称为<strong>外部链接</strong>)</li>
+<li>在这个意义上，外部变量类似于Fortran语言的COMMON块或Pascal语言中在最外层程序块中声明的变量</li>
+</ul>
+<p>每个源文件中包含一个编译预处理命令和若干函数和变量定义，各个文件可以<strong>单独编译</strong>，并可以与库中已经编译过的函数一起加载。源文件里的内容一般都是相对独立的，在编译时不需要与其他文件互通，只需要在编译成目标文件后再与其他的目标文件做一次链接就行了。在不同系统中，保存在多个源文件中的c程序的编译和加载工作是不同的，如在UNIX系统中可使用cc命令：</p>
+<blockquote>
+<p>cc main.c geline.c strindex.c 编译文件后，将生成的目标代码分别放在文件main.o，geline.o与strindex.o中</p>
+</blockquote>
+<p>然后再将三个文件一起加载到a.out可执行文件中，若源程序存在错误(比如main.c存在错误)，则可以通过命令对main.c文件重新编：</p>
+<blockquote>
+<p>cc main.c geline.o strindex.o</p>
+</blockquote>
+<p>并将编译的结果与以前已编译过的目标文件getline.o与strindex.o一起加载到可执行文件中，cc命令使用.c与.o两种扩展名来区分源文件与目标文件</p>
 <span id="more"></span>
 <h1 id="变量作用域scope"><a class="markdownIt-Anchor" href="#变量作用域scope"></a> 变量作用域(scope)</h1>
-<pre><code>作用域指在源程序中定义的变量的位置及其能被读写访问的范围
-
-作用域可以分为：全局作用域，局部作用域，变量分别对应于局部(内部)变量和全局(外部)变量
-
-对于在函数开头声明的自动变量，其作用域是声明该变量名的函数，不同函数中声明的具有相同名字的各局部变量之间没有任何关系
-
-函数的参数也是一样，实际可以将其看作是局部变量
-</code></pre>
-<h2 id="内部局部变量interanllocal-variable"><a class="markdownIt-Anchor" href="#内部局部变量interanllocal-variable"></a> 内部(局部)变量(Interanl/Local Variable)</h2>
-<pre><code>在语句块内定义的变量，包括形参，分动态和静态，缺省定义的是动态内部变量(自动变量)
-
-特点：
-</code></pre>
+<p>变量作用域指在源程序中定义的变量位置及其能被读写访问的范围。作用域可以分为：全局作用域，局部作用域，其中声明的变量分别对应于局部变量和全局变量。对于在函数开头声明的自动变量，其作用域是声明该变量名的函数，不同函数中声明的具有相同名字的各局部变量之间则没有任何关系，函数的参数也是一样，实际可以将其看作是局部变量。当然全局和局部的说法主要是在单个文件中划分的，如果要涉及多个文件的链接的话，不同作用域内的变量更适合从内部和外部的角度进行讨论。</p>
+<h2 id="内部变量interanl-variable"><a class="markdownIt-Anchor" href="#内部变量interanl-variable"></a> 内部变量(Interanl Variable)</h2>
+<p>在<strong>语句块</strong>内定义的变量，包括形参，分动态和静态，缺省定义的是动态内部变量(自动变量)，特点：</p>
 <ul>
-<li>
-<p>生存期是该语句块的生存期，进入语句块时获得内存，仅能由语句块内语句访问，退出语句块时释放内存并不再有效</p>
-</li>
-<li>
-<p>定义时不会自动初始化，除非设定初值</p>
-</li>
-<li>
-<p>并列语句块各自定义的同名变量互不干扰</p>
-</li>
-<li>
-<p>形参和实参可以同名</p>
-<p>c并不是Pascal等语言意义上的程序块结构式语言，它不允许在函数中定义函数，但在函数中可以以程序块结构的形式定义变量</p>
-<p>变量的声明(包括初始化)除了可以紧跟在函数开始的花括号之后，还可以紧跟在任何其他标识复合语句开始的左花括号之后</p>
-<p>这种方式声明的变量可以隐藏程序块外与之同名的变量，并在与左花括号匹配的右花括号出现之前一直存在</p>
+<li>生存期是该语句块的生存期，进入语句块时获得内存，仅能由语句块内语句访问，退出语句块时释放内存并且不再有效</li>
+<li>定义时不会自动初始化，除非设定初值</li>
+<li>并列语句块各自定义的同名变量互不干扰</li>
+<li>形参和实参可以同名</li>
+</ul>
+<p>c并不是Pascal等语言意义上的程序块结构式语言，它不允许在函数中定义函数，但在函数中可以以程序块结构的形式定义变量。变量的声明(包括初始化)除了可以紧跟在函数开始的花括号之后，还可以紧跟在任何其他标识复合语句开始的左花括号之后，这种方式声明的变量可以隐藏程序块外与之同名的变量，并在与左花括号匹配的右花括号出现之前一直存在，如：</p>
+<blockquote>
+<p>if(n&gt;0){int i;for(i=0;i&lt;n;i++);}中变量i的作用域是if语句的‘真’分支，与程序块外声明的i无关</p>
+</blockquote>
+<p>每次进入程序块时，程序块内声明以及初始化的自动变量都将被初始化，静态变量只在第一次进行时初始化一次。</p>
+<p>自动变量也可以隐藏同名的外部变量和函数，如：</p>
+<blockquote>
+<p>int x,y;f(double x){double y;}</p>
+</blockquote>
+<p>一个好的程序设计风格中，应当避免出现变量名隐藏外部作用域中相同名字的情况，否则很容易引起混乱和错误，外部变量或函数作用域从声明它的地方开始，到其所在的(待编译的)文件末尾结束。</p>
+<h2 id="外部变量external-variable"><a class="markdownIt-Anchor" href="#外部变量external-variable"></a> 外部变量(External Variable)</h2>
+<p>在所有函数之外定义的变量，特点：</p>
+<ul>
+<li>生存期是整个程序，从程序运行起占据内存，程序运行过程中可随时访问，程序退出时释放内存</li>
+<li>有效范围是从定义变量的位置开始到本程序结束
+<ul>
+<li>注意作用范围不是从变量定义处到该文件结束，在其他文件中也有效</li>
+</ul>
 </li>
 </ul>
-<pre class="line-numbers language-none"><code class="language-none">如:if(n&gt;0)&#123;int i;for(i&#x3D;0;i&lt;n;i++);&#125;中变量i的作用域是if语句的‘真’分支，与程序块外声明的i无关<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<pre><code>每次进入程序块时，程序块内声明以及初始化的自动变量都将被初始化，静态变量只在第一次进行时初始化一次
-
-自动变量也可以隐藏同名的外部变量和函数，如:int x,y;f(double x)&#123;double y;&#125;
-
-一个好的程序设计风格中，应当避免出现变量名隐藏外部作用域中相同名字的情况，否则很容易引起混乱和错误
-
-外部变量或函数的作用域从声明它的地方开始，到其所在的(待编译的)文件末尾结束
-</code></pre>
-<h2 id="外部全局变量externalglobal-variable"><a class="markdownIt-Anchor" href="#外部全局变量externalglobal-variable"></a> 外部(全局)变量(External/Global Variable)</h2>
-<pre><code>在所有函数之外定义的变量
-
-特点：
-</code></pre>
+<p>构成c程序的函数与外部变量可以分开进行编译，一个程序可以放在几个文件中，原先已经编译过的函数可以从库中进行加载，如：</p>
+<blockquote>
+<p>main(){…}int sp=0;double val[MAXVAL];void push(double);double pop(void);</p>
+</blockquote>
+<p>push和pop不需任何声明就可以访问sp与val，但sp，val，push和pop都不能用在main函数中。另一方面，如果在外部变量定义之前使用该变量，或者外部变量的定义与变量的使用不在同一个源文件，则必须在相应的变量声明中强制使用extern，定义格式：</p>
+<blockquote>
+<p>extern 数据类型 变量名</p>
+</blockquote>
+<p>extern最基本的用法是声明外部变量，可以扩大该变量的作用域，extern用于声明函数的话仅仅是暗示这个函数可能在别的源文件里定义，无实际作用</p>
 <ul>
-<li>
-<p>生存期是整个程序，从程序运行起占据内存，程序运行过程中可随时访问，程序退出时释放内存</p>
-</li>
-<li>
-<p>有效范围是从定义变量的位置开始到本程序结束</p>
-<p>构成c程序的函数与外部变量可以分开进行编译，一个程序可以可放在几个文件中，原先已经编译过的函数可以从库中进行加载</p>
-</li>
+<li>这主要是因为函数声明和定义区别很明显，从是否有定义体就能看出来，因此用不用extern都能区分</li>
+<li>外部数据变量则不同，因为是在全局作用域所以默认会自动初始化，如果不加extern的话就必须为这个变量分配空间，所以加上extern就是让编译器知道这是个声明不用为其分配空间</li>
 </ul>
-<pre class="line-numbers language-none"><code class="language-none">如:main()&#123;…&#125;int sp&#x3D;0;double val[MAXVAL];void push(double);double pop(void);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<pre><code>push和pop不需任何声明就可以访问sp与val，但sp，val，push和pop都不能用在main函数中
-
-另一方面，如果在外部变量定义之前使用该变量，或者外部变量的定义与变量的使用不在同一个源文件
-
-则必须在相应的变量声明中强制使用extern，定义格式：extern 数据类型 变量名
-
-extern最基本的用法是声明外部变量，可以扩大该变量的作用域，extern用于声明函数的话仅仅是暗示这个函数可能在别的源文件里定义，无实际作用
-
-原本全局变量的作用域是从定义点处开始直到文件结束，使用extern提前声明之后就变成从声明处开始，直到文件结束，例：
-</code></pre>
+<p>原本外部变量的作用域是从定义点处开始直到文件结束，使用extern提前声明之后就变成从声明处开始，直到文件结束，例：</p>
 <pre class="line-numbers language-none"><code class="language-none">int main()
 &#123;
-    extern int x;         声明外部变量(全局变量)，如果不提前声明编译器到这里找不到x
+    extern int x;         &#x2F;&#x2F;声明外部变量，如果不提前声明编译器到这里找不到x
     printf(&quot;%d&quot;,x);
-&#125;
-int x&#x3D;1;                  全局变量定义点在main()函数以后<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<pre><code>外部变量(和函数)的声明与定义必须要严格区分，变量声明用于说明变量的属性(主要是类型)，而变量定义除此外还将引起存储器的分配
-
-(主要是外部变量和函数要么在其他地方有定义，要么在声明的同时初始化)
-</code></pre>
-<pre class="line-numbers language-none"><code class="language-none">如:int sp;double val[MAXVAL];写在所有函数之外则相当于直接定义了外部变量，并为之分配存储单元，以及作为该文件中其余部分的声明
-   extern int sp;extern double val[];只作为该文件中其余部分的声明(数组长度在其他部分确定)，声明没有建立变量或分配存储单元<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<pre><code>定义中必须指定数组的长度，但extern声明不一定需要，变量的初始化只能出现其定义中
-
-一个程序的所有源文件中，一个外部变量只能在某个文件中定义一次，其他文件可以通过extern声明来访问
-
-定义外部变量的源文件也可包含对该外部变量的extern声明
-</code></pre>
-<pre class="line-numbers language-none"><code class="language-none">例：假定函数push和pop定义在同一个文件中，而变量val和sp在另一个文件中定义并被初始化(通常不大可能着样组织程序)
-    file1:
-    int sp&#x3D;0;double val[MAXVAL];
-    file2:
-    extern int sp;extern double val[];void push(double f)&#123;&#125;double pop(void)&#123;&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<pre><code>通过这样的声明和定义可以将函数和变量“绑定”在一起，file2中的extern声明不仅放在函数定义外面，还要在它们的前面，适用于该文件所有函数
-
-如果要在同一文件中先使用后定义变量，也需要像这样的方式来组织文件
-
-相比于内部(局部)变量，外部变量具有更大的作用域和更长的生存期
-
-外部(全局)变量为函数的数据交换提供了一种可以代替函数参数与返回值的方式，任何函数都可以通过名字访问一个外部变量
-
-如果函数之间需要共享大量的变量，使用外部变量要比使用一个很长的参数表更方便有效
-
-如:俩个函数互不调用对方，但必须共享某些数据，这种情况下最方便的方式是将这些共享定义为外部变量，而不是分别作为函数参数传递
-
-但这样做可能对程序结构产生不良的影响，导致程序中各个函数之间具有太多的数据依赖
-</code></pre>
-<pre class="line-numbers language-none"><code class="language-none">例：int a&#x3D;-1;void Function()&#123;int a&#x3D;5;&#125;int main()&#123;int a&#x3D;10;&#123;int a&#x3D;5;&#125;Function();printf(&quot;a&#x3D;%d&quot;,a);&#125;
-   输出结果：a&#x3D;10<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<pre><code>其中外部变量a=-1的生存期和程序生存期相同
-
-Function()被调用，里面的内部变量a=5才分配空间，Function()执行完成生存期结束，作用域范围是从定义位置开始到函数体末尾
-
-主函数main()中定义a=10在程序执行时分配空间，main()执行完成生存期结束，作用域范围也是从定义位置开始到函数体末尾
-
-main()中复合语句的内部变量只在程序块中执行，生存期和作用域范围也都是在程序块内
-</code></pre>
+&#125;  
+int x&#x3D;1;                  &#x2F;&#x2F;外部变量定义点在main()函数以后<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>外部变量(和函数)的声明与定义必须要严格区分，变量声明用于说明变量的属性(主要是类型)，而变量定义除此外还将引起存储器的分配(主要是外部变量和函数要么在其他地方有定义，要么在声明的同时初始化)，如：</p>
+<blockquote>
+<p>int sp;double val[MAXVAL]; 写在所有函数之外则相当于直接定义了该文件中的外部变量，并为之分配存储单元(自动初始化)，以及作为该文件中其余部分的声明<br>
+extern int sp;extern double val[];只作为该文件中其余部分的声明(数组长度在其他部分确定)，声明没有建立变量或分配存储单元</p>
+</blockquote>
+<p>变量定义中必须指定数组的长度，但extern声明不一定需要，因为变量的初始化(指的是真正的为内存中的变量赋值的过程)只能出现其定义中，这进一步体现了声明不需要实际分配存储空间的特点。</p>
+<p>一个外部变量是不可能在另一个文件中同时定义的，否则必然是重定义错误(就像在同一个作用域内不能定义同名变量)。在一个程序的所有源文件中，一个外部变量只能在某个文件中定义一次，其他文件可以通过extern声明来访问。假定函数push和pop定义在同一个文件中，而变量val和sp在另一个文件中定义并被初始化(通常不大可能这样组织程序)，如：</p>
+<blockquote>
+<p>file1:<br>
+int sp=0;double val[MAXVAL];<br>
+file2:<br>
+extern int sp;extern double val[];void push(double f){}double pop(void){}</p>
+</blockquote>
+<p>通过这样的声明和定义可以将函数和变量“绑定”在一起，file2中的extern声明不仅放在函数定义外面，还要在它们的前面，适用于该文件所有函数，如果要在同一文件中先使用后定义变量，也需要像这样的方式来组织文件。</p>
+<p>相比于内部变量，外部变量具有更大的作用域和更长的生存期，外部变量为函数的数据交换提供了一种可以代替函数参数与返回值的方式，任何函数都可以通过名字访问一个外部变量，如：</p>
+<blockquote>
+<p>int a=-1;void Function(){int a=5;}int main(){int a=10;{int a=5;}Function();printf(“a=%d”,a);}<br>
+输出结果：a=10</p>
+</blockquote>
+<p>上例中外部变量a的生存期和程序生存期相同，Function()被调用，里面的内部变量a=5才分配空间，Function()执行完成生存期结束，作用域范围是从定义位置开始到函数体末尾，主函数main()中定义的a在程序执行时分配空间，main()执行完成生存期结束，作用域范围也是从定义位置开始到函数体末尾。main()中复合语句的内部变量只在程序块中执行，生存期和作用域范围也都是在程序块内。如果函数之间需要共享大量的变量，使用外部变量要比使用一个很长的参数表更方便有效，比如两个函数互不调用对方，但必须共享某些数据，这种情况下最方便的方式是将这些共享定义为外部变量，而不是分别作为函数参数传递，不过这样做也可能对程序结构产生不良的影响，导致程序中各个函数之间具有太多的数据依赖。</p>
+<p>实际上需要理解外部变量这一概念的关键在于理解编译器的工作原理：<br>
+简单说编译器是并不关心程序的具体实现的(当然优秀的编译器会进行语义检查和优化，不过这不属于它必须要做的事)，它只关心程序在“逻辑”上能不能运行起来。编译器的要求是只要程序在适当位置有声明，能够将变量函数之类的用符号表存储起来并为其进行适当的逻辑上的存储分配，满足程序的过程调用关系就可以了，它检查完这些就进行“文本翻译”，将源程序编译为其他程序(汇编程序、可重定位目标程序)。<br>
+那么，真正需要完成地址绑定的是链接器(当然一般编译器软件都是包含配套链接器的)。链接器链通过编译器提供的全局符号表找到相对应的符号，将每个引用符号的地方进行地址修改，如果是外部符号就由链接器在其输入的可重定义目标文件中查找该符号，此时就要求符号声明要在对应文件中有无二义性的定义实现，如果找不到就会报链接错误。另一方面也就是说，假如在多个文件中同时定义外部变量，这时候它们会各自存在于所在的源文件编译出来的可重定位目标文件中，链接器根本不知道应该要链接哪个，也会产生错误。</p>
 <h1 id="变量存储类型storage-class"><a class="markdownIt-Anchor" href="#变量存储类型storage-class"></a> 变量存储类型(storage class)</h1>
-<pre><code>存储类型指数据在内存中存储的方式，即编译器为数据分配内存的方式，决定变量的生存期
-
-在定义变量时可以指定变量存储类型，基本格式为：
-</code></pre>
-<pre class="line-numbers language-none"><code class="language-none">存储类型 数据类型 变量名;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<pre><code>c程序的读写类型：auto型-自动变量，static型-静态变量，extern型-外部变量，register型-寄存器变量
-
-在内存(RAM)中，代码在代码区，常量在常量区(也有部分在代码区)
-
-变量存储区域分静态存储区和动态存储区，分别是数据区和栈/堆
-
-静态存储区主要包括静态局部变量和全局变量，动态存储段主要存放自动变量(动态局部变量)
-
-寄存器变量存放在cpu的寄存器中（普通变量是运行时cpu从内存读取需要的数据到寄存器中进行运算,而寄存器变量直接在寄存器读取即可）
-
-静态存储区中变量与整个程序“共存亡”，动态存储区中变量和寄存器变量与所在函数“共存亡”
-
-如果变量定义在局部(函数内)时
-
-自动变量(动态局部变量) 定义格式：auto 数据类型 变量名 (或者直接省略auto)
-
-进入语句块时自动申请内存，退出时自动释放内存
-</code></pre>
+<p>存储类型指数据在内存中存储的方式，即编译器为数据分配内存的方式，决定变量的生存期。在定义变量时可以指定变量存储类型，基本格式为：</p>
+<blockquote>
+<p>存储类型 数据类型 变量名;</p>
+</blockquote>
+<p>c程序变量的读写类型分为：auto型-自动变量，static型-静态变量，extern型-外部变量，register型-寄存器变量</p>
+<p>在内存(RAM)中，代码在代码区，常量在常量区(也有部分在代码区)，变量存储区域分静态存储区和动态存储区，分别是数据区和栈/堆。静态存储区主要包括静态局部变量和全局变量，动态存储段主要存放自动变量(动态局部变量)，寄存器变量存放在cpu的寄存器中（普通变量是运行时cpu从内存读取需要的数据到寄存器中进行运算，而寄存器变量直接在寄存器读取即可）。当然这只是语言定义的一种理想化模型，实际上如何分配属于编译器和操作系统的行为。<br>
+静态存储区中变量与整个程序“共存亡”，动态存储区中变量和寄存器变量与所在函数“共存亡”。(生存期)</p>
 <h2 id="动态局部变量"><a class="markdownIt-Anchor" href="#动态局部变量"></a> 动态局部变量</h2>
-<p>动态局部变量是缺省的存储类型</p>
+<p>动态局部变量是缺省的存储类型，如果变量定义在局部(函数内)时，称为自动变量(动态局部变量)，定义格式：</p>
+<blockquote>
+<p>auto 数据类型 变量名 (或者直接省略auto)</p>
+</blockquote>
+<p>动态局部变量在执行流进入语句块时自动申请内存，退出时自动释放内存。</p>
 <h2 id="静态变量"><a class="markdownIt-Anchor" href="#静态变量"></a> 静态变量</h2>
-<pre class="line-numbers language-none"><code class="language-none">静态变量(静态局部变量或全局变量) 定义格式：static 数据类型 变量名<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<pre><code>使用static修饰变量，对内部变量而言是改变生存期，对外部变量是改变作用域
-
-在函数内部定义的话存储期同动态局部变量，生存期为整个程序运行期间
-
-不管其所在函数是否被调用，static类型的内部变量是一种只能在某个特定函数中使用但一直占据存储空间的变量
-
-如果用static声明限定外部变量和函数，则可以将其后声明的对象作用域限制在编译源文件的剩余部分
-
-通过static限定外部对象，可以达到隐藏外部对象的目的，外部的static声明通常多用于变量，当然也可声明用于函数
-
-通常情况下函数名是全局可访问的，对程序的各个部分而言都可见
-
-但如果把函数声明为static类型则除了对该函数所在文件仍然可见外，其他文件都无法访问
-
-在这种情况下不同源文件中同名的外部变量甚至是不冲突的
-
-可以认为非静态外部变量的作用域是整个源程序，静态全局变量的作用域是单个源文件
-</code></pre>
-<pre class="line-numbers language-none"><code class="language-none">(内部)静态变量示例程序：使用静态变量输出1-10的阶乘
-#include&lt;stdio.h&gt;
+<p>静态变量(静态局部变量或全局变量) 定义格式：</p>
+<blockquote>
+<p>static 数据类型 变量名</p>
+</blockquote>
+<p>使用static修饰变量，对内部变量而言是改变生存期，对外部变量是改变作用域。在函数内部定义的话静态变量作用同动态局部变量，生存期为整个程序运行期间。不管其所在函数是否被调用，static类型的内部变量是一种只能在某个特定函数中使用但一直占据存储空间的变量。<br>
+如果用static声明限定外部变量和函数，则可以将其后声明的对象作用域限制在编译源文件的剩余部分，通过static限定外部对象，可以达到隐藏外部对象的目的(类似于private的效果)。外部的static声明通常多用于变量，当然也可声明用于函数，通常情况下函数名是全局可访问的，对程序的各个部分而言都可见，但如果把函数声明为static类型则除了对该函数所在文件仍然可见外，其他文件都无法访问。在这种情况下不同源文件中同名的外部变量甚至是不冲突的，可以认为非静态外部变量的作用域是整个源程序，静态外部变量的作用域是单个源文件。</p>
+<p>(内部)静态变量示例程序：使用静态变量输出1-10的阶乘</p>
+<pre class="line-numbers language-none"><code class="language-none">#include&lt;stdio.h&gt;
 int Factorial(int n)
 &#123;
-    static int p&#x3D;1;              静态变量只初始化一次，函数调用结束后不释放内存，值可以保存到下次进入函数，是函数具有了记忆功能
-    p*&#x3D;n;                        p从1开始，每调用一次就乘一次n，即为阶乘
+    static int p&#x3D;1;              &#x2F;&#x2F;静态变量只初始化一次，函数调用结束后不释放内存，值可以保存到下次进入函数，是函数具有了记忆功能
+    p*&#x3D;n;                        &#x2F;&#x2F;p从1开始，每调用一次就乘一次n，即为阶乘
     return p;
 &#125;
 int main()
@@ -20480,48 +20652,19 @@ int main()
     scanf(&quot;%d&quot;,&amp;n);
     for(i&#x3D;1;i&lt;n;i++)
     &#123;
-         printf(&quot;%d!&#x3D;%d\n&quot;,i,Factorial(i));
+        printf(&quot;%d!&#x3D;%d\n&quot;,i,Factorial(i));
     &#125;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="寄存器变量"><a class="markdownIt-Anchor" href="#寄存器变量"></a> 寄存器变量</h2>
-<pre class="line-numbers language-none"><code class="language-none">定义格式：register 数据类型 变量名<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<pre><code>cpu内部容量有限，但运算速度极快
-
-register声明告诉编译器，其所声明的变量在程序中使用频率较高，其思想是将register变量放在机器寄存器中
-
-将使用频率比较高的变量声明为寄存器变量，可使程序更小，执行速度更快，不过编译器可以忽略这一选项
-
-一些现代编译器有能力自动将普通变量优化为寄存器变量，并且可以忽略用户的指定，所以现在一般已经无需特别声明变量为register类型
-</code></pre>
-<pre class="line-numbers language-none"><code class="language-none">register声明只适用于自动变量以及函数的形式参数，如:f(register unsigned m,register long n)&#123;register int i;&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<pre><code>实际使用时，底层硬件环境实际情况会对寄存器变量的使用有一些限制，不同机器中对寄存器变量的数目和类型的具体限制也是不同的
-
-每个函数中只有很少变量可以保存在寄存器中，且只允许某些类型的变量，但是过量声明也没太多坏处，因为编译器可以自动过滤
-
-无论寄存器变量是不是真正存放在寄存器中，它的地址都是不能访问的(因为地址格式和内存不一定相同故而无法进行取地址运算)
-</code></pre>
-<h1 id="初始化规则"><a class="markdownIt-Anchor" href="#初始化规则"></a> 初始化规则</h1>
-<pre><code>不进行显式初始化的情况下，外部变量和静态变量都将被初始化为0，自动变量和寄存器变量的初值则没有意义
-
-定义标量变量时(只能存放单个数值的变量)，可以在变量名后紧跟一个等号和一个表达式来初始化变量
-</code></pre>
-<pre class="line-numbers language-none"><code class="language-none">如:int x&#x3D;1;char squote&#x3D;&#39;\&#39;;long day&#x3D;1000L*60L*60L*24L;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<pre><code>定义数组时也分显式初始化和隐式初始化
-</code></pre>
-<pre class="line-numbers language-none"><code class="language-none">显式初始化数组元素如:const int array_size&#x3D;3;int array[array_size]&#x3D;&#123;1,2,3&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<pre><code>隐式初始化:若无显式初始化，则函数体外定义的内置数组，元素均为0；函数体内定义的初始数组，无初始化(随机数填充)
-
-对于外部变量与静态变量来说，初始化表达式必须是常量表达式，且只初始化一次
-
-从概念上讲是程序开始执行前进行初始化(实际还是与机器实现有关)
-
-对于自动变量与寄存器变量来说，每次进入函数或程序块时都将进行初始化，初始化表达式可以不是常量表达式
-
-表达式中可以包含任意在此表达式之前已经定义的值，包括函数调用
-</code></pre>
-<pre class="line-numbers language-none"><code class="language-none">如:int binsearch(int x,int v[],int n)&#123;int low&#x3D;0,int high&#x3D;n-1,int mid&#x3D;(low+high)&#x2F;2;&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<pre><code>实际上，自动变量的初始化等效于简写的赋值语句，究竟采用哪种形式看个人的习惯
-</code></pre>
+<p>寄存器变量定义格式：</p>
+<blockquote>
+<p>register 数据类型 变量名</p>
+</blockquote>
+<p>cpu内部容量有限但运算速度极快，register声明就是告诉编译器，其所声明的变量在程序中使用频率较高，其思想是将register变量放在cpu寄存器中，将使用频率比较高的变量声明为寄存器变量，可使程序更小，执行速度更快。不过编译器本身也是可以忽略这一选项的，一些现代编译器有能力自动将普通变量优化为寄存器变量，并且可以忽略用户的指定，所以现在一般已经无需特别声明变量为register类型。register声明只适用于自动变量以及函数的形式参数，如：</p>
+<blockquote>
+<p>f(register unsigned m,register long n){register int i;}</p>
+</blockquote>
+<p>这主要是因为extern和static类型变量本身在存储分配、生存期、作用域方面有其特殊性，其实现并不容易让寄存器参与进去。另外实际使用时，底层硬件环境实际情况会对寄存器变量的使用有一些限制，不同机器中对寄存器变量的数目和类型的具体限制也是不同的，每个函数中只有很少变量可以保存在寄存器中，且只允许某些类型的变量。不过过量声明也没太多坏处就是了(但不意味着可以瞎写等着编译器优化)，因为编译器可以自动过滤，无论寄存器变量是不是真正存放在寄存器中，它的地址都是不能访问的(因为地址格式和内存不一定相同故而无法进行取地址运算)。</p>
 ]]></content>
       <categories>
         <category>c&amp;c++学习</category>
@@ -21138,20 +21281,13 @@ c提供了可随意滥用的goto语句以及标记跳转位置的标号
 <p>标识符应尽量从字面上表达变量的用途，以防止发生混淆</p>
 <p>内部变量一般使用较短变量名(尤其是循环控制变量)，而外部变量尽量使用较长名字    */</p>
 <h3 id="关键字"><a class="markdownIt-Anchor" href="#关键字"></a> 关键字</h3>
-<pre><code>如int，return等标识符被保留为关键字(或称系统保留字)，不能用于其他用途，并且自定义标识符不能与关键字重名
-
-C语言关键字列表
-
-auto,enum,restrict,unsigned,break,extern,
-
-return,void,case,float,short,Volatile,
-
-char,for,signed,while,const,goto,sizeof,_Bool,continue,if,
-
-static,_Complex,default,inline,struct,_Imaginary,do,int,switch,
-
-double,long,typedef,else,register,union
-</code></pre>
+<p>如int，return等标识符被保留为关键字(或称系统保留字)，不能用于其他用途，并且自定义标识符不能与关键字重名</p>
+<p>C语言关键字列表</p>
+<p>auto,enum,restrict,unsigned,break,extern,</p>
+<p>return,void,case,float,short,Volatile,</p>
+<p>char,for,signed,while,const,goto,sizeof,_Bool,continue,if,</p>
+<p>static,_Complex,default,inline,struct,_Imaginary,do,int,switch,</p>
+<p>double,long,typedef,else,register,union</p>
 <p>某些实现还将fortran和asm保留为关键字</p>
 <p>关键字const、signed、volatile是在ANSI C中加入的，enum和void是在K&amp;R的第1版书后加入的，这些关键字现在都已被广泛应用</p>
 <p>entry曾经被保留为关键字但从未被使用过，现已被剔除</p>
@@ -21204,124 +21340,68 @@ double,long,typedef,else,register,union
 <p>(ANSI标准特别允许void*类型指针与其他对象指针在赋值表达式和关系表达式中混用，关键是不需要进行强制类型转换)</p>
 <h1 id="常量"><a class="markdownIt-Anchor" href="#常量"></a> 常量</h1>
 <p>程序中一般不直接使用常数，可定义宏常量(c中一般所指的常数)或const常量</p>
-<pre><code>常量区别于变量的最大的特点是常量不可修改
-
-宏常量定义格式(一般定义在文件头预处理部分) 例：#define PI 3.1415926，宏定义中如果是表达式则一般用括号括起来，否则极容易出错
-
-const定义方法与变量相同，具有数据类型，某些环境下可直接对其进行调试
-
-任何变量的声明都可以使用const限定符修饰，从而指定变量不可修改，
-
-例：const char msg[]=&quot;warning:&quot;;int len(const char[]);
-
-在c的环境下，const是c99新增，并且c99只认定const变量为只读数据不可修改的变量，不是真正的常量，因此不能用于定义数组长度等用途
-</code></pre>
+<p>常量区别于变量的最大的特点是常量不可修改</p>
+<p>宏常量定义格式(一般定义在文件头预处理部分) 例：#define PI 3.1415926，宏定义中如果是表达式则一般用括号括起来，否则极容易出错</p>
+<p>const定义方法与变量相同，具有数据类型，某些环境下可直接对其进行调试</p>
+<p>任何变量的声明都可以使用const限定符修饰，从而指定变量不可修改，</p>
+<p>例：const char msg[]=“warning:”;int len(const char[]);</p>
+<p>在c的环境下，const是c99新增，并且c99只认定const变量为只读数据不可修改的变量，不是真正的常量，因此不能用于定义数组长度等用途</p>
 <h3 id="常量类型"><a class="markdownIt-Anchor" href="#常量类型"></a> 常量类型：</h3>
 <p>常量有多种类型，每种类型的常量都有一个数据类型</p>
-<pre><code>数值型常量：整型常量，浮点型常量，枚举常量
-
-字符型常量：字符常量，字符串常量，转义字符，符号常量
-
-整型常量分八进制，十进制，十六进制三种数制
-
-浮点型常量为实数在计算机中的表示形式，十进制表示，分小数形式或指数形式(如3.14e-3为3.14*10^-3)
-
-整型常量由一串数字组成，并且可以带有不同的前缀和后缀代表不同的含义：
-
-带有0前缀的常量表示八进制形式;前缀为0x或0X的常量表示十六进制形式，如:十进制31可写成八进制037或十六进制0x1F
-
-带有l、L后缀的常量表示long或long long或double型常量;u,U表示无符号常量;ul,UL表示unsigned long 如:3567l;56u;58924ul
-
-常量可以同时拥有前缀和后缀，如:0xFul
-
-浮点型常量由整数部分、小数点、小数部分、一个e或E、一个可选的带符号整型类型的指数和一个可选的表示类型的后缀组成(即f,F,l或L之一)
-
-整数和小数部分均由数组序列组成，可以没有整数部分或小数部分(但不能两者都没有)，同理也可以没有小数点或e和指数部分
-
-浮点常量的类型由后缀确定，F或f后缀表示它是float类型，l或L后缀表明它是long double类型，没有后缀则默认是double类型
-
-字符常量和字符串常量也可以称为单字符常量和多字符常量，字符串常量也称为字符串字面值(string literal)
-
-字符常量为单引号括起的一个字符，按其对应的默认机器字符集(一般为ASCII)中的数值存储，占一个字节，可以像整数一样参与运算
-
-字符常量不包括双引号字符和换行符，可以使用转义字符序列来表示这些字符以及其他一些字符
-
-字符串常量为双引号括起的多个字符，例:China 存储格式为67 104 105 112 97 \0
-
-字符串中使用\&quot;表示双引号字符，如：&quot;I am a \&quot;string\&quot;&quot;
-
-编译时可以将多个字符串常量连接起来，如：&quot;hello,&quot;&quot; world&quot;等价于&quot;hello, world&quot;，这种连接未将较长的字符串分散开来提供了支持
-
-如果程序试图修改字符串字面值，则行为是未定义的
-
-从技术角度看，字符串常量就是字符数组，存储时加串结束标识符NULL或'\0'，因此字符串物理存储单元数比括在双引号中的字符数多一个
-
-字符串存储类为static，使用给定的字符进行初始化，对相同的字符串字面值是否进行区分取决于具体实现
-
-c中对字符串的长度没有限制，但程序必须扫描整个字符串后才能确定字符串的长度
-
-标准库函数strlen()可返回字符串的长度，但不包括'\0'，标准头文件string.h中声明了strlen()和其他字符串函数
-
-字符常量不同于仅包含一个字符的字符串，如:'x'和&quot;x&quot;，前者是一个整数，后者是字符和'\0'组成的字符数组
-
-枚举常量是一个常量整型值的列表，如:enum escapes&#123;NO,YES&#125;;
-
-在没有显示说明的情况下，enum类型中第一个枚举值为0，第二个为1，以此类推
-
-如果只指定了部分枚举成员的值，则未指定成员的值依照最后一个指定值向后递增
-
-如:enum months&#123;JAN=1,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC&#125;，其中FEB=2，MAR=3，以此类推
-
-枚举为建立常量值与名字之间的关联提供了一种便利的方式，相对于宏定义其优势在于常量值可以自动生成
-
-可以生成enum类型的变量，编译器会进行类型检查，但不检查这种类型的变量中存储的值是否有效(不会检查值是否属于定义的枚举常量所代表的值)
-
-例：enum color&#123;red,yellow,blue&#125;mycolor=5;（在c中可以通过编译，但是c++不可以）
-</code></pre>
+<p>数值型常量：整型常量，浮点型常量，枚举常量</p>
+<p>字符型常量：字符常量，字符串常量，转义字符，符号常量</p>
+<p>整型常量分八进制，十进制，十六进制三种数制</p>
+<p>浮点型常量为实数在计算机中的表示形式，十进制表示，分小数形式或指数形式(如3.14e-3为3.14*10^-3)</p>
+<p>整型常量由一串数字组成，并且可以带有不同的前缀和后缀代表不同的含义：</p>
+<p>带有0前缀的常量表示八进制形式;前缀为0x或0X的常量表示十六进制形式，如:十进制31可写成八进制037或十六进制0x1F</p>
+<p>带有l、L后缀的常量表示long或long long或double型常量;u,U表示无符号常量;ul,UL表示unsigned long 如:3567l;56u;58924ul</p>
+<p>常量可以同时拥有前缀和后缀，如:0xFul</p>
+<p>浮点型常量由整数部分、小数点、小数部分、一个e或E、一个可选的带符号整型类型的指数和一个可选的表示类型的后缀组成(即f,F,l或L之一)</p>
+<p>整数和小数部分均由数组序列组成，可以没有整数部分或小数部分(但不能两者都没有)，同理也可以没有小数点或e和指数部分</p>
+<p>浮点常量的类型由后缀确定，F或f后缀表示它是float类型，l或L后缀表明它是long double类型，没有后缀则默认是double类型</p>
+<p>字符常量和字符串常量也可以称为单字符常量和多字符常量，字符串常量也称为字符串字面值(string literal)</p>
+<p>字符常量为单引号括起的一个字符，按其对应的默认机器字符集(一般为ASCII)中的数值存储，占一个字节，可以像整数一样参与运算</p>
+<p>字符常量不包括双引号字符和换行符，可以使用转义字符序列来表示这些字符以及其他一些字符</p>
+<p>字符串常量为双引号括起的多个字符，例:China 存储格式为67 104 105 112 97 \0</p>
+<p>字符串中使用&quot;表示双引号字符，如：“I am a “string””</p>
+<p>编译时可以将多个字符串常量连接起来，如：“hello,”&quot; world&quot;等价于&quot;hello, world&quot;，这种连接未将较长的字符串分散开来提供了支持</p>
+<p>如果程序试图修改字符串字面值，则行为是未定义的</p>
+<p>从技术角度看，字符串常量就是字符数组，存储时加串结束标识符NULL或’\0’，因此字符串物理存储单元数比括在双引号中的字符数多一个</p>
+<p>字符串存储类为static，使用给定的字符进行初始化，对相同的字符串字面值是否进行区分取决于具体实现</p>
+<p>c中对字符串的长度没有限制，但程序必须扫描整个字符串后才能确定字符串的长度</p>
+<p>标准库函数strlen()可返回字符串的长度，但不包括’\0’，标准头文件string.h中声明了strlen()和其他字符串函数</p>
+<p>字符常量不同于仅包含一个字符的字符串，如:‘x’和&quot;x&quot;，前者是一个整数，后者是字符和’\0’组成的字符数组</p>
+<p>枚举常量是一个常量整型值的列表，如:enum escapes{NO,YES};</p>
+<p>在没有显示说明的情况下，enum类型中第一个枚举值为0，第二个为1，以此类推</p>
+<p>如果只指定了部分枚举成员的值，则未指定成员的值依照最后一个指定值向后递增</p>
+<p>如:enum months{JAN=1,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC}，其中FEB=2，MAR=3，以此类推</p>
+<p>枚举为建立常量值与名字之间的关联提供了一种便利的方式，相对于宏定义其优势在于常量值可以自动生成</p>
+<p>可以生成enum类型的变量，编译器会进行类型检查，但不检查这种类型的变量中存储的值是否有效(不会检查值是否属于定义的枚举常量所代表的值)</p>
+<p>例：enum color{red,yellow,blue}mycolor=5;（在c中可以通过编译，但是c++不可以）</p>
 <h3 id="常量表达式"><a class="markdownIt-Anchor" href="#常量表达式"></a> 常量表达式</h3>
-<pre><code>常量定义为标识符即为符号常量（如宏常量）
-
-常量表达式是仅仅包含常量的表达式，这种表达式在编译时求值而不在运行时求值
-
-可以出现在常量可以出现的任何位置，例：
-</code></pre>
+<p>常量定义为标识符即为符号常量（如宏常量）</p>
+<p>常量表达式是仅仅包含常量的表达式，这种表达式在编译时求值而不在运行时求值</p>
+<p>可以出现在常量可以出现的任何位置，例：</p>
 <p>#define MAXLINE 1000</p>
-<pre><code>#define LEAP 1
-
-char line[MAXLINE+1];
-
-int days[31+28+LEAP+31+30+31+30+31+31+30+31+30+31]
-</code></pre>
+<p>#define LEAP 1</p>
+<p>char line[MAXLINE+1];</p>
+<p>int days[31+28+LEAP+31+30+31+30+31+31+30+31+30+31]</p>
 <h1 id="转义字符"><a class="markdownIt-Anchor" href="#转义字符"></a> 转义字符</h1>
-<pre><code>转义字符为字符的特殊形式，表示不可打印或特殊用途
-
-ANSI C中全部的转义字符序列为：
-
-\0 空字符(null)，通常用'\0'形式代替0，以强调某些表达式的字符属性，但其值为空
-
-\a 响铃符\\ 反斜杠
-
-\b 回退符\? 问号
-
-\f 换页符\' 单引号
-
-\n 换行符\&quot; 双引号
-
-\r 回车符     \000 转义八进制数(0开头，数字范围0-7)，表示ASCII码等于该值十进制形式的字符
-
-\t 横向制表符  \xhh 转义十六进制数(0x开头，数字0-9,a-f,A-F)，表示ASCII码等于该值十进制形式的字符
-
-\v 纵向制表符
-</code></pre>
+<p>转义字符为字符的特殊形式，表示不可打印或特殊用途</p>
+<p>ANSI C中全部的转义字符序列为：</p>
+<p>\0 空字符(null)，通常用’\0’形式代替0，以强调某些表达式的字符属性，但其值为空</p>
+<p>\a 响铃符\ 反斜杠</p>
+<p>\b 回退符? 问号</p>
+<p>\f 换页符’ 单引号</p>
+<p>\n 换行符&quot; 双引号</p>
+<p>\r 回车符     \000 转义八进制数(0开头，数字范围0-7)，表示ASCII码等于该值十进制形式的字符</p>
+<p>\t 横向制表符  \xhh 转义十六进制数(0x开头，数字0-9,a-f,A-F)，表示ASCII码等于该值十进制形式的字符</p>
+<p>\v 纵向制表符</p>
 <p>例：</p>
-<pre><code>#define VTAB '\013' 或  #define VTAB '\xb'  表示将VTAB替换为ASCII纵向制表符(\v的ASCII码为11)
-
-#define BELL '\007' 或  #define BELL '\x7'  表示将BELL替换为ASCII响铃符(\a的ASCII码为7)
-
-转义数字的位数没有限制，但如果字符值超过最大字符值或者字符值不在以上指定的转移字符序列中，则该行为是未定义的
-
-如果转义数字的具体实现中将类型char看作是带符号的，则会对字符值进行符号扩展，类似于强制转换成char类型
-</code></pre>
+<p>#define VTAB ‘\013’ 或  #define VTAB ‘\xb’  表示将VTAB替换为ASCII纵向制表符(\v的ASCII码为11)</p>
+<p>#define BELL ‘\007’ 或  #define BELL ‘\x7’  表示将BELL替换为ASCII响铃符(\a的ASCII码为7)</p>
+<p>转义数字的位数没有限制，但如果字符值超过最大字符值或者字符值不在以上指定的转移字符序列中，则该行为是未定义的</p>
+<p>如果转义数字的具体实现中将类型char看作是带符号的，则会对字符值进行符号扩展，类似于强制转换成char类型</p>
 <h3 id="扩展字符集"><a class="markdownIt-Anchor" href="#扩展字符集"></a> 扩展字符集</h3>
 <p>在c的某些实现中，还有一个扩展的字符集，不能用char类型来表示</p>
 <p>扩展集中的常量要以一个前导符L开头(例如L’x’)，称为宽字符常量，这种常量的类型为wchar_t</p>
@@ -21351,6 +21431,21 @@ ANSI C中全部的转义字符序列为：
 <p>从概念上来说是在程序开始运行之前，并且初始化表达式必须为常量表达式</p>
 <p>对显式初始化的自动变量，每次进入函数或程序块时都将被自动初始化一次，初始化表达式可以是任何表达式</p>
 <p>默认情况下，外部变量与静态变量被初始化为0，未经显式初始化的自动变量值为无效值</p>
+<h3 id="变量初始化规则"><a class="markdownIt-Anchor" href="#变量初始化规则"></a> 变量初始化规则</h3>
+<p>不进行显式初始化的情况下，外部变量和静态变量都将被自动初始化为0，自动变量和寄存器变量的初值则是没有意义的随机值(没有初始化过程)。定义标量变量时(只能存放单个数值的变量)，可以在变量名后紧跟一个等号和一个表达式来初始化变量，如：</p>
+<blockquote>
+<p>int x=1;char squote=’\’;long day=1000L*60L*60L*24L;</p>
+</blockquote>
+<p>定义数组时也分显式初始化和隐式初始化，显式初始化数组元素如：</p>
+<blockquote>
+<p>const int array_size=3;int array[array_size]={1,2,3};</p>
+</blockquote>
+<p>若无显式初始化，则函数体外定义的内置数组，元素均为0；函数体内定义的初始数组，无初始化(随机数填充)，这是隐式初始化。</p>
+<p>对于外部变量与静态变量来说，初始化表达式必须是常量表达式，且只初始化一次。从概念上讲是程序开始执行前进行初始化(实际还是与机器实现有关)，对于自动变量与寄存器变量来说，每次进入函数或程序块时都将进行初始化，初始化表达式可以不是常量表达式，表达式中可以包含任意在此表达式之前已经定义的值，包括函数调用，如：</p>
+<blockquote>
+<p>int binsearch(int x,int v[],int n){int low=0,int high=n-1,int mid=(low+high)/2;}</p>
+</blockquote>
+<p>实际上自动变量的初始化等效于先声明后赋值，究竟采用哪种形式看个人的习惯。</p>
 <h3 id="存储类型"><a class="markdownIt-Anchor" href="#存储类型"></a> 存储类型</h3>
 <p>存储类分为两类：自动存储类(automatic)和静态存储类(static)</p>
 <p>声明对象时使用的一些关键词和声明上下文共同决定了对象的存储类，自动存储类对象对于一个程序块来说是局部的，在退出程序块时该对象消失</p>
@@ -21368,95 +21463,51 @@ ANSI C中全部的转义字符序列为：
 <h3 id="初等表达式"><a class="markdownIt-Anchor" href="#初等表达式"></a> 初等表达式</h3>
 <p>初等表达式是标识符、常量、字符串或带括号的表达式</p>
 <p>一个标识符只要是按下面所讨论的方式适当说明的就是初等表达式，其类型由说明指定:</p>
-<pre><code>如果一个标识符指定一个对象且其类型是算术、结构、联合或指针类型，那么它是一个左值；
-
-一个常量是一个初等表达式，其类型依赖于它的形式；
-
-一个字符串字面值是一个初等表达式，它的初始类型是char数组类型(对于宽字符字符串，则为wchar_t数组类型)，
-
-通常被修改为指向char类型(wchar_t类型)的指针，从而结果是指向字符串中第一个字符的指针；
-
-用括号括起来的表达式是一个初等表达式，它的类型和值与无括号的表达式一致，此表达式是否是左值不受括号的影响
-</code></pre>
+<p>如果一个标识符指定一个对象且其类型是算术、结构、联合或指针类型，那么它是一个左值；</p>
+<p>一个常量是一个初等表达式，其类型依赖于它的形式；</p>
+<p>一个字符串字面值是一个初等表达式，它的初始类型是char数组类型(对于宽字符字符串，则为wchar_t数组类型)，</p>
+<p>通常被修改为指向char类型(wchar_t类型)的指针，从而结果是指向字符串中第一个字符的指针；</p>
+<p>用括号括起来的表达式是一个初等表达式，它的类型和值与无括号的表达式一致，此表达式是否是左值不受括号的影响</p>
 <h3 id="后缀表达式"><a class="markdownIt-Anchor" href="#后缀表达式"></a> 后缀表达式</h3>
-<pre><code>后缀表达式中的运算符遵循从左到右的结合规则。
-
-后缀表达式的形式主要包括:
-
-1.初等表达式
-
-2.后缀表达式[表达式] 即数组引用形式
-
-带下标的数组由一个后缀表达式后跟一个括在方括号中的表达式来表示。方括号前的后缀表达式的类型必须为“指向T类型的指针”，
-
-其中T为某种类型，方括号中表达式的类型必须为整型，结果得到的下标表达式的类型为T
-
-表达式E1[E2]在定义上等同于*((E1)+(E2))
-
-3.后缀表达式(变元表达式表opt)
-
-函数调用由一个后缀表达式(称为函数标志符)后跟由圆括号括起来的包含一个可能为空的、由逗号分隔的赋值表达式列表组成，这些表达式就是函数的变元
-
-如果后缀表达式包含一个在当前作用域中不存在的标识符，则此标识符将被隐式地声明，等同于在执行此函数调用的最内层程序块中包含下列声明:
-
-extern int 标识符();  该后缀表达式(在可能的隐式声明和指针生成后)的类型必须为“指向返回T类型的函数的指针”
-
-其中T为某种类型，且函数调用的值的类型为T
-
-(旧语法中在通过指向函数的指针来调用此函数时必须有一个显式的*运算符，ANSI C标准允许现存的一些编泽程序用同样的语法来进行函数调用和
-
-通过指向函数的指针来进行函数调用，旧的语法仍然可用)
-
-变元表达式表形式:
-
-赋值表达式   (注意是编译层次上的赋值表达式即可)
-
-变元表达式表,赋值表达式
-
-术语变元用来表示传递给函数调用的表达式，而术语参数则用来表示由函数定义或函数说明所接收的输入对象(或其标识符)，
-
-通常也可用术语“实际变元”和“形式参数”来区分它们
-
-在准备调用函数时，要对它的每个变元进行复制，所有变元传递严格地按值进行
-
-函数可能会改变其参数对象的值(即变元表达式值的拷贝)，这个改变不会影响变元的值，但是可以将指针作为变元传递，以使函数可以改变指针所指向的对象的值
-
-函数可以用两种方式说明；在新的方式中，形式参数的类型是作为函数类型的一部分显式指定的，这种说明称为函数原型，而在旧的方式中，参数类型没有说明
-
-在函数调用的作用域中，如果函数是以旧方式声明的则按以下方式对每个实际变元进行缺省变元提升:
-
-对每个整型变元进行整型提升；
-
-将每个float类型的变元转换为double类型；
-
-如果调用时变元的数目与函数定义中参数的数目不等，或者某个变元类型提升后与相应的参数类型不一致，那么函数调用的结果是未定义的
-
-其中类型一致性依赖于函数定义是以新方式进行的还是以旧方式进行的:
-
-如果定义是旧方式的，那么类型一致性检查将在提升过的函数调用的变元类型和提升过的参数类型之间进行；
-
-如果定义是新方式的，那么提升过的实际变元类型必须与没有提升过的形式参数本身的类型一致；
-
-如果在函数调用的作用域中函数说明是以新方式进行的，那么变元将被转换为函数原型中的相应参数类型，就像是赋值一样
-
-变元数目必须与显式说明的参数数目相同，除非函数说明的参数表以省略号(,...)结束，在这种情况下变元的数目必须等于或超过参数的数目；
-
-其后无显式指定类型的参数与之对应的变元要进行缺省变元提升
-
-如果函数定义是以旧方式进行的，那么在调用中可见的原型中的每个变元类型必须与相应函数定义中的参数类型一致(函数定义中的参数类型已进行过变元提升)
-
-(这些规则特别复杂，因为必须要考虑到新旧方式函数的混合使用，应尽可能避免新旧方式混合使用)
-
-变元的求值次序没有指定，不同的编译器的实现方式各不相同，但是在进入函数前变元和函数命名符是完全求值的，包括所有的副作用
-
-对任何函数都可以进行递归调用
-
-4.后缀表达式.标识符
-
-5.后缀表达式-&gt;标识符
-
-6.后缀表达式++ / --
-</code></pre>
+<p>后缀表达式中的运算符遵循从左到右的结合规则。</p>
+<p>后缀表达式的形式主要包括:</p>
+<p>1.初等表达式</p>
+<p>2.后缀表达式[表达式] 即数组引用形式</p>
+<p>带下标的数组由一个后缀表达式后跟一个括在方括号中的表达式来表示。方括号前的后缀表达式的类型必须为“指向T类型的指针”，</p>
+<p>其中T为某种类型，方括号中表达式的类型必须为整型，结果得到的下标表达式的类型为T</p>
+<p>表达式E1[E2]在定义上等同于*((E1)+(E2))</p>
+<p>3.后缀表达式(变元表达式表opt)</p>
+<p>函数调用由一个后缀表达式(称为函数标志符)后跟由圆括号括起来的包含一个可能为空的、由逗号分隔的赋值表达式列表组成，这些表达式就是函数的变元</p>
+<p>如果后缀表达式包含一个在当前作用域中不存在的标识符，则此标识符将被隐式地声明，等同于在执行此函数调用的最内层程序块中包含下列声明:</p>
+<p>extern int 标识符();  该后缀表达式(在可能的隐式声明和指针生成后)的类型必须为“指向返回T类型的函数的指针”</p>
+<p>其中T为某种类型，且函数调用的值的类型为T</p>
+<p>(旧语法中在通过指向函数的指针来调用此函数时必须有一个显式的*运算符，ANSI C标准允许现存的一些编泽程序用同样的语法来进行函数调用和</p>
+<p>通过指向函数的指针来进行函数调用，旧的语法仍然可用)</p>
+<p>变元表达式表形式:</p>
+<p>赋值表达式   (注意是编译层次上的赋值表达式即可)</p>
+<p>变元表达式表,赋值表达式</p>
+<p>术语变元用来表示传递给函数调用的表达式，而术语参数则用来表示由函数定义或函数说明所接收的输入对象(或其标识符)，</p>
+<p>通常也可用术语“实际变元”和“形式参数”来区分它们</p>
+<p>在准备调用函数时，要对它的每个变元进行复制，所有变元传递严格地按值进行</p>
+<p>函数可能会改变其参数对象的值(即变元表达式值的拷贝)，这个改变不会影响变元的值，但是可以将指针作为变元传递，以使函数可以改变指针所指向的对象的值</p>
+<p>函数可以用两种方式说明；在新的方式中，形式参数的类型是作为函数类型的一部分显式指定的，这种说明称为函数原型，而在旧的方式中，参数类型没有说明</p>
+<p>在函数调用的作用域中，如果函数是以旧方式声明的则按以下方式对每个实际变元进行缺省变元提升:</p>
+<p>对每个整型变元进行整型提升；</p>
+<p>将每个float类型的变元转换为double类型；</p>
+<p>如果调用时变元的数目与函数定义中参数的数目不等，或者某个变元类型提升后与相应的参数类型不一致，那么函数调用的结果是未定义的</p>
+<p>其中类型一致性依赖于函数定义是以新方式进行的还是以旧方式进行的:</p>
+<p>如果定义是旧方式的，那么类型一致性检查将在提升过的函数调用的变元类型和提升过的参数类型之间进行；</p>
+<p>如果定义是新方式的，那么提升过的实际变元类型必须与没有提升过的形式参数本身的类型一致；</p>
+<p>如果在函数调用的作用域中函数说明是以新方式进行的，那么变元将被转换为函数原型中的相应参数类型，就像是赋值一样</p>
+<p>变元数目必须与显式说明的参数数目相同，除非函数说明的参数表以省略号(,…)结束，在这种情况下变元的数目必须等于或超过参数的数目；</p>
+<p>其后无显式指定类型的参数与之对应的变元要进行缺省变元提升</p>
+<p>如果函数定义是以旧方式进行的，那么在调用中可见的原型中的每个变元类型必须与相应函数定义中的参数类型一致(函数定义中的参数类型已进行过变元提升)</p>
+<p>(这些规则特别复杂，因为必须要考虑到新旧方式函数的混合使用，应尽可能避免新旧方式混合使用)</p>
+<p>变元的求值次序没有指定，不同的编译器的实现方式各不相同，但是在进入函数前变元和函数命名符是完全求值的，包括所有的副作用</p>
+<p>对任何函数都可以进行递归调用</p>
+<p>4.后缀表达式.标识符</p>
+<p>5.后缀表达式-&gt;标识符</p>
+<p>6.后缀表达式++ / –</p>
 <h1 id="c语言运算符表"><a class="markdownIt-Anchor" href="#c语言运算符表"></a> c语言运算符表</h1>
 <p>运算符按照优先级大小由上向下排列，在同一行的运算符具有相同优先级。第二行是所有的一元运算符。</p>
 <table>
@@ -21847,14 +21898,11 @@ extern int 标识符();  该后缀表达式(在可能的隐式声明和指针生
 <p>每个运算符将其操作数生成的值结合起来的方式与表达式的语法分析方式是兼容的</p>
 <p>运算符的优先级与结合性规定了表达式中相邻运算符间的相对运算次序，但是对于操作数而言其求值顺序依赖于具体实现</p>
 <p>如:exp1+exp2<em>exp3 可以确定的是</em>运算会先于加法运算，但其中运算数exp2和exp3以及exp1和exp2*exp3的求值顺序</p>
-<pre><code>在不同编译器的实现下是不一样的
-</code></pre>
+<p>在不同编译器的实现下是不一样的</p>
 <p>对于因操作数计算的次序不同产生不同，结果的表达式为带副作用的表达式，在计算时会影响其他操作数的值，引起副作用的运算符为带副作用的运算符</p>
 <p>如:x=1,(x+2)*(++x); 第二个表达式在不同的操作数计算顺序下结果是不一样的</p>
-<pre><code>x=f()+g(); 其中f()可以在g()之前计算也可以在g()之后计算，因此如果f或g改变了另一个函数所用的变量则x的结果可能依赖于两个函数的计算顺序
-
-(这种情况为保证特定的计算顺序最好将结果保存在中间变量当中)
-</code></pre>
+<p>x=f()+g(); 其中f()可以在g()之前计算也可以在g()之后计算，因此如果f或g改变了另一个函数所用的变量则x的结果可能依赖于两个函数的计算顺序</p>
+<p>(这种情况为保证特定的计算顺序最好将结果保存在中间变量当中)</p>
 <p>在c++中规定，先计算逻辑与(&amp;&amp;)和逻辑或(||)的第一个操作数，再计算第二个操作数，以便进行短路求值</p>
 <p>条件（?:）、逗号（,）运算符也规定了操作数的计算次序，除此以外，其他运算符没有规定操作数的计算次序，计算次序由具体的编译器决定。</p>
 <p>因此在表达式中尽量避免在操作数中引入带副作用的运算符</p>
@@ -21878,48 +21926,27 @@ extern int 标识符();  该后缀表达式(在可能的隐式声明和指针生
 <p>由于函数调用的参数是表达式，在传递参数时也可能发生类型转换，因此在声明参数时应尽量声明为范围大的类型</p>
 <p>同时也需注意类型的使用条件，如不能将下标设置为浮点型等</p>
 <p>针对可能导致丢失信息的表达式，编译器可能会发出警告信息，如将long,float赋给int等，但这种表达式并不非法</p>
-<pre><code>许多运算符会在运算过程中引起转换，并产生结果类型，其效果是将所有操作数转换为同一公共类型，并以此作为结果类型
-
-这种方式的转换称为普通算术类型转换
-
-如果二元运算符(具有两个操作数)的两个操作数类型不同，则需先把较低类型转换为较高类型，结果返回较高的类型
-
-如果不考虑unsigned类型操作数，表达式中只需要下列非正式规则即可：(优先级按顺序下降)
-
-1.如果其中一个操作数类型为long double，则将另一个操作数转换为long double类型
-
-2.如果其中一个操作数类型为double，则将另一个操作数转换为double类型
-
-3.如果其中一个操作数类型为float，则将另一个操作数转换为float类型
-
-4.将char与short类型的操作数直接自动转为int类型(整型提升)
-
-5.整型提升后，如果任何一个操作数为unsigned long int类型，则将另一个操作数转换为unsigned long int类型
-
-6.如果一个操作数为long int类型且另一个操作数为unsigned int类型，则结果依赖于long int类型是否可以表示所有的unsigned int类型值
-
-如果long int类型不能覆盖所有的unsigned int取值，则将两个操作数都转换为unsigned long int类型
-
-7.如果一个操作数为long int类型，则另一个操作数转换为long int类型
-
-8.如果一个操作数为unsigned int类型，则另一个操作数转换为unsigned int类型
-
-9.最后，如果以上都没有，则将两个操作数转换为int类型
-
-注意，表达式中float类型操作数不会自动转换为double类型
-
-一般而言，数学函数(如&lt;math.h&gt;中定义的函数)使用双精度类型变量
-
-使用float主要为了在使用较大数组时节省存储空间，以及节省执行时间(双精度算术运算很费时)，但精度上有所欠缺
-
-当表达式中包括unsigned类型时，转换规则要更复杂，主要原因在于进行的转换是与机器相关的，例：
-
-假定int占16位，long占32位，则-1L&lt;1U，因为此时unsigned int被隐式转换为signed long，
-
-但是-1L&gt;1UL，因为此时signed long被转为unsigned long，即-1在一些情况下可能被转为一个比1大的正整数
-
-(这种情况下long可以覆盖unsigned的取值，因此两数都转换为long即可)
-</code></pre>
+<p>许多运算符会在运算过程中引起转换，并产生结果类型，其效果是将所有操作数转换为同一公共类型，并以此作为结果类型</p>
+<p>这种方式的转换称为普通算术类型转换</p>
+<p>如果二元运算符(具有两个操作数)的两个操作数类型不同，则需先把较低类型转换为较高类型，结果返回较高的类型</p>
+<p>如果不考虑unsigned类型操作数，表达式中只需要下列非正式规则即可：(优先级按顺序下降)</p>
+<p>1.如果其中一个操作数类型为long double，则将另一个操作数转换为long double类型</p>
+<p>2.如果其中一个操作数类型为double，则将另一个操作数转换为double类型</p>
+<p>3.如果其中一个操作数类型为float，则将另一个操作数转换为float类型</p>
+<p>4.将char与short类型的操作数直接自动转为int类型(整型提升)</p>
+<p>5.整型提升后，如果任何一个操作数为unsigned long int类型，则将另一个操作数转换为unsigned long int类型</p>
+<p>6.如果一个操作数为long int类型且另一个操作数为unsigned int类型，则结果依赖于long int类型是否可以表示所有的unsigned int类型值</p>
+<p>如果long int类型不能覆盖所有的unsigned int取值，则将两个操作数都转换为unsigned long int类型</p>
+<p>7.如果一个操作数为long int类型，则另一个操作数转换为long int类型</p>
+<p>8.如果一个操作数为unsigned int类型，则另一个操作数转换为unsigned int类型</p>
+<p>9.最后，如果以上都没有，则将两个操作数转换为int类型</p>
+<p>注意，表达式中float类型操作数不会自动转换为double类型</p>
+<p>一般而言，数学函数(如&lt;math.h&gt;中定义的函数)使用双精度类型变量</p>
+<p>使用float主要为了在使用较大数组时节省存储空间，以及节省执行时间(双精度算术运算很费时)，但精度上有所欠缺</p>
+<p>当表达式中包括unsigned类型时，转换规则要更复杂，主要原因在于进行的转换是与机器相关的，例：</p>
+<p>假定int占16位，long占32位，则-1L&lt;1U，因为此时unsigned int被隐式转换为signed long，</p>
+<p>但是-1L&gt;1UL，因为此时signed long被转为unsigned long，即-1在一些情况下可能被转为一个比1大的正整数</p>
+<p>(这种情况下long可以覆盖unsigned的取值，因此两数都转换为long即可)</p>
 <p>c中没有指定char类型是带符号(signed)还是无符号(unsigned)，因此在将char转化为int时其结果可能为负整数</p>
 <p>不同机器的结果可能不同，某些机器中，如果char类型最左一位是1，则转换为负整数(符号扩展后，高于1字节的位数全置为1，算术移位)，</p>
 <p>另一些机器中，在将char转换为int后，在char类型值左边加0(逻辑移位)，使转换后的值总是正值</p>
@@ -21943,20 +21970,13 @@ extern int 标识符();  该后缀表达式(在可能的隐式声明和指针生
 <p>(注意此空指针等于指向同一类型的另一空指针，但不等于任何指向函数或对象的指针)</p>
 <p>作为一种良好的编程习惯，很多程序员都不愿意在程序中到处出现未加修饰的0或者其他空指针常量，为了让程序中的空指针使用更加明确从而保持统一的编程风格</p>
 <p>专门定义了一个标准预处理宏NULL，其值为“空指针常量”，VC++中定义预处理宏NULL的代码如下：</p>
-<pre><code>#ifndef NULL
-
-#ifdef __cplusplus
-
-#define NULL 0
-
-#else
-
-#define NULL ((void*)0)
-
-#endif
-
-#endif
-</code></pre>
+<p>#ifndef NULL</p>
+<p>#ifdef __cplusplus</p>
+<p>#define NULL 0</p>
+<p>#else</p>
+<p>#define NULL ((void*)0)</p>
+<p>#endif</p>
+<p>#endif</p>
 <p>指针可以转换为整型，但此整型必须足够大，所要求的大小和映射函数(转换方式)依赖于具体的实现</p>
 <p>整型对象可以显式地转换为指针，这种映射通常是将一个足够宽的从指针转换来的整数转换为同一个指针，其他情况依赖于具体的实现</p>
 <p>指向某一类型的指针可以显式地转换为指向另一类型的指针，但是如果该指针指向的对象不满足一定的存储对齐要求，则结果指针可能会导致地址异常</p>
@@ -21965,24 +21985,15 @@ extern int 标识符();  该后缀表达式(在可能的隐式声明和指针生
 <p>对于某类型T，如果某表达式或子表达式的类型为“T的数组”。那么此表达式的值是指向数组中第一个对象的指针，并且此表达式的类型被转换为“指向T的指针”</p>
 <p>如果此表达式是一元运算符&amp;、++、–或sizeof的运算分量，或是赋值类运算符或圆点运算符.的左运算分量．那么转换不会发生</p>
 <p>(int a[]={0,10,20};</p>
-<pre><code>printf(&quot;%p\n&quot;,a);           输出：0x7ff7b3a6a36c
-
-printf(&quot;%p\n&quot;,&amp;a[0]);     输出：0x7ff7b3a6a36c
-
-printf(&quot;%p\n&quot;,&amp;a);         输出：0x7ff7b3a6a36c
-
-printf(&quot;%p\n&quot;,a+1);       输出：0x7ff7b3a6a370
-
-printf(&quot;%p\n&quot;,&amp;a[0]+1); 输出：0x7ff7b3a6a370
-
-printf(&quot;%p\n&quot;,&amp;a+1);     输出：0x7ff7b3a6a378
-
-可以发现，数组名a、数组名首元素a[0]的地址、数组名a的地址三者的值是一样的，因此变量a存储的地址值即一个指针常量
-
-但是从进行增1运算后的结果来看，a和a[0]都是增加4个字节的长度，但是&amp;a增1后直接位移了12个字节，也就是整个数组的
-
-总长度，说明&amp;运算符和数组名结合后a并不能视作为指针类型，变量类型(符号表中的种属?)表示的是数组类型)
-</code></pre>
+<p>printf(&quot;%p\n&quot;,a);           输出：0x7ff7b3a6a36c</p>
+<p>printf(&quot;%p\n&quot;,&amp;a[0]);     输出：0x7ff7b3a6a36c</p>
+<p>printf(&quot;%p\n&quot;,&amp;a);         输出：0x7ff7b3a6a36c</p>
+<p>printf(&quot;%p\n&quot;,a+1);       输出：0x7ff7b3a6a370</p>
+<p>printf(&quot;%p\n&quot;,&amp;a[0]+1); 输出：0x7ff7b3a6a370</p>
+<p>printf(&quot;%p\n&quot;,&amp;a+1);     输出：0x7ff7b3a6a378</p>
+<p>可以发现，数组名a、数组名首元素a[0]的地址、数组名a的地址三者的值是一样的，因此变量a存储的地址值即一个指针常量</p>
+<p>但是从进行增1运算后的结果来看，a和a[0]都是增加4个字节的长度，但是&amp;a增1后直接位移了12个字节，也就是整个数组的</p>
+<p>总长度，说明&amp;运算符和数组名结合后a并不能视作为指针类型，变量类型(符号表中的种属?)表示的是数组类型)</p>
 <p>类似地，类型为“返回T的函数”的表达式被转换为类型“指向返回T的函数的指针”，除非此表达式被用作&amp;运算符的运算分量</p>
 <p>一个指针可以转换为同类型的另一个指针，但增加或删除了指针所处的对象类型的限定符(比如volatile等)的情况有些特殊:</p>
 <p>如果增加了限定符则新指针与原指针等价，不同的是增加了限定符带来的限制</p>
