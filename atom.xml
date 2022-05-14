@@ -6,7 +6,7 @@
   <link href="http://hetumessi.github.io/atom.xml" rel="self"/>
   
   <link href="http://hetumessi.github.io/"/>
-  <updated>2022-05-14T06:39:38.801Z</updated>
+  <updated>2022-05-14T18:15:03.890Z</updated>
   <id>http://hetumessi.github.io/</id>
   
   <author>
@@ -17,11 +17,37 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>【转】命令行界面(CLI)、终端(Terminal)、Shell、TTY的区别</title>
+    <link href="http://hetumessi.github.io/2022/05/15/shell%E3%80%81terminal/"/>
+    <id>http://hetumessi.github.io/2022/05/15/shell%E3%80%81terminal/</id>
+    <published>2022-05-14T16:26:10.857Z</published>
+    <updated>2022-05-14T18:15:03.890Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;虽然这个话题已是老生常谈，搜索一下应该也能找到大把的相关文章。不过难得提到了这方面，就趁此机会把我的理解写下来，一来看看我是不是真正理解了，二来看看我能不能把它们之间的区别讲得更加简明易懂。&lt;/p&gt;
+&lt;h1 id=&quot;太长不看&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="杂记" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/"/>
+    
+    
+    <category term="计算机小常识" scheme="http://hetumessi.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%B0%8F%E5%B8%B8%E8%AF%86/"/>
+    
+  </entry>
+  
+  <entry>
     <title>makefile编写</title>
     <link href="http://hetumessi.github.io/2022/05/14/makefile%E8%BF%9B%E9%98%B6/"/>
     <id>http://hetumessi.github.io/2022/05/14/makefile%E8%BF%9B%E9%98%B6/</id>
     <published>2022-05-13T17:05:05.702Z</published>
-    <updated>2022-05-14T06:39:38.801Z</updated>
+    <updated>2022-05-14T18:26:28.652Z</updated>
     
     
       
@@ -460,7 +486,7 @@
     <link href="http://hetumessi.github.io/2022/05/10/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/"/>
     <id>http://hetumessi.github.io/2022/05/10/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/</id>
     <published>2022-05-09T16:14:33.410Z</published>
-    <updated>2022-05-14T09:22:11.812Z</updated>
+    <updated>2022-05-14T10:54:20.478Z</updated>
     
     
       
@@ -525,33 +551,6 @@
         
         
     <summary type="html">&lt;h1 id=&quot;各种排序&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#各种排序&quot;&gt;&lt;/a&gt;</summary>
-        
-      
-    
-    
-    
-    <category term="数据结构实例运用" scheme="http://hetumessi.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E4%BE%8B%E8%BF%90%E7%94%A8/"/>
-    
-    
-    <category term="数据结构与算法" scheme="http://hetumessi.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
-    
-    <category term="PTA" scheme="http://hetumessi.github.io/tags/PTA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>6.词频统计、电话聊天狂人、QQ帐户的申请与登陆</title>
-    <link href="http://hetumessi.github.io/2022/05/08/%E8%81%8A%E5%A4%A9%E7%8B%82%E4%BA%BA/"/>
-    <id>http://hetumessi.github.io/2022/05/08/%E8%81%8A%E5%A4%A9%E7%8B%82%E4%BA%BA/</id>
-    <published>2022-05-08T10:59:34.942Z</published>
-    <updated>2022-05-12T09:25:57.810Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;词频统计&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#词频统计&quot;&gt;&lt;/a&gt;</summary>
         
       
     
