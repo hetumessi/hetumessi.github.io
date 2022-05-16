@@ -6,7 +6,7 @@
   <link href="http://hetumessi.github.io/atom.xml" rel="self"/>
   
   <link href="http://hetumessi.github.io/"/>
-  <updated>2022-05-14T18:15:03.890Z</updated>
+  <updated>2022-05-16T04:48:16.559Z</updated>
   <id>http://hetumessi.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://hetumessi.github.io/2022/05/15/shell%E3%80%81terminal/"/>
     <id>http://hetumessi.github.io/2022/05/15/shell%E3%80%81terminal/</id>
     <published>2022-05-14T16:26:10.857Z</published>
-    <updated>2022-05-14T18:15:03.890Z</updated>
+    <updated>2022-05-16T04:48:16.559Z</updated>
     
     
       
@@ -38,7 +38,7 @@
     <category term="杂记" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/"/>
     
     
-    <category term="计算机小常识" scheme="http://hetumessi.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%B0%8F%E5%B8%B8%E8%AF%86/"/>
+    <category term="计算机小知识" scheme="http://hetumessi.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%B0%8F%E7%9F%A5%E8%AF%86/"/>
     
   </entry>
   
@@ -46,16 +46,16 @@
     <title>makefile编写</title>
     <link href="http://hetumessi.github.io/2022/05/14/makefile%E8%BF%9B%E9%98%B6/"/>
     <id>http://hetumessi.github.io/2022/05/14/makefile%E8%BF%9B%E9%98%B6/</id>
-    <published>2022-05-13T17:05:05.702Z</published>
-    <updated>2022-05-14T18:26:28.652Z</updated>
+    <published>2022-05-13T17:05:05.000Z</published>
+    <updated>2022-05-16T04:48:49.810Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;p&gt;&lt;strong&gt;注：本文内容均是基于GNU make的标准&lt;/strong&gt;&lt;/p&gt;
-&lt;h1 id=&quot;makefile规则&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#makefile规则&quot;&gt;&lt;/a&gt;</summary>
+    <summary type="html">&lt;p&gt;&lt;strong&gt;注：本文内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&quot;makefile规则&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot;</summary>
         
       
     
@@ -66,9 +66,9 @@
     
     <category term="工具使用" scheme="http://hetumessi.github.io/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"/>
     
-    <category term="编译" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91/"/>
-    
     <category term="makefile" scheme="http://hetumessi.github.io/tags/makefile/"/>
+    
+    <category term="编译" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91/"/>
     
   </entry>
   
@@ -456,7 +456,7 @@
     <link href="http://hetumessi.github.io/2022/05/10/qt%E4%BB%8B%E7%BB%8D/"/>
     <id>http://hetumessi.github.io/2022/05/10/qt%E4%BB%8B%E7%BB%8D/</id>
     <published>2022-05-10T13:37:52.830Z</published>
-    <updated>2022-05-12T10:35:04.077Z</updated>
+    <updated>2022-05-16T04:46:36.102Z</updated>
     
     
       
@@ -513,7 +513,7 @@
     <link href="http://hetumessi.github.io/2022/05/09/makefile/"/>
     <id>http://hetumessi.github.io/2022/05/09/makefile/</id>
     <published>2022-05-09T03:36:34.395Z</published>
-    <updated>2022-05-14T02:53:38.474Z</updated>
+    <updated>2022-05-16T04:51:58.959Z</updated>
     
     
       
@@ -532,9 +532,9 @@
     
     <category term="工具使用" scheme="http://hetumessi.github.io/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"/>
     
-    <category term="编译" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91/"/>
-    
     <category term="makefile" scheme="http://hetumessi.github.io/tags/makefile/"/>
+    
+    <category term="编译" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91/"/>
     
   </entry>
   
