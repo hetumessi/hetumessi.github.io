@@ -6,7 +6,7 @@
   <link href="http://hetumessi.github.io/atom.xml" rel="self"/>
   
   <link href="http://hetumessi.github.io/"/>
-  <updated>2022-05-16T04:48:16.559Z</updated>
+  <updated>2022-05-16T16:26:22.546Z</updated>
   <id>http://hetumessi.github.io/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>makefile编写(2)：makefile的变量</title>
+    <link href="http://hetumessi.github.io/2022/05/16/makefile%E7%BC%96%E5%86%99/"/>
+    <id>http://hetumessi.github.io/2022/05/16/makefile%E7%BC%96%E5%86%99/</id>
+    <published>2022-05-16T08:53:33.554Z</published>
+    <updated>2022-05-16T16:26:22.546Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;strong&gt;注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序&lt;/strong&gt;&lt;/p&gt;
+&lt;a href=&quot;/2022/05/14/makefile%E8%BF%9B%E9%98%B6/&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="应用程序开发" scheme="http://hetumessi.github.io/categories/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/"/>
+    
+    
+    <category term="工具使用" scheme="http://hetumessi.github.io/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"/>
+    
+    <category term="makefile" scheme="http://hetumessi.github.io/tags/makefile/"/>
+    
+    <category term="编译原理实例" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AE%9E%E4%BE%8B/"/>
+    
+  </entry>
   
   <entry>
     <title>【转】命令行界面(CLI)、终端(Terminal)、Shell、TTY的区别</title>
@@ -43,19 +73,19 @@
   </entry>
   
   <entry>
-    <title>makefile编写</title>
+    <title>makefile编写(1)：makefile的规则</title>
     <link href="http://hetumessi.github.io/2022/05/14/makefile%E8%BF%9B%E9%98%B6/"/>
     <id>http://hetumessi.github.io/2022/05/14/makefile%E8%BF%9B%E9%98%B6/</id>
     <published>2022-05-13T17:05:05.000Z</published>
-    <updated>2022-05-16T04:48:49.810Z</updated>
+    <updated>2022-05-16T16:04:23.416Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;p&gt;&lt;strong&gt;注：本文内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序&lt;/strong&gt;&lt;/p&gt;
-&lt;h1 id=&quot;makefile规则&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot;</summary>
+    <summary type="html">&lt;p&gt;&lt;strong&gt;注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序&lt;/strong&gt;&lt;/p&gt;
+&lt;a href=&quot;/2022/05/14/makefile%E8%BF%9B%E9%98%B6/&quot;</summary>
         
       
     
@@ -68,7 +98,7 @@
     
     <category term="makefile" scheme="http://hetumessi.github.io/tags/makefile/"/>
     
-    <category term="编译" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91/"/>
+    <category term="编译原理实例" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AE%9E%E4%BE%8B/"/>
     
   </entry>
   
@@ -486,7 +516,7 @@
     <link href="http://hetumessi.github.io/2022/05/10/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/"/>
     <id>http://hetumessi.github.io/2022/05/10/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/</id>
     <published>2022-05-09T16:14:33.410Z</published>
-    <updated>2022-05-14T10:54:20.478Z</updated>
+    <updated>2022-05-16T10:26:39.247Z</updated>
     
     
       
@@ -504,7 +534,7 @@
     
     <category term="工具使用" scheme="http://hetumessi.github.io/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"/>
     
-    <category term="编译" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91/"/>
+    <category term="编译原理实例" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AE%9E%E4%BE%8B/"/>
     
   </entry>
   
@@ -513,7 +543,7 @@
     <link href="http://hetumessi.github.io/2022/05/09/makefile/"/>
     <id>http://hetumessi.github.io/2022/05/09/makefile/</id>
     <published>2022-05-09T03:36:34.395Z</published>
-    <updated>2022-05-16T04:51:58.959Z</updated>
+    <updated>2022-05-16T12:38:42.127Z</updated>
     
     
       
@@ -534,34 +564,7 @@
     
     <category term="makefile" scheme="http://hetumessi.github.io/tags/makefile/"/>
     
-    <category term="编译" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>7.简单排序算法、统计工龄</title>
-    <link href="http://hetumessi.github.io/2022/05/08/%E7%BB%9F%E8%AE%A1%E5%B7%A5%E9%BE%84/"/>
-    <id>http://hetumessi.github.io/2022/05/08/%E7%BB%9F%E8%AE%A1%E5%B7%A5%E9%BE%84/</id>
-    <published>2022-05-08T11:07:11.627Z</published>
-    <updated>2022-05-12T09:14:43.222Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;各种排序&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#各种排序&quot;&gt;&lt;/a&gt;</summary>
-        
-      
-    
-    
-    
-    <category term="数据结构实例运用" scheme="http://hetumessi.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E4%BE%8B%E8%BF%90%E7%94%A8/"/>
-    
-    
-    <category term="数据结构与算法" scheme="http://hetumessi.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
-    
-    <category term="PTA" scheme="http://hetumessi.github.io/tags/PTA/"/>
+    <category term="编译原理实例" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AE%9E%E4%BE%8B/"/>
     
   </entry>
   
