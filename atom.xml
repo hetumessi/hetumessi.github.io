@@ -6,7 +6,7 @@
   <link href="http://hetumessi.github.io/atom.xml" rel="self"/>
   
   <link href="http://hetumessi.github.io/"/>
-  <updated>2022-05-17T16:25:47.343Z</updated>
+  <updated>2022-05-17T16:29:47.753Z</updated>
   <id>http://hetumessi.github.io/</id>
   
   <author>
@@ -17,26 +17,29 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title></title>
+    <title>【转】PowerPC、X86和ARM架构区别</title>
     <link href="http://hetumessi.github.io/2022/05/18/powerpc%E3%80%81x86%E3%80%81arm/"/>
     <id>http://hetumessi.github.io/2022/05/18/powerpc%E3%80%81x86%E3%80%81arm/</id>
     <published>2022-05-17T16:25:36.305Z</published>
-    <updated>2022-05-17T16:25:47.343Z</updated>
+    <updated>2022-05-17T16:29:47.753Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;p&gt;PowerPC、X86、ARM&lt;br&gt;
-在嵌入式领域，存在着三种处理器通用的架构，PowerPC、X86、ARM，本文将对这三种架构进行对比分析。&lt;br&gt;
+    <summary type="html">&lt;p&gt;在嵌入式领域，存在着三种处理器通用的架构，PowerPC、X86、ARM，本文将对这三种架构进行对比分析。&lt;br&gt;
 1、PowerPC的由来&lt;br&gt;
-1975 年, IMB 公司801</summary>
+1975 年, IMB 公司801 小型计算机工程在RISC机体系结构方面做了许多开创性试验。801</summary>
         
       
     
     
     
+    <category term="杂记" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/"/>
+    
+    
+    <category term="计算机小知识" scheme="http://hetumessi.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%B0%8F%E7%9F%A5%E8%AF%86/"/>
     
   </entry>
   

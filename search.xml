@@ -44,10 +44,9 @@ Mash Kyrielight   マシュ・キリエライト</center>
       </tags>
   </entry>
   <entry>
-    <title></title>
+    <title>【转】PowerPC、X86和ARM架构区别</title>
     <url>/2022/05/18/powerpc%E3%80%81x86%E3%80%81arm/</url>
-    <content><![CDATA[<p>PowerPC、X86、ARM<br>
-在嵌入式领域，存在着三种处理器通用的架构，PowerPC、X86、ARM，本文将对这三种架构进行对比分析。<br>
+    <content><![CDATA[<p>在嵌入式领域，存在着三种处理器通用的架构，PowerPC、X86、ARM，本文将对这三种架构进行对比分析。<br>
 1、PowerPC的由来<br>
 1975 年, IMB 公司801 小型计算机工程在RISC机体系结构方面做了许多开创性试验。801 计算机与贝克莱大学的RISC处理器引起了RISC机革新运动, 然而801 计算机仅仅是一个用来演示某种概念的原型机。<br>
 801 工程的成功致使IBM 公司开发一种商业的RISC工作站产品, 这就是RT PC。RT PC 于1986 年诞生, 它采用了801 的体系结构概念, 成为一个实际产品。RT PC未获得商业成功, 它有许多性能相当或更好的竞争产品。1990 年IBM 公司在总结了801 和RT PC 两产品经验教训的基础上生产了第3 个产品即IBM RISC SYSTEM/6000 。它是一个类似RISC 的超标量计算机, 市场定位是高性能工作站。此产品推介后不久, IBM公司开始把这种计算机称为Power 结构。<br>
@@ -146,6 +145,12 @@ PowerPC的使用范围除了苹果电脑之外，其他厂商使用的比例极�
 2. 软件：编程语言方面我没有发言权，但相信intel架构的普及率降低了软件的开发门槛，而且现在的app比PPC时代多的多。<br>
 3. 市场：对市场受众而言intel平台的apple更具有亲和力，兼容性好、用不惯OS X分分钟就能装Windows，消费者可以很放心地入手，市场占有率也由此大幅度提升。</p>
 ]]></content>
+      <categories>
+        <category>杂记</category>
+      </categories>
+      <tags>
+        <tag>计算机小知识</tag>
+      </tags>
   </entry>
   <entry>
     <title>【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？</title>
