@@ -6,7 +6,7 @@
   <link href="http://hetumessi.github.io/atom.xml" rel="self"/>
   
   <link href="http://hetumessi.github.io/"/>
-  <updated>2022-05-16T16:26:22.546Z</updated>
+  <updated>2022-05-16T17:18:52.596Z</updated>
   <id>http://hetumessi.github.io/</id>
   
   <author>
@@ -17,11 +17,37 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？</title>
+    <link href="http://hetumessi.github.io/2022/05/17/windows%20shell/"/>
+    <id>http://hetumessi.github.io/2022/05/17/windows%20shell/</id>
+    <published>2022-05-16T16:29:30.424Z</published>
+    <updated>2022-05-16T17:18:52.596Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;转自&lt;a href=&quot;https://www.zhihu.com/question/310462143/answer/584141216&quot;&gt;知乎：韩朴宇&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&quot;explorerexe&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="杂记" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/"/>
+    
+    
+    <category term="计算机小知识" scheme="http://hetumessi.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%B0%8F%E7%9F%A5%E8%AF%86/"/>
+    
+  </entry>
+  
+  <entry>
     <title>makefile编写(2)：makefile的变量</title>
     <link href="http://hetumessi.github.io/2022/05/16/makefile%E7%BC%96%E5%86%99/"/>
     <id>http://hetumessi.github.io/2022/05/16/makefile%E7%BC%96%E5%86%99/</id>
     <published>2022-05-16T08:53:33.554Z</published>
-    <updated>2022-05-16T16:26:22.546Z</updated>
+    <updated>2022-05-17T02:08:33.789Z</updated>
     
     
       
@@ -533,36 +559,6 @@
     
     
     <category term="工具使用" scheme="http://hetumessi.github.io/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"/>
-    
-    <category term="编译原理实例" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AE%9E%E4%BE%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>makefile介绍</title>
-    <link href="http://hetumessi.github.io/2022/05/09/makefile/"/>
-    <id>http://hetumessi.github.io/2022/05/09/makefile/</id>
-    <published>2022-05-09T03:36:34.395Z</published>
-    <updated>2022-05-16T12:38:42.127Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;makefile&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#makefile&quot;&gt;&lt;/a&gt; makefile&lt;/h1&gt;
-&lt;h2 id=&quot;为什么使用makefile&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="应用程序开发" scheme="http://hetumessi.github.io/categories/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/"/>
-    
-    
-    <category term="工具使用" scheme="http://hetumessi.github.io/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"/>
-    
-    <category term="makefile" scheme="http://hetumessi.github.io/tags/makefile/"/>
     
     <category term="编译原理实例" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AE%9E%E4%BE%8B/"/>
     

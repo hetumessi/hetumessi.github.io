@@ -44,6 +44,74 @@ Mash Kyrielight   マシュ・キリエライト</center>
       </tags>
   </entry>
   <entry>
+    <title>【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？</title>
+    <url>/2022/05/17/windows%20shell/</url>
+    <content><![CDATA[<p>转自<a href="https://www.zhihu.com/question/310462143/answer/584141216">知乎：韩朴宇</a></p>
+<h1 id="explorerexe"><a class="markdownIt-Anchor" href="#explorerexe"></a> explorer.exe</h1>
+<p>是Windows95到Windows Me，Windows NT4到Windows10的默认shell(代替了Windows3.2的程序管理器)，同时也是默认的文件管理器(代替了<a href="https://github.com/Microsoft/winfile">WinFile</a>)。</p>
+<p>explorer负责了任务栏，开始菜单，桌面的显示，同时也是文件管理器，功能复杂，实现起来更加复杂(尤其是Windows10，包含了很多UWP组件，稳定性差)。explorer提供了接口可以被第三方DLL注入，因此更会降低稳定性，一旦explorer主进程崩溃，桌面和任务栏就会消失(一般会自动重启)也因为explorer提供了用户打开其他程序的主要方式(开始菜单/固定到任务栏/桌面)，Windows10的任务管理器定位到explorer.exe时结束进程会变成重启进程。</p>
+<p>shell是操作系统提供给用户的交互程序，分为图形shell和命令行shell两种。shell直译就是壳，即内核外层的东西。<br></p>
+<img src="https://pic2.zhimg.com/50/v2-9c6232de3a7146f09f83ebb8e662340c_720w.jpg?source=1940ef5c">
+￼
+<center>https://zh.wikipedia.org/wiki/Shell</center><br>
+<p>常见的命令行shell有Windows的cmd.exe，powershell，Unix下的Bash，Zsh，Fish。Windows Server，Windows PE默认使用cmd作为shell，开机后只有一个命令行的窗口。命令行shell没有多任务能力，一次只能显示一个文本程序，现在很少有人只使用命令行操作计算机。</p>
+<p>桌面系统的图形shell则比较复杂，可以分为多个组件：桌面，任务栏/dock，开始菜单/Launcher，通知区域等。桌面经常由文件管理器负责，例如Windows的explorer，macOS的finder，通常显示/Users/&lt;User&gt;/Desktop下的文件，这些图标的操作方式一般和文件管理器内部没有差别。</p>
+<p>Windows的任务栏由explorer负责，而macOS的dock程序坞是独立的程序/System/Library/CoreServices/Dock.app</p>
+<p>Windows的开始菜单在Windows7及之前是explorer的一部分。Windows8中“开始”改成了类似移动端的开始屏幕，Windows10改成了独立的UWP，但是和explorer仍有密切的关系，比如开始菜单卡死了可以重启explorer解决。macOS的Luncher启动台是独立的程序/Applications/Launchpad.app。</p>
+<p>Windows的通知区域是任务栏的一部分，而macOS则是独立在顶栏的右半部分。</p>
+<p>Explorer包含了很多的功能，而且可以通过各种手段插入插件，因此稳定性不如macOS这种分离式设计。当然，我仍然觉得Windows的多任务管理比macOS直观。<br>
+移动操作系统的用户界面相比更加简化，只有启动器/主屏幕/开始屏幕（上香）和多任务界面。</p>
+<h1 id="历史内容"><a class="markdownIt-Anchor" href="#历史内容"></a> 历史内容</h1>
+<p>观察早期的Windows可以看到explorer是怎么成为shell的<br></p>
+<img src="https://pic3.zhimg.com/50/v2-b70bacb42e43ff8aa02d47cb550d0df0_720w.jpg?source=1940ef5c">
+￼
+<center>Windows 2的画图，后面的窗口是shell“MS-DOS可执行程序”，具有文件管理功能，启动程序需要双击exe，左下角的是最小化的“写字板”</center><br>
+<img src="https://pic1.zhimg.com/50/v2-6794323abfe4daa11544936f23fad980_720w.jpg?source=1940ef5c">
+￼
+<center>“程序管理器”是Windows3.x，WindowsNT3.x的shell，左下方的图标是最小化的文件管理器，相比于Windows2，程序管理器具有快捷方式的功能，把安装好的程序放到了程序组中，而不必找到exe文件双击执行</center><br>
+<img src="https://pica.zhimg.com/50/v2-09183deb0373cfc44bcde96e0f633a3f_720w.jpg?source=1940ef5c">
+￼
+<center>Windows3的“文件管理器”，和“程序管理器”不是一个程序</center><br>
+<img src="https://pica.zhimg.com/50/v2-b8b1a2a85f09dd2839999ab33a3e11f0_720w.jpg?source=1940ef5c">
+￼
+<center>Windows95，左上角是点击“我的电脑”打开的资源管理器，右面的是开始菜单里的Windows exploring，下面的是Windows3时代的文件管理器（winfile，现已开源）</center><br>
+<p>Windows95虽然是16/32位混合系统，但是开始菜单/任务栏/桌面/资源管理器4功能于一体的explorer一直延续到Windows10.<br>
+Explorer.exe早在Windows 95（Chicago）开发早期就引入了</p>
+<img src="https://pica.zhimg.com/50/v2-573436a68d70b24e0f2b9cc7470bdcf1_720w.jpg?source=1940ef5c">
+￼
+<center>Windows Chicago 4.0.58s，此时explorer叫cabinet，开始按钮有3个，任务栏没有完工，时间1993-08-09</center><br>
+<img src="https://pic2.zhimg.com/50/v2-dfea339b0d27f18fe847849acb77c61d_720w.jpg?source=1940ef5c">
+￼
+<center>右上角的关闭按钮是后来加入的，早期Windows程序使用双击左上角的-退出</center><br>
+<img src="https://pic3.zhimg.com/50/v2-dceadcf9d9a9a94f96815a357452542d_720w.jpg?source=1940ef5c">
+￼
+<center>关于</center><br>
+<img src="https://pica.zhimg.com/50/v2-5e996cbe7c78044260d6250d621cc34c_720w.jpg?source=1940ef5c">
+￼
+<center>Windows Chicago 4.00.81基本完工，时间1994-01-19</center><br>
+<p>这是ReactOS的explorer的源代码，和Windows Server2003很接近<br>
+<a href="https://github.com/reactos/reactos/tree/master/base/shell/explorer">reactos/reactos</a><br></p>
+<img src="https://pic1.zhimg.com/50/v2-305e5730558fd4389160f990ef19766c_720w.jpg?source=1940ef5c">
+￼
+<center>在桌面上，macOS的菜单栏显示finder的菜单</center><br>
+<img src="https://pic1.zhimg.com/50/v2-0e613ac20e55bab50fa72f1116476e54_720w.jpg?source=1940ef5c">
+￼
+<center>3个app</center><br>
+<p>使用的模拟器：<br>
+windows2/3 <a href="https://www.pcjs.org/">The Original IBM PC in a Web Browser</a><br>
+Windows95 <a href="https://archive.org/details/win95_in_dosbox">win95</a><br>
+Windows Chicago的更多信息<br>
+<a href="https://www.thecollectionbook.info/windows/95">The Collection Book</a><br>
+<a href="https://betawiki.net/wiki/Windows_95">Windows 95 - BetaWiki</a></p>
+]]></content>
+      <categories>
+        <category>杂记</category>
+      </categories>
+      <tags>
+        <tag>计算机小知识</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>makefile编写(2)：makefile的变量</title>
     <url>/2022/05/16/makefile%E7%BC%96%E5%86%99/</url>
     <content><![CDATA[<p><strong>注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序</strong></p>
@@ -100,38 +168,38 @@ all:
 A = $(B)<br>
 B = $(A)</p>
 </blockquote>
-<p>这相当于形成了循环依赖，make将会报错的。<br>
-此外就是如果在变量中使用函数时，使用=赋值这种方式效率很低，更糟糕的是当使用两个make函数wildcard和shell时，这样可能发生不可预知的错误。因为你不会知道这两个函数会<br>
-被调用多少次。<br>
-为了避免上面的这种方法，我们可以使用make中的另一种用变量来定义变量的方法。这种方法使用的是:=操作符，如：</p>
-<pre class="line-numbers language-none"><code class="language-none">x :&#x3D; foo
-y :&#x3D; $(x) bar
-x :&#x3D; later
-# 其等价于：
-y :&#x3D; foo bar
-x :&#x3D; later<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>值得一提的是，这种方法，前面的变量不能使用后面的变量，只能使用前面已定义好了的变量。如果是这样：</p>
-<pre class="line-numbers language-none"><code class="language-none">y :&#x3D; $(x) bar
-x :&#x3D; foo<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>那么，y的值是“bar”，而不是“foo bar”。<br>
-上面都是一些比较简单的变量使用了，让我们来看一个复杂的例子，其中包括了make的函数、条件表达式和一个系统变量“MAKELEVEL”的使用：</p>
-<pre class="line-numbers language-none"><code class="language-none">ifeq (0,$&#123;MAKELEVEL&#125;)
-cur-dir :&#x3D; $(shell pwd)
-whoami :&#x3D; $(shell whoami)
-host-type :&#x3D; $(shell arch)
-MAKE :&#x3D; $&#123;MAKE&#125; host-type&#x3D;$&#123;host-type&#125; whoami&#x3D;$&#123;whoami&#125;
-endif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>关于条件表达式和函数，我们在后面再说，对于系统变量“MAKELEVEL”，其意思是，如果我们的make有一个嵌套执行的动作<br>
-（参见前面的“嵌套使用make”），那么，这个变量会记录了我们的当前Makefile的调用层数。<br>
-下面再介绍两个定义变量时我们需要知道的，请先看一个例子，如果我们要定义一个变量，其值是一个空格，那么我们可以这样来：</p>
-<pre class="line-numbers language-none"><code class="language-none">nullstring :&#x3D;
-space :&#x3D; $(nullstring) # end of the line<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<p>nullstring 是一个Empty变量，其中什么也没有，而我们的space的值是一个空格。因为在操作符的右边是很难描述一个空格的，这里采用的技术很<br>
-管用，先用一个 Empty变量来标明变量的值开始了，而后面采用“#”注释符来表示变量定义的终止，这样，我们可以定义出其值是一个空格的变量。<br>
-请注意这里关于“#”的使用，注释符“#”的这种特性值得我们注意，如果我们这样定义一个变量：</p>
-<pre class="line-numbers language-none"><code class="language-none">dir :&#x3D; &#x2F;foo&#x2F;bar # directory to put the frobs in<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>dir这个变量的值是“/foo/bar”，后面还跟了4个空格，如果我们这样使用这样变量来指定别的目录——“$(dir)/file”那么就完蛋了。<br>
-还有一个比较有用的操作符是“?=”，先看示例：</p>
+<p>这相当于形成了循环依赖，make将会报错。<br>
+另外如果在变量中使用函数时，使用=赋值这种方式效率很低，并且可能发生不可预知的错误，因为这两个函数调用会因为递归调用而不可控。因为其特性，=赋值在makefile中又被称为递归赋值，赋值语句可能影响多个变量，所有定值变量相关的其他定值变量都受影响。<br>
+为了避免上面的这些情况，可以使用make中的:=操作符来=定义变量，使用方法如：</p>
+<blockquote>
+<p>x := foo<br>
+y := $(x) bar<br>
+x := later</p>
+</blockquote>
+<p>其等价于：</p>
+<blockquote>
+<p>y := foo bar<br>
+x := later</p>
+</blockquote>
+<p>如果是这样：</p>
+<blockquote>
+<p>y := $(x) bar<br>
+x := foo</p>
+</blockquote>
+<p>此时y的值是bar，而不是foo bar。<br>
+:=与c/c++等语言中常规理解的赋值方式是一致的，只对赋值语句之后的变量有效。</p>
+<p>特别的，如果要定义一个空字符变量那么可以这样：</p>
+<blockquote>
+<p>nullstring :=<br>
+space := $(nullstring) # end of the line</p>
+</blockquote>
+<p>nullstring是一个空变量，其中什么也没有，而space值是一个空格。因为在操作符的右边是很难描述一个空格的(make会默认删除)，因此先用一个空变量来标明变量的值，而后面采用#注释符来表示变量定义的终止，这样就可以定义出值是一个空格的变量。注意这里关于#的使用，如果这样定义一个变量：</p>
+<blockquote>
+<p>dir := /foo/bar    # directory to put the frobs in</p>
+</blockquote>
+<p>dir这个变量的值是/foo/bar后面还跟个空格，如果使用这样的变量$(dir)/file来指定目录那么是错误的，因此在赋值语句时一定不要在同行写注释时加上空格(除非想在变量值中增加空字符)。</p>
+<p>还有两种常用的赋值操作符是?=和+=。?=表示条件赋值，如果变量未定义则使用符号中的值定义变量，如果该变量已经赋值则该赋值语句无效。+=表示追加赋值原变量，用<strong>空格隔开</strong>的方式追加一个新值。</p>
+<p>，先看示例：</p>
 <pre class="line-numbers language-none"><code class="language-none">FOO ?&#x3D; bar<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>其含义是，如果FOO没有被定义过，那么变量FOO的值就是“bar”，如果FOO先前被定义过，那么这条语将什么也不做，其等价于：</p>
 <pre class="line-numbers language-none"><code class="language-none">ifeq ($(origin FOO), undefined)
