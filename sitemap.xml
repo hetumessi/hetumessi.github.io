@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://hetumessi.github.io/2022/05/18/powerpc%E3%80%81x86%E3%80%81arm/</loc>
+    
+    <lastmod>2022-05-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://hetumessi.github.io/2022/05/16/makefile%E7%BC%96%E5%86%99/</loc>
     
     <lastmod>2022-05-17</lastmod>
