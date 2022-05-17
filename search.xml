@@ -115,6 +115,7 @@ Windows Chicago的更多信息<br>
     <title>makefile编写(2)：makefile的变量</title>
     <url>/2022/05/16/makefile%E7%BC%96%E5%86%99/</url>
     <content><![CDATA[<p><strong>注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序</strong></p>
+<a href="/2022/05/09/makefile/" title="makefile介绍">makefile介绍</a><br>
 <a href="/2022/05/14/makefile%E8%BF%9B%E9%98%B6/" title="makefile编写(1)：makefile的规则">makefile编写(1)：makefile的规则</a><br>
 <a href="/2022/05/16/makefile%E7%BC%96%E5%86%99/" title="makefile编写(2)：makefile的变量">makefile编写(2)：makefile的变量</a>
 <h1 id="makefile变量"><a class="markdownIt-Anchor" href="#makefile变量"></a> makefile变量</h1>
@@ -154,57 +155,143 @@ prog.o : prog.c
 </ul>
 <p>不过为了更加安全地使用，一般还是推荐一律给变量加括号。<br>
 另外还存在的一种特殊情况是在命令中使用变量，是完全可以按照Shell命令的形式写的。只不过由于makefile中符号$有特殊的含义，不能直接按照Shell脚本的格式写，否则默认是在按照makefile的形式引用变量。此时需要使用两个连续的$$“转义”符号$，这样变量就会被解析为Shell脚本的$xx形式。(同理，在规则中需要使用符号$的地方，都需要使用两个连续的$$)</p>
-<h2 id="makefile变量嵌套引用"><a class="markdownIt-Anchor" href="#makefile变量嵌套引用"></a> makefile变量嵌套引用</h2>
-<p>在定义变量的值时可以使用其它变量来构造变量的值，在makefile中支持两种方式用变量定义变量。<br>
-第一种方式是简单的使用=号，在=左侧是变量，右侧是变量的引用，<strong>右侧变量可以定义在文件的任何一处</strong>，也就是说=右侧不一定非要是已定义的值，也可以使用后面定义的值，如：</p>
+<h2 id="makefile变量赋值"><a class="markdownIt-Anchor" href="#makefile变量赋值"></a> makefile变量赋值</h2>
+<p>makefile中支持四种变量基本赋值方式。第一种方式是简单的使用=号，可以用一个或多个字串为变量赋值，也可以用其他<strong>变量的值</strong>(注意此处先不讨论引用的情况)赋值。注意，在这种情况下如果用变量值来定义变量的话，<strong>右侧变量可以定义在文件的任何一处</strong>，也就是说=右侧不一定非要是已定义的值，也可以用后面定义的值，如：</p>
 <pre class="line-numbers language-none"><code class="language-none">foo &#x3D; $(bar)
 bar &#x3D; $(ugh)
 ugh &#x3D; Huh?
 all:
     echo $(foo)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>执行make all将会打印出的变量$(foo)的值是Huh? ($(foo)的值是$(bar)，$(bar)的值是$(ugh)，$(ugh)的值是Huh?)，可见变量是可以使用后面的变量来定义的。这主要是因为脚本语言都是不需要提前声明变量的，尤其Shell的特点是只要变量第一次出现就<strong>默认创建</strong>，如果没有给出初始化值，则变量会被赋予一个<strong>空字符串</strong>。之后的过程与宏展开是类似的，make在读入所有变量以后，将变量最终的值(全局变量)展开在引用处。不过这也带来了一个严重的问题，那就是可能形成递归定义，如：</p>
-<blockquote>
-<p>CFLAGS = $(CFLAGS) -O<br>
-A = $(B)<br>
-B = $(A)</p>
-</blockquote>
-<p>这相当于形成了循环依赖，make将会报错。<br>
-另外如果在变量中使用函数时，使用=赋值这种方式效率很低，并且可能发生不可预知的错误，因为这两个函数调用会因为递归调用而不可控。因为其特性，=赋值在makefile中又被称为递归赋值，赋值语句可能影响多个变量，所有定值变量相关的其他定值变量都受影响。<br>
+<p>执行make all将会打印出的变量$(foo)的值是Huh? ($(foo)的值是$(bar)，$(bar)的值是$(ugh)，$(ugh)的值是Huh?)，可见变量是可以使用后面的变量来定义的。这主要是因为脚本语言都是不需要提前声明变量的，而Shell的特点是只要变量第一次出现就<strong>默认创建</strong>，如果没有给出初始化值则变量会被赋予一个<strong>空字符串</strong>。之后的过程与宏展开类似，make在读入所有变量以后，将变量最终的值展开在所有引用处(作用域内)。不过这也带来了一个严重的问题，那就是可能形成递归定义，如：</p>
+<pre class="line-numbers language-none"><code class="language-none">CFLAGS &#x3D; $(CFLAGS) -O
+A &#x3D; $(B)
+B &#x3D; $(A)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>这相当于形成了循环依赖，make将会报错。另外如果在变量中使用函数时，使用=赋值这种方式效率很低，并且可能发生不可预知的错误，因为这两个函数调用将会因为递归调用而不可控。因此，=赋值在makefile中又被称为递归赋值，赋值语句可能影响多个变量，所有定值变量相关的其他定值变量都受影响。<br>
 为了避免上面的这些情况，可以使用make中的:=操作符来=定义变量，使用方法如：</p>
-<blockquote>
-<p>x := foo<br>
-y := $(x) bar<br>
-x := later</p>
-</blockquote>
-<p>其等价于：</p>
-<blockquote>
-<p>y := foo bar<br>
-x := later</p>
-</blockquote>
-<p>如果是这样：</p>
-<blockquote>
-<p>y := $(x) bar<br>
-x := foo</p>
-</blockquote>
-<p>此时y的值是bar，而不是foo bar。<br>
-:=与c/c++等语言中常规理解的赋值方式是一致的，只对赋值语句之后的变量有效。</p>
-<p>特别的，如果要定义一个空字符变量那么可以这样：</p>
+<pre class="line-numbers language-none"><code class="language-none">x :&#x3D; foo
+y :&#x3D; $(x) bar
+x :&#x3D; later
+# 其等价于：
+# y :&#x3D; foo bar
+# x :&#x3D; later<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>反之，如果是这样的话：</p>
+<pre class="line-numbers language-none"><code class="language-none">y :&#x3D; $(x) bar
+x :&#x3D; foo<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>此时y的值是bar，而不是foo bar，也就是说并不是与最终的赋值相同(变量的值在程序中不同位置是不同的)。:=与c/c++等语言中常规理解的赋值方式是一致的，只对赋值语句之后的变量有效，这种赋值方式又称为覆盖赋值。<br>
+一个特别的用法是借助:=定义一个空字符变量：</p>
 <blockquote>
 <p>nullstring :=<br>
 space := $(nullstring) # end of the line</p>
 </blockquote>
-<p>nullstring是一个空变量，其中什么也没有，而space值是一个空格。因为在操作符的右边是很难描述一个空格的(make会默认删除)，因此先用一个空变量来标明变量的值，而后面采用#注释符来表示变量定义的终止，这样就可以定义出值是一个空格的变量。注意这里关于#的使用，如果这样定义一个变量：</p>
+<p>此例中nullstring是一个空变量，其中什么也没有，而space值是一个空格。因为在操作符的右边是很难描述一个空格的(make会默认删除)，因此先用一个空变量来标明变量的值，而后面采用#注释符来表示变量定义的终止，这样就可以定义出值是一个空格的变量(这是我自己测试的结果，推测可能是跟c语言注释一样被转换为一个空格了)。注意这里关于#的使用，如果这样定义一个变量：</p>
 <blockquote>
 <p>dir := /foo/bar    # directory to put the frobs in</p>
 </blockquote>
 <p>dir这个变量的值是/foo/bar后面还跟个空格，如果使用这样的变量$(dir)/file来指定目录那么是错误的，因此在赋值语句时一定不要在同行写注释时加上空格(除非想在变量值中增加空字符)。</p>
-<p>还有两种常用的赋值操作符是?=和+=。?=表示条件赋值，如果变量未定义则使用符号中的值定义变量，如果该变量已经赋值则该赋值语句无效。+=表示追加赋值原变量，用<strong>空格隔开</strong>的方式追加一个新值。</p>
-<p>，先看示例：</p>
-<pre class="line-numbers language-none"><code class="language-none">FOO ?&#x3D; bar<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>其含义是，如果FOO没有被定义过，那么变量FOO的值就是“bar”，如果FOO先前被定义过，那么这条语将什么也不做，其等价于：</p>
-<pre class="line-numbers language-none"><code class="language-none">ifeq ($(origin FOO), undefined)
-FOO &#x3D; bar
-endif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>此外还有两种常用的赋值操作符是?=和+=。?=表示条件赋值，如果变量未定义则使用符号中的值定义变量，如果该变量已经赋值(只要是显式的赋值就算，哪怕是空串)则该赋值语句无效，如：</p>
+<pre class="line-numbers language-none"><code class="language-none">FOO ?&#x3D; bar
+# 实际上这条语句等价于：
+# ifeq ($(origin FOO), undefined)
+# FOO &#x3D; bar
+# endif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>+=表示追加赋值，被赋值的变量用空格隔开的方式在原本值后面追加一个新值，因此：</p>
+<pre class="line-numbers language-none"><code class="language-none">objects &#x3D; main.o foo.o bar.o utils.o
+objects +&#x3D; another.o
+# 等价于
+# objects &#x3D; main.o foo.o bar.o utils.o another.o<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>需要注意的是：</p>
+<ul>
+<li>如果变量之前没有定义过，那么+=会自动变成=</li>
+<li>如果前面变量上次被=或?=赋值过，那么+=会以=的方式(可以由之后的值在此展开)在后面追加内容，并且+=的结果可以作为递归赋值的在所有引用处展开</li>
+<li>如果前面变量上次被:=赋值过，那么+=会以:=的方式(直接用变量当前值展开)在后面追加内容</li>
+</ul>
+<p>下面是一个例子：</p>
+<pre class="line-numbers language-none"><code class="language-none">variable1 :&#x3D; $(variable3)value1
+variable1 +&#x3D; $(variable3)
+variable2 &#x3D; $(variable3)
+variable2 ?&#x3D; another
+variable2 +&#x3D; $(variable3)
+variable3 +&#x3D; value3
+variable3 &#x3D; more
+variable3 +&#x3D; value3
+test:
+    @echo $(variable1)
+    @echo $(variable2)
+    @echo $(variable3)
+# 输出结果为：
+#value1
+more value3 more value3
+more value3
+# 因此这段makefile等价于：
+# variable1 :&#x3D; value1                   此时$(variable3)为空串
+# variable1 :&#x3D; value1                   +&#x3D;在此处追加一个空串$(variable3)
+# variable2 &#x3D; $(variable3) $(variable3) variable2上次是?&#x3D;赋值，所以variable2此时值为$(variable3)，+&#x3D;按递归的方式再追加一个$(variable3)
+# variable3 &#x3D; more                      variable3先被+&#x3D;赋值为value3，&#x3D;将之前+&#x3D;的值覆盖为more
+# variable3 &#x3D; mare value3               variable3在上一步的基础上追加一个value3<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="变量替换引用"><a class="markdownIt-Anchor" href="#变量替换引用"></a> 变量替换引用</h2>
+<p>在makefile中可以替换变量中共有的部分，其格式为：</p>
+<blockquote>
+<p>$(var:a=b) 或是 ${var:a=b}</p>
+</blockquote>
+<p>上面的意思是把变量var中所有以a字串<strong>结尾</strong>的a替换成b字串，这里“结尾”的意思是空格或是结束符，比如：</p>
+<blockquote>
+<p>foo := a.o b.o c.o<br>
+bar := $(foo:.o=.c)</p>
+</blockquote>
+<p>此例中先定义了一个$(foo)变量，第二行的意思是把$(foo)中所有以.o字串结尾全部替换成.c，所以$(bar)的值就是a.c b.c c.c。注意括号中的变量使用的是变量名而不是变量名的引用，变量名的后面要使用冒号和参数选项分开，表达式中间不能使用空格。另外一种常用的变量替换是与模式字符结合起来使用(形式与规则目标依赖关系中的静态模式相同)，如：</p>
+<blockquote>
+<p>foo := a.o b.o c.o<br>
+bar := $(foo:%.o=%.c)</p>
+</blockquote>
+<p>这个例子中加不加%都是一样的，不过加上%在这种替换中能起到的作用并不仅于此。实际中对变量值的操作往往不只是修改结尾字符，可能改变其中的多个不同位置的字符，比如：</p>
+<pre class="line-numbers language-none"><code class="language-none">foo:&#x3D;a123c a1234c a12345c
+obj1&#x3D;$(foo:a%c&#x3D;x%y)
+obj2&#x3D;$(foo:a%c&#x3D;x5%y)
+obj3&#x3D;$(foo:a1%c&#x3D;x%5y)
+obj4&#x3D;$(foo:a%5c&#x3D;x5%y)
+obj5&#x3D;$(foo:a%2%c&#x3D;x5%3%y)
+All:
+	@cat makefile  
+	@echo $(obj1)  # 输出x123y x1234y x12345y
+	@echo $(obj2)  # 输出x123y x1234y x12345y
+	@echo $(obj3)  # 输出x5123y x51234y x512345y
+	@echo $(obj4)  # 输出a123c a1234c x51234y
+    @echo $(obj5)  # 输出a123c a1234c a12345c(我自己的测试结果，看来一个模式中不能有多个\%\ ?)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>实际上，变量的替换引用其实是函数patsubst的一个简化实现，在make中两者的行为是一致的。</p>
+<h2 id="变量嵌套引用"><a class="markdownIt-Anchor" href="#变量嵌套引用"></a> 变量嵌套引用</h2>
+<p>变量嵌套引用可以理解为“把变量的值再当成变量”，先看一个例子：</p>
+<blockquote>
+<p>x = y<br>
+y = z<br>
+a := $($(x))</p>
+</blockquote>
+<p>此例中，$(x)的值是y，所以$($(x))就是$(y)，于是$(a)的值就是z，注意这里是x=y而不是x=$(y)。使用更多层次进行嵌套也是一样的，比如：</p>
+<blockquote>
+<p>x = $(y)<br>
+y = z<br>
+z = u<br>
+u = Hello<br>
+a := $($($(x)))#输出为Hello</p>
+</blockquote>
+<p>这里的$($($(x)))被替换成了$($(z))，因为$(z)值是u，所以最终结果是：a:=$(u)，也就是Hello。使用变量时并不是只能引用一个变量，可以有多个变量的引用以及任意的文本字符，最后变量的引用是其中所有字符展开后的结果，比如：</p>
+<blockquote>
+<p>first_second = Hello<br>
+a = first<br>
+b = second<br>
+all = $($a_$b)</p>
+</blockquote>
+<p>上例中$a_$b组成了first_second，于是$(all)的值就是Hello。因为展开后的字串是变量引用的形式，所以这种嵌套引用同样可以用在表达式左值：</p>
+<blockquote>
+<p>dir = foo<br>
+$(dir)_sources := $(wildcard $(dir)/*.c)</p>
+</blockquote>
+<p>上例中定义了三个变量：dir、foo_sources和foo_print。<br>
+要注意区分变量的嵌套引用和变量的递归赋值：</p>
+<ul>
+<li>嵌套引用是用一个变量表示另外一个变量，然后进行多层的引用，而递归展开的变量表示当一个变量存在对其它变量的引用时，对此变量的替换方式</li>
+<li>两种方式是完全可以混用的，比如可以在定义个一个递归展开式变量时使用套嵌引用的方式</li>
+</ul>
+<p>实际使用应该尽量避免过多使用变量嵌套引用，在必须要使用的时候应该做到嵌套层数越少越好，因为使用这种方法表达会比较复杂，可读性不好。</p>
 ]]></content>
       <categories>
         <category>应用程序开发</category>
@@ -368,6 +455,7 @@ endif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></spa
     <title>makefile编写(1)：makefile的规则</title>
     <url>/2022/05/14/makefile%E8%BF%9B%E9%98%B6/</url>
     <content><![CDATA[<p><strong>注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序</strong></p>
+<a href="/2022/05/09/makefile/" title="makefile介绍">makefile介绍</a><br>
 <a href="/2022/05/14/makefile%E8%BF%9B%E9%98%B6/" title="makefile编写(1)：makefile的规则">makefile编写(1)：makefile的规则</a><br>
 <a href="/2022/05/16/makefile%E7%BC%96%E5%86%99/" title="makefile编写(2)：makefile的变量">makefile编写(2)：makefile的变量</a>
 <h1 id="makefile规则"><a class="markdownIt-Anchor" href="#makefile规则"></a> makefile规则</h1>
@@ -694,7 +782,7 @@ clean:
 </blockquote>
 <p>当使用-C参数指定make下层makefile时，-w会被自动打开，除非参数中有-s、--slient或是--no-print-directory，那么此时-w是失效的。</p>
 <h3 id="定义命令包"><a class="markdownIt-Anchor" href="#定义命令包"></a> 定义命令包</h3>
-<p>如果makefile中总是出现一些相同的命令序列(不过一般都是定义在一行的)，那么可以为这些命令序列定义一个变量。定义这种命令序列的语法以define开始，以endef结束，如：</p>
+<p>如果makefile中总是出现一些相同的命令序列(不过一般都是定义在一行的)，那么可以为这些命令序列定义一个变量。定义这种命令序列的语法以define开始，以endef结束(定义多行变量也是以这种方式)，如：</p>
 <pre class="line-numbers language-none"><code class="language-none">define run-yacc
     yacc $(firstword $^)
     mv y.tab.c $@
@@ -4337,6 +4425,11 @@ MSYS2 ： <a href="http://sourceforge.net/projects/msys2/">项目主页</a></p>
     <title>makefile介绍</title>
     <url>/2022/05/09/makefile/</url>
     <content><![CDATA[<h1 id="makefile"><a class="markdownIt-Anchor" href="#makefile"></a> makefile</h1>
+<p>本系列参考 <a href="https://blog.csdn.net/haoel/category_9198_2.html">一起跟我写makefile</a>，在此向原作者致谢。文章经过了我个人的整理、补充和再次排版而完成，记录在此以供大家学习分享。<br>
+另附<a href="https://www.comsince.cn/download/gun_make.pdf">GNU make中文手册</a>以供参考。</p>
+<a href="/2022/05/09/makefile/" title="makefile介绍">makefile介绍</a><br>
+<a href="/2022/05/14/makefile%E8%BF%9B%E9%98%B6/" title="makefile编写(1)：makefile的规则">makefile编写(1)：makefile的规则</a><br>
+<a href="/2022/05/16/makefile%E7%BC%96%E5%86%99/" title="makefile编写(2)：makefile的变量">makefile编写(2)：makefile的变量</a>
 <h2 id="为什么使用makefile"><a class="markdownIt-Anchor" href="#为什么使用makefile"></a> 为什么使用makefile</h2>
 <p>虽然可以直接调用编译器如g++编译程序，但是如果项目里的代码文件变多了，哪些代码文件更新了需要重新编译，哪些代码没有改不需要重新编译等等，靠程序员自己记忆去处理是比较麻烦的事，还有哪些代码需要预处理或是链接哪些库文件，这些都是繁杂的过程。为了规范程序的编译生成过程，产生了<strong>规范化的生成脚本</strong>，就是makefile，生成器make可以依据规范的makefile自动生成目标程序或库文件。makefile也是一个研究项目的利器，很多项目可能文档不完整，而makefile就是项目的地图，从Makefile入手可以快速窥探整个项目的框架和概貌，深入代码而不至于迷路。<br>
 简单的说，就是定义好makefile，可以让程序员只需要去关注如何编写代码，而生成程序过程中的脏活累活都交给make程序。而且现在makefile通常都有工具自动生成，如cmake、qmake工具，这样就大量减轻了程序员的负担。</p>
