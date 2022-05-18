@@ -1,5 +1,5 @@
+http://hetumessi.github.io/2022/05/19/%E5%BE%AE%E8%BD%AFvs%E8%8B%B9%E6%9E%9C/
+http://hetumessi.github.io/2022/05/18/makefile%E8%BF%9B%E9%98%B62/
 http://hetumessi.github.io/2022/05/18/powerpc%E3%80%81x86%E3%80%81arm/
 http://hetumessi.github.io/2022/05/17/windows%20shell/
 http://hetumessi.github.io/2022/05/16/makefile%E7%BC%96%E5%86%99/
-http://hetumessi.github.io/2022/05/15/shell%E3%80%81terminal/
-http://hetumessi.github.io/2022/05/14/makefile%E8%BF%9B%E9%98%B6/
