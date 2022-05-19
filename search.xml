@@ -297,9 +297,9 @@ endif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></spa
 <pre class="line-numbers language-none"><code class="language-none">libs_for_gcc &#x3D; -lgnu
 normal_libs &#x3D;
 ifeq ($(CC),gcc)
-    libs&#x3D;$(libs_for_gcc)
+libs&#x3D;$(libs_for_gcc)
 else
-    libs&#x3D;$(normal_libs)
+libs&#x3D;$(normal_libs)
 endif
 foo: $(objects)
     $(CC) -o foo $(objects) $(libs)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
@@ -319,8 +319,27 @@ else<br>
 TEXT-IF-FALSE<br>
 endif</p>
 </blockquote>
-<p>和TEXT-IF-TRUE一样，TEXT-IF-FALSE”可以是若干任何文本行。条件判断表达式CONDITIONAL-DIRECTIVE对于上边的两种格式都是同样的，其本身可以是下面四种用于测试不同条件的关键字。</p>
-<p>ifeq关键字用来判断参数是否相等，格式如下：(ARG可以是任何变量值、常量、函数返回值结合起来的表达式文本)</p>
+<p>和TEXT-IF-TRUE一样，TEXT-IF-FALSE可以是若干任何文本行。注意两个分支的情况只是基本情况，实际上条件判断的执行文本中也可包含条件判断语句(也就是说条件语句是可以嵌套的)，从而达成多分支的效果，但是也要注意makefile是不支持elif类型的关键字的，所以需要在else后面再加上CONDITIONAL-DIRECTIVE。下面是一个简单的例子：</p>
+<pre class="line-numbers language-none"><code class="language-none">TARGET_ARCH&#x3D;x86
+ifeq ($(TARGET_ARCH), arm)
+LOCAL_SRC_FILES :&#x3D; a
+else ifeq ($(TARGET_ARCH), x86)
+LOCAL_SRC_FILES :&#x3D; b
+ifdef LOCAL_SRC_FILES
+TARGET_ARCH&#x3D;mips
+endif                        #注意每个独立的条件判读语句块必须以endif结束
+else ifeq ($(TARGET_ARCH), mips)   
+LOCAL_SRC_FILES :&#x3D; c
+else
+LOCAL_SRC_FILES :&#x3D; d
+endif
+test:
+    @echo $(TARGET_ARCH)     #输出mips
+    @echo $(LOCAL_SRC_FILES) #输出b<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>注意else CONDITIONAL-DIRECTIVE实际上也算是makefile中条件判断的一个结构(只不过不是所有的版本都支持)，因此可以和整个条件判断语句块共享一个endif，如果碰到不支持else CONDITIONAL-DIRECTIVE类型的make时，只要在后面单独加上一个endif表示一个单独的条件语句块就可以了。</p>
+<h2 id="条件判断关键字"><a class="markdownIt-Anchor" href="#条件判断关键字"></a> 条件判断关键字</h2>
+<p>条件判断表达式CONDITIONAL-DIRECTIVE对于两种基本格式都是同样的，其本身可以是下面四种用于测试不同条件的关键字。<br>
+ifeq关键字用来判断参数是否相等，格式如下：(ARG可以是任何变量值、常量、函数返回值结合起来的表达式文本)</p>
 <blockquote>
 <p>ifeq (ARG1, ARG2)<br>
 ifeq ‘ARG1’ ‘ARG2’<br>
@@ -334,45 +353,356 @@ ifeq ‘ARG1’ “ARG2”</p>
 <blockquote>
 <p>ifdef VARIABLE-NAME</p>
 </blockquote>
-<p>如果变量VAEIABLE_NAME的值非空(在makefile中只有未定义的变量以及使用未定义变量赋值的变量值为空)，那么表达式为真，将TEXT-IF-TRUE作为make要执行的一部分，否则表达式为假执行TEXT-IF-FALSE。对于ifdef关键字需要说明的是：ifdef只是测试一个变量当前<strong>是否已经定义</strong>，不是对变量进行替换展开来判断变量的值是否为空(说明条件判断的执行还要在变量展开之前)。对于变量VARIABLE-NAME，除了未定义的VARIABLE-NAME或者没有给出任何初始化值的定义，使用其它方式对它的定义都会使ifdef条件判断表达式返回真。也就是说即使通过其它方式给它赋了一个空值，ifdef也会返回真，比如：</p>
+<p>如果变量VAEIABLE_NAME的值非空(在makefile中只有未定义的变量以及使用未定义变量赋值的变量值为空)，那么表达式为真，将TEXT-IF-TRUE作为make要执行的一部分，否则表达式为假执行TEXT-IF-FALSE。对于ifdef关键字需要说明的是：ifdef只是测试一个变量当前<strong>是否已经定义</strong>，不是对变量进行替换展开来判断变量的值是否为空</p>
+<ul>
+<li>条件判断的执行还要在变量展开之前，更在规则执行之前，因此模式字符和自动化变量在条件判断中都是使用不了的</li>
+<li>实际上条件判断发生在makefile读取之时，makefile中包含的文件也不能保证在条件判断中即时展开，因此不能将完整的条件判断语句分写在两个不同的makefile文件中</li>
+</ul>
+<p>对于变量VARIABLE-NAME，除了未定义的VARIABLE-NAME或者没有给出任何初始化值的定义，使用其它方式对它的定义都会使ifdef条件判断表达式返回真。也就是说即使通过其它方式给它赋了一个空值，ifdef也会返回真，比如：</p>
+<pre class="line-numbers language-none"><code class="language-none">foo &#x3D;
+bar &#x3D; $(foo)
+ifdef foo
+frobozz1 &#x3D; yes
+else
+frobozz1 &#x3D; no
+endif
+ifdef bar
+frobozz2 &#x3D; yes
+else
+frobozz2 &#x3D; no
+endif
+test:
+    @echo $(frobozz1) $(frobozz2) #输出no yes<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>从这里也可以看出，当需要判断一个变量的值是否为空时，需要使用ifeq而不是ifdef。关键字ifndef和ifdef格式完全相同，实现的功能相反。<br>
+在CONDITIONAL-DIRECTIVE这一行上，多余的空格是被允许的，但是不能以[Tab]键做为开始(不然就被认为是命令)，而注释符“#”同样也是安全的，包括else和endif也一样，只要不是以[Tab]键开始就行。</p>
+<p>此外，makefile虽然没有提供逻辑或和逻辑与运算符，但可以借助于其内嵌函数和字符串拼接来实现相同的功能，比如如果让ifeq(ARG1, ARG2)和ifeq(ARG3, ARG4)达成逻辑与的关系，可以这样：</p>
 <blockquote>
-<p>bar =#使用:=是一样的<br>
-foo = $(bar)<br>
-ifdef foo<br>
-frobozz1 = yes<br>
-else<br>
-frobozz1 = no<br>
-endif<br>
-ifdef bar<br>
-frobozz2 = yes<br>
-ifdef foo<br>
-frobozz3 = yes<br>
-endif<br>
-else<br>
-frobozz2 = no<br>
-bar = $(foo)<br>
-endif<br>
-test:<br>
-@echo $(frobozz1) # 输出yes<br>
-@echo $(frobozz2) # 输出no<br>
-@echo $(frobozz3) # 输出no</p>
+<p>ifeq(ARG1_ARG3,ARG2_ARG4)</p>
 </blockquote>
-<p>示例二：<br>
-foo =<br>
-ifdef foo<br>
-frobozz = yes<br>
+<p>这样只有ARG1和ARG2、ARG3和ARG4同时相等时才为真，_字符起到分隔两个字串的作用，可以是任何一定不存在于两个字串中的字符。如果是ifdef条件判断的话，由于是指定变量名的方式进行判断，因此采用变量引用和函数的方式比较难以实现逻辑运算，不过可以通过条件语句嵌套的方式实现：</p>
+<blockquote>
+<p>ifdef VARIABLE-NAME1<br>
+ifdef VARIABLE-NAME2<br>
+TEXT-IF-TRUE<br>
+endif<br>
 else<br>
-frobozz = no<br>
+TEXT-IF-FALSE<br>
 endif</p>
-<p>第一个例子中，“(frobozz)”值是“yes”，第二个则是“no”。
-第四个条件关键字是“ifndef”。其语法是：
-ifndef <variable-name>
-这个我就不多说了，和“ifdef”是相反的意思。
-在<conditional-directive>这一行上，多余的空格是被允许的，但是不能以[Tab]键做为开始（不然就被认为是命令）。而注释符“#”同样也是
-安全的。“else”和“endif”也一样，只要不是以[Tab]键开始就行了。
-特别注意的是，make是在读取Makefile时就计算条件表达式的值，并根据条件表达式的值来选择语句，所以，你最好不要把自动化变量（如“@”等）<br>
-放入条件表达式中，因为自动化变量是在运行时才有的。<br>
-而且，为了避免混乱，make不允许把整个条件语句分成两部分放在不同的文件中。</conditional-directive></variable-name></p>
+</blockquote>
+<p>这样只有VARIABLE-NAME1和VARIABLE-NAME2同时为真才能执行true控制流，否则执行false控制流。如果想实现逻辑或关系的话可以像这样：</p>
+<blockquote>
+<p>ifeq($(filter-out(ARG1 ARG3,ARG2 ARG4)),)<br>
+TEXT-IF-TRUE<br>
+else<br>
+TEXT-IF-FALSE<br>
+endif</p>
+</blockquote>
+<p>函数filter-out会过滤掉字串ARG2 ARG4中满足模式ARG1和ARG3的字串，如果返回空串说明ARG2和ARG4一定符合模式ARG1和ARG3的其中一个。但是这种方法没有考虑的特殊情况是ARG1等于ARG4，ARG3等于ARG2的情况，所以只有在确定两组比较条件不等的情况才能使用这种方法。如果两组条件中的有相同的字串，此时条件判断语句可以这样：</p>
+<blockquote>
+<p>ifeq($(findstring(ARG1 ARG2_ARG3)),)</p>
+</blockquote>
+<p>最后，ifdef条件判断可以这样实现逻辑或(采用类似于elif的结构)：</p>
+<blockquote>
+<p>ifdef VARIABLE-NAME1<br>
+TEXT-IF-TRUE<br>
+else ifdef VARIABLE-NAME2<br>
+TEXT-IF-TRUE<br>
+else<br>
+TEXT-IF-FALSE<br>
+endif<br>
+endif</p>
+</blockquote>
+<p>ifneq和ifndef实现逻辑运算的方法与ifeq和ifdef原理相同，只不过实现的功能相反。</p>
+<h1 id="makefile函数"><a class="markdownIt-Anchor" href="#makefile函数"></a> makefile函数</h1>
+<p>makefile函数提供了处理文件名、变量、文本和命令等等的方法。使用函数的makefile可以编写的更加灵活和健壮。可以在需要的地方地调用函数来处理指定<strong>文本</strong>(需要处理的文本作为函数的参数)，函数调用在调用的地方被替换为它的处理结果。函数调用(引用)的展开和变量引用展开的行为基本是相同的，而且是同步进行的。</p>
+<h2 id="makefile函数的基本语法"><a class="markdownIt-Anchor" href="#makefile函数的基本语法"></a> makefile函数的基本语法</h2>
+<p>函数调用的方法很像变量值引用的方法，也是以$来标识，其语法如下：</p>
+<blockquote>
+<p>$(FUNCTION ARGUMENTS)或${FUNCTION ARGUMENTS}</p>
+</blockquote>
+<p>这里FUNCTION就是函数名，ARGUMENTS是函数的参数，参数间以逗号,分隔，而函数名和参数之间以空格分隔。函数调用以$开头，以圆括号或花括号把函数名和参数括起，感觉上很像一个变量。函数中的参数可以使用变量引用，为了风格的统一，函数和变量的括号最好一样，如使用：</p>
+<blockquote>
+<p>$(subst a,b,$(x))</p>
+</blockquote>
+<p>这样的形式，而不是：</p>
+<blockquote>
+<p>$(subst a,b,${x})”</p>
+</blockquote>
+<p>虽然实际功能都一样，但良好的编写风格能够增加可读性。此外推荐在变量引用和函数引用中统一使用圆括号，这样在使用vim编写makefile时可以高亮显示make的内嵌函数。函数处理参数时如果参数中存在对其它变量或者函数的引用，首先对这些引用展开得到参数的实际内容后再进行处理，参数的展开顺序是按照参数的先后顺序进行的。参数中尽量不要出现逗号,和空格，这是因为逗号会被作为多个参数的分隔符，并且此时,的前导空格(试了下好像Tab也忽略)很多时候会被忽略，因此当有逗号或空格作为函数参数时，需要把它们赋值给一个变量，通过在函数的参数中引用这个变量来实现，例：</p>
+<pre class="line-numbers language-none"><code class="language-none">comma:&#x3D; ,
+empty:&#x3D;
+space:&#x3D; $(empty) $(empty)
+foo:&#x3D; a b c
+bar1:&#x3D; $(subst $(space),$(comma),$(foo)i)
+bar2:&#x3D; $(subst  ,$(comma),$(foo)i)
+bar3:&#x3D; $(subst a,$(comma),$(foo)i)
+bar4:&#x3D; $(subst $(space),,,$(foo)i)
+bar5:&#x3D; $(subst  $(space),$(comma) ,$(foo)i)
+bar6:&#x3D; $(subst $(space), ,$(foo)i)
+test:
+	@cat makefile
+	@echo $(bar1) #将$(foo)中,换成空格的标准写法，输出结果为a,b,ci
+	@echo $(bar2) #把$(space)直接写成空格则接收第一个参数时会被忽略，此时第一个参数为空字符(默认在结尾)，输出结果为a b ci,
+	@echo $(bar3) #如果是正常字符的可以直接替换，输出结果为,b ci
+	@echo $(bar4) #同理把$(comma)写成,则被解析为分隔符，因为subst只有三个接收参数，因此第三个,被当作第三个参数的一部分，输出结果为,abci
+	@echo $(bar5) #首先在没有读入$(space)前会删去空白符，因此$(space)前面的空白符被删去；其次在第二个参数已经读入$(comma)以后，
+                  #后面的空格符被当作是参数的一部分，加在$(comma)后面，因此最终输出为a, b, ci
+    @echo $(bar6) #实际上此例中将空格直接作为第二个参数也是可以接收到的，subst函数做的事首先是把第三个要处理的TEXT文本中首尾空字符去掉
+                  #然后将作为函数名和参数间分隔符的空格去掉，而第二个参数夹在中间，因此它是可以接收到空格的<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="makefile常用函数"><a class="markdownIt-Anchor" href="#makefile常用函数"></a> makefile常用函数</h2>
+<h3 id="makefile文本处理函数"><a class="markdownIt-Anchor" href="#makefile文本处理函数"></a> makefile文本处理函数</h3>
+<p>常用的内嵌文本处理函数有以下11个函数。</p>
+<h4 id="字符串替换函数subst"><a class="markdownIt-Anchor" href="#字符串替换函数subst"></a> 字符串替换函数subst</h4>
+<ul>
+<li>$(subst FROM,TO,TEXT)</li>
+<li>功能：把字串TEXT中的FROM字符串替换成TO</li>
+<li>返回：替换过后的字符串</li>
+<li>示例：
+<ul>
+<li>$(subst ee,EE,feet on the street)</li>
+<li>把feet on the street中的ee替换成EE，返回结果是fEEt on the strEEt</li>
+</ul>
+</li>
+</ul>
+<h4 id="模式字符串替换函数patsubst"><a class="markdownIt-Anchor" href="#模式字符串替换函数patsubst"></a> 模式字符串替换函数patsubst</h4>
+<ul>
+<li>$(patsubst PATTERN,REPLACEMENT,TEXT)</li>
+<li>功能：搜索TEXT中以空格分开的<strong>单词</strong>，将否符合模式TATTERN的单词替换为REPLACEMENT。参数PATTERN中可以使用模式通配符%表示任意长度的字串，如果REPLACEMENT中也包含%，那么REPLACEMENT中的这个%将是PATTERN中的那个%所代表的字串</li>
+<li>返回：替换过后的字符串</li>
+<li>说明：参数TEXT的单词之间的多个空格在处理时被合并为一个空格，并忽略前导和结尾空格</li>
+<li>示例：
+<ul>
+<li>$(patsubst %.c,%.o,x.c.c bar.c)</li>
+<li>把字串x.c.c bar.c符合模式[%.c]的单词替换成[%.o]，返回结果是x.c.o bar.o</li>
+<li>实际上变量的替换引用就是靠patsubst函数实现的，$(VAR:PATTERN=REPLACEMENT)实际就等价于$(patsubst PATTERN,REPLACEMENT,$(VAR))</li>
+</ul>
+</li>
+<li>如果PATTERN中没有使用%，则在实现时自动加上，也就是$(VAR::SUFFIX=REPLACEMENT)等价于$(patsubst %SUFFIX,%REPLACEMENT,$(VAR))</li>
+<li>比如：$(objects:.o=.c)等价于$(patsubst %.o,%.c,$(objects))</li>
+</ul>
+<h4 id="去空格函数strip"><a class="markdownIt-Anchor" href="#去空格函数strip"></a> 去空格函数strip</h4>
+<ul>
+<li>$(strip STRINT)</li>
+<li>功能：去掉STRINT字串中<strong>开头和结尾</strong>的空字符</li>
+<li>返回：去掉空格的字符串值</li>
+<li>说明：空字符包括空格、[Tab]等不可显示字符</li>
+<li>示例：
+<ul>
+<li>$(strip a b c )</li>
+<li>把字串a b c 去开头和结尾的空格，结果是<strong>a b c</strong>(这么说的话难道说lexer调用的就是这个函数？)</li>
+<li>strip函数经常用在条件判断语句的表达式中，确保表达式比较的可靠和健壮</li>
+</ul>
+</li>
+</ul>
+<h4 id="查找字符串函数findstring"><a class="markdownIt-Anchor" href="#查找字符串函数findstring"></a> 查找字符串函数findstring</h4>
+<ul>
+<li>$(findstring FIND,IN)</li>
+<li>功能：在字串IN中查找FIND字串</li>
+<li>返回：如果找到则返回FIND，否则返回空字符串</li>
+<li>说明：IN中可以包含空格、[Tab]，搜索需要是严格的文本匹配</li>
+<li>示例：
+<ul>
+<li>$(findstring a,a b c)返回a字符</li>
+<li>$(findstring a,b c)返回“”字符串(空字符串)</li>
+</ul>
+</li>
+</ul>
+<h4 id="过滤函数filter"><a class="markdownIt-Anchor" href="#过滤函数filter"></a> 过滤函数filter</h4>
+<ul>
+<li>$(filter PATTERN…,TEXT)</li>
+<li>功能：以PATTERN模式过滤TEXT中的单词，保留符合模式PATTERN的单词，可以有多个PATTERN，PATTERN之间使用空格分隔</li>
+<li>返回：符合模式PATTERN的字串</li>
+<li>示例：</li>
+</ul>
+<pre class="line-numbers language-none"><code class="language-none">sources :&#x3D; foo.c bar.c baz.s ugh.h
+foo: $(sources)
+    cc $(filter %.c %.s,$(sources)) -o foo
+# $(filter %.c %.s,$(sources))返回值为foo.c bar.c baz.s<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="反过滤函数filter-out"><a class="markdownIt-Anchor" href="#反过滤函数filter-out"></a> 反过滤函数filter-out</h4>
+<ul>
+<li>$(filter-out PATTERN…,TEXT)</li>
+<li>功能：过滤掉TEXT中所有符合模式PATTERN的单词，保留不符合此模式的单词，可以有多个PATTERN，PATTERN之间使用空格分隔</li>
+<li>返回：不符合模式PATTERN的字串。</li>
+<li>示例：</li>
+</ul>
+<pre class="line-numbers language-none"><code class="language-none">objects&#x3D;main1.o foo.o main2.o bar.o
+mains&#x3D;main1.o main2.o
+# $(filter-out $(mains),$(objects))返回值是foo.o bar.o<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<h4 id="排序函数sort"><a class="markdownIt-Anchor" href="#排序函数sort"></a> 排序函数sort</h4>
+<ul>
+<li>$(sort LIST)</li>
+<li>功能：给字串LIST中的<strong>单词</strong>以首字母为准按升序进行排序，去掉重复的单词</li>
+<li>返回：排序后的空格分割的没有重复单词的字串</li>
+<li>示例：
+<ul>
+<li>$(sort foo bar lose)返回bar foo lose</li>
+</ul>
+</li>
+</ul>
+<h4 id="取单词函数word"><a class="markdownIt-Anchor" href="#取单词函数word"></a> 取单词函数word</h4>
+<ul>
+<li>$(word N,TEXT)</li>
+<li>功能：取字符串TEXT中第N个<strong>单词</strong>，N的值<strong>从1开始</strong></li>
+<li>返回：字串TEXT中第N个单词</li>
+<li>说明：如果N值大于字串TEXT中单词的数目，返回空字符串，如果N为0则出错</li>
+<li>示例：
+<ul>
+<li>$(word 2, foo bar baz)返回值是bar</li>
+</ul>
+</li>
+</ul>
+<h4 id="取字串函数wordlist"><a class="markdownIt-Anchor" href="#取字串函数wordlist"></a> 取字串函数wordlist。</h4>
+<ul>
+<li>$(wordlist S,E,TEXT)</li>
+<li>功能：从字串TEXT中取出从S开始到E的单词串，S和E表示单词在字串中的下标+1，都是从1开始的数字</li>
+<li>返回：字串TEXT中从第S到E(包括E)的单词字串</li>
+<li>说明：当S比TEXT中的单词数大时返回空串，如果E大于TEXT单词数，返回从S开始到TEXT结束的单词串，如果S大于E，返回空串，如果S或E为0错误</li>
+<li>示例：
+<ul>
+<li>$(wordlist 2, 3, foo bar baz)返回值是bar baz</li>
+</ul>
+</li>
+</ul>
+<h4 id="统计单词数目函数words"><a class="markdownIt-Anchor" href="#统计单词数目函数words"></a> 统计单词数目函数words</h4>
+<ul>
+<li>$(words TEXT)</li>
+<li>功能：统计TEXT中的单词个数</li>
+<li>返回：TEXT中的单词数</li>
+<li>示例：
+<ul>
+<li>$(words, foo bar baz)返回值是3</li>
+<li>如果要取TEXT中最后的一个单词可以这样：$(word $(words TEXT),TEXT)</li>
+</ul>
+</li>
+</ul>
+<h4 id="取首单词函数firstword"><a class="markdownIt-Anchor" href="#取首单词函数firstword"></a> 取首单词函数firstword</h4>
+<ul>
+<li>$(firstword TEXT)</li>
+<li>功能：取字串TEXT中的第一个单词</li>
+<li>返回：字串TEXT的第一个单词</li>
+<li>示例：
+<ul>
+<li>$(firstword foo bar)返回值是foo</li>
+<li>这个函数的实现应该是$(word 1,TEXT)</li>
+</ul>
+</li>
+</ul>
+<h4 id="一个简单的应用用vpath中的值生成cflags的查找路径"><a class="markdownIt-Anchor" href="#一个简单的应用用vpath中的值生成cflags的查找路径"></a> 一个简单的应用：用VPATH中的值生成CFLAGS的查找路径</h4>
+<pre class="line-numbers language-none"><code class="language-none">VPATH&#x3D;src:..&#x2F;includes
+override CFLAGS+&#x3D;$(patsubst %,-I%,$(subst :, ,$(VPATH)))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>其中$(subst :, ,$(VPATH))返回src… /includes，$(patsubst %,-I%,src… /includes)返回-Isrc -I…/inludes，也就是gcc指定头文件路径的编译参数的形式。</p>
+<h3 id="文件名操作函数"><a class="markdownIt-Anchor" href="#文件名操作函数"></a> 文件名操作函数</h3>
+<p>makefile支持一些针对于文件名的处理函数，这些函数主要用来对一系列空格分割的文件名进行转换，参数被作为若干个文件名进行处理并返回空格分隔的多个文件名序列。由于这类函数操作的对象是文件名，因此在参数首尾的空白符都要删掉。</p>
+<h4 id="取目录函数dir"><a class="markdownIt-Anchor" href="#取目录函数dir"></a> 取目录函数dir</h4>
+<ul>
+<li>$(dir NAMES…)</li>
+<li>功能：从文件名序列NAMES…中取出目录部分，目录部分是指最后一个反斜杠/之前的部分，如果没有反斜杠，那么返回./</li>
+<li>返回：文件名序列NAMES…的目录部分(包括最后一个/)</li>
+<li>示例：
+<ul>
+<li>$(dir src/foo.c hacks)返回值是src/ ./</li>
+</ul>
+</li>
+</ul>
+<h4 id="取文件名函数notdir"><a class="markdownIt-Anchor" href="#取文件名函数notdir"></a> 取文件名函数notdir</h4>
+<ul>
+<li>$(notdir NAMES…)</li>
+<li>功能：从文件名序列NAMES…中取出非目录部分，非目录部分是指最后一个反斜杠/之后的部分</li>
+<li>返回：返回文件名序列NAMES…的非目录部分(不包括最后一个/)</li>
+<li>示例：
+<ul>
+<li>$(notdir src/foo.c hacks)返回值是foo.c hacks</li>
+</ul>
+</li>
+</ul>
+<h4 id="取后缀函数suffix"><a class="markdownIt-Anchor" href="#取后缀函数suffix"></a> 取后缀函数suffix</h4>
+<ul>
+<li>$(suffix NAMES…)</li>
+<li>功能：从文件名序列NAMES…中取出各个文件名的后缀，后缀是文件名中最后一个以点.开始的部分(包含点号)</li>
+<li>返回：文件名序列NAMES…的后缀序列，如果文件没有后缀则返回空字串</li>
+<li>示例：
+<ul>
+<li>$(suffix src/foo.c src-1.0/bar.c hacks)返回值是.c .c</li>
+</ul>
+</li>
+</ul>
+<h4 id="取前缀函数basename"><a class="markdownIt-Anchor" href="#取前缀函数basename"></a> 取前缀函数basename</h4>
+<ul>
+<li>$(basename NAMES…)</li>
+<li>功能：从文件名序列NAMES…中取出各个文件名的前缀部分，前缀部分指的是文件名中最后一个点号之前的部分</li>
+<li>返回：文件名序列NAMES…的前缀序列，如果文件没有前缀则返回空字串</li>
+<li>示例：$(basename src/foo.c src-1.0/bar.c hacks)返回值是src/foo src-1.0/bar hacks</li>
+</ul>
+<h4 id="加后缀函数addsuffix"><a class="markdownIt-Anchor" href="#加后缀函数addsuffix"></a> 加后缀函数addsuffix</h4>
+<ul>
+<li>$(addsuffix SUFFIX,NAMES…)</li>
+<li>功能：把后缀SUFFIX加到NAMES…中的每个单词后面</li>
+<li>返回：加过后缀的文件名序列</li>
+<li>示例：
+<ul>
+<li>$(addsuffix .c,foo bar)返回值是foo.c bar.c</li>
+</ul>
+</li>
+</ul>
+<h4 id="加前缀函数addprefix"><a class="markdownIt-Anchor" href="#加前缀函数addprefix"></a> 加前缀函数addprefix</h4>
+<ul>
+<li>$(addprefix PREFIX,NAMES…)</li>
+<li>功能：把前缀PREFIX加到NAMES…中的每个单词前面</li>
+<li>返回：返回加过前缀的文件名序列</li>
+<li>示例：
+<ul>
+<li>$(addprefix src/,foo bar)返回值是src/foo src/bar</li>
+</ul>
+</li>
+</ul>
+<h4 id="连接函数join"><a class="markdownIt-Anchor" href="#连接函数join"></a> 连接函数join</h4>
+<ul>
+<li>$(join LIST1,LIST2)</li>
+<li>功能：把LIST2中的单词对应地加到LIST1的单词后面，比如将LIST2中的第一个单词追加LIST1第一个单词字后合并为一个单词，LIST2第二个单词追加到LIST第二个单词后……以此类推</li>
+<li>返回：单空格分隔的合并后的文件名序列</li>
+<li>说明：如果LIST1和LIST2中的文件名数目不一致时，两者中多余部分将被作为返回序列的一部分(类似于归并)</li>
+<li>示例：
+<ul>
+<li>$(join aaa bbb , 111 222 333)返回值是aaa111 bbb222 333</li>
+</ul>
+</li>
+</ul>
+<h4 id="获取匹配模式文件名函数wildcard"><a class="markdownIt-Anchor" href="#获取匹配模式文件名函数wildcard"></a> 获取匹配模式文件名函数wildcard</h4>
+<ul>
+<li>$(wildcard PATTERN)</li>
+<li>功能：列出当前目录下所有符合模式PATTERN格式的文件名</li>
+<li>返回：空格分割的、存在于<strong>当前目录</strong>下的所有符合模式PATTERN的文件名</li>
+<li>示例：
+<ul>
+<li>$(wildcard *.c)返回值为当前目录下所有.c源文件列表</li>
+</ul>
+</li>
+</ul>
+<h3 id="其他常用函数"><a class="markdownIt-Anchor" href="#其他常用函数"></a> 其他常用函数</h3>
+<h4 id="foreach-函数"><a class="markdownIt-Anchor" href="#foreach-函数"></a> foreach 函数</h4>
+<p>foreach函数和别的函数非常的不一样，因为这个函数是用来做循环控制流用的。makefile中的foreach函数几乎是仿照于Unix标准Shell(/bin/sh)中的for语句，或是C-Shell(/bin/csh)中的foreach语句而构建的，它的语法是：</p>
+<blockquote>
+<p>$(foreach VAR,LIST,TEXT)</p>
+</blockquote>
+<p>这个函数的工作过程是这样的：</p>
+<ul>
+<li>如果存在变量或者函数的引用，首先展开变量VAR和LIST的引用，而TEXT中的变量引用不展开</li>
+<li>执行时把LIST中使用空格分隔的单词依次取出赋值给变量VAR</li>
+<li>执行TEXT表达式，返回一个字符串</li>
+<li>重复执行直到LIST的最后一个单词为空时结束</li>
+<li>TEXT所返回的每个字符串所组成的整个字符串(以空格分隔)将会是foreach函数的返回值</li>
+</ul>
+<p>需要注意的是，TEXT中的变量或者函数引用在执行时才被展开，因此如果在TEXT中存在对VAR的引用，那么VAR的值在每一次展开时将会到得到不同的值，同时VAR参数是一个临时的局部变量，当foreach函数执行完后，参数VAR的变量将不在作用，其作用域只在foreach函数当中。一般在foreach函数时，VAR最好是一个变量名，LIST可以是一个表达式，而TEXT中一般会使用VAR这个参数来依次枚举LIST中的单词，下面举例说明：</p>
+<blockquote>
+<p>names := a b c d<br>
+files := $(foreach n,$(names),$(n).o)</p>
+</blockquote>
+<p>上例中，$(name)中的单词会被挨个取出并依次赋值给变量n，$(n).o每次通过$(n)展开后得出一个单词，将所有单词以空格分隔，最后作为foreach函数的返回，所以$(files)的值是a.o b.o c.o d.o。当函数的TEXT表达式过于复杂时，可以通过定义一个中间变量代表表达式的一部分，并在TEXT中引用这个变量，比如：</p>
+<blockquote>
+<p>find_files=$(wildcard $(dir)/*)<br>
+dirs:=a b c d<br>
+files:=$(foreach dir,$(dirs),$(find_files))</p>
+</blockquote>
 ]]></content>
       <categories>
         <category>应用程序开发</category>
@@ -610,7 +940,7 @@ prog.o : prog.c
 <blockquote>
 <p>变量的名称=值列表</p>
 </blockquote>
-<p>值列表中既可以是零项，又可以是一项或者是多项。等号左右的空白符没有明确的要求，因为make解析时多余的空白符会被自动删除，变成Shell的赋值形式。<br>
+<p>值列表中既可以是零项，又可以是一项或者是多项。等号左右的空白符没有明确的要求，因为make解析时多余的空白符会被自动删除，变成Shell的赋值形式。注意makefile变量值都是字符串，所以任何情况下都不要额外加&quot;&quot;和’’(除非是在Shell命令中)，否则会被单纯的看作是字面值本身加上引号。<br>
 引用变量时的格式为：</p>
 <blockquote>
 <p>$(值列表)或${值列表T}</p>
@@ -632,7 +962,7 @@ prog.o : prog.c
 <p>不过为了更加安全地使用，一般还是推荐一律给变量加括号。<br>
 另外还存在的一种特殊情况是在命令中使用变量，是完全可以按照Shell命令的形式写的。只不过由于makefile中符号$有特殊的含义，不能直接按照Shell脚本的格式写，否则默认是在按照makefile的形式引用变量。此时需要使用两个连续的$$“转义”符号$，这样变量就会被解析为Shell脚本的$xx形式。(同理，在规则中需要使用符号$的地方，都需要使用两个连续的$$)</p>
 <h2 id="makefile变量赋值"><a class="markdownIt-Anchor" href="#makefile变量赋值"></a> makefile变量赋值</h2>
-<p>makefile中支持四种变量基本赋值方式。第一种方式是简单的使用=号，可以用一个或多个字串为变量赋值，也可以用其他<strong>变量的值</strong>(注意此处先不讨论引用的情况)赋值。注意，在这种情况下如果用变量值来定义变量的话，<strong>右侧变量可以定义在文件的任何一处</strong>，也就是说=右侧不一定非要是已定义的值，也可以用后面定义的值，如：</p>
+<p>makefile中支持四种变量基本赋值方式。第一种方式是简单的使用=号，可以用一个或多个字串为变量赋值，也可以用其他<strong>变量引用</strong>赋值。注意，在这种情况下如果用变量值来定义变量的话，<strong>右侧变量可以定义在文件的任何一处</strong>，也就是说=右侧不一定非要是已定义的值，也可以用后面定义的值，如：</p>
 <pre class="line-numbers language-none"><code class="language-none">foo &#x3D; $(bar)
 bar &#x3D; $(ugh)
 ugh &#x3D; Huh?
@@ -709,7 +1039,8 @@ more value3
 <blockquote>
 <p>$(var:a=b) 或是 ${var:a=b}</p>
 </blockquote>
-<p>上面的意思是把变量var中所有以a字串<strong>后缀</strong>的a替换成b字串，这里“后缀”的意思是空格或是结束符，比如：</p>
+<p>上面的意思是把变量var中所有以a字符为后缀的字串替换为b结尾。结尾的含义是空格(一般Tab也算)之前(变量值多个字之间使用空格分开)。而对于变量其它部分的a字符不进行替<br>
+换，比如：</p>
 <blockquote>
 <p>foo := a.o b.o c.o<br>
 bar := $(foo:.o=.c)</p>
@@ -719,7 +1050,7 @@ bar := $(foo:.o=.c)</p>
 <p>foo := a.o b.o c.o<br>
 bar := $(foo:%.o=%.c)</p>
 </blockquote>
-<p>这个例子中加不加%都是一样的，不过加上%在这种替换中能起到的作用并不仅于此。实际中对变量值的操作往往不只是修改后缀字符，可能改变其中的多个不同位置的字符，比如：</p>
+<p>这个例子中加不加%都是一样的，不过加上%在这种替换中能起到的作用并不仅于此。实际中对变量值的操作往往不只是修改后缀字符，可能改变字串中的不同位置的字符，比如：(加上%还可以匹配前缀)</p>
 <pre class="line-numbers language-none"><code class="language-none">foo:&#x3D;a123c a1234c a12345c
 obj1&#x3D;$(foo:a%c&#x3D;x%y)
 obj2&#x3D;$(foo:a%c&#x3D;x5%y)
@@ -732,8 +1063,9 @@ All:
 	@echo $(obj2)  # 输出x123y x1234y x12345y
 	@echo $(obj3)  # 输出x5123y x51234y x512345y
 	@echo $(obj4)  # 输出a123c a1234c x51234y
-    @echo $(obj5)  # 输出a123c a1234c a12345c(我自己的测试结果，看来一个模式中不能有多个\%\ ?)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>实际上，变量的替换引用其实是函数patsubst的一个简化实现，在make中两者的行为是一致的。</p>
+    @echo $(obj5)  # 输出a123c a1234c a12345c(我自己的测试结果，看来一个模式中不能有多个\% \?)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看到<br>
+实际上，变量的替换引用其实是函数patsubst的一个简化实现，在make中两者的行为是一致的。</p>
 <h2 id="变量嵌套引用"><a class="markdownIt-Anchor" href="#变量嵌套引用"></a> 变量嵌套引用</h2>
 <p>变量嵌套引用可以理解为“把变量的值再当成变量”，先看一个例子：</p>
 <blockquote>
@@ -764,7 +1096,8 @@ $(dir)_sources := $(wildcard $(dir)/*.c)</p>
 <p>上例中定义了三个变量：dir、foo_sources和foo_print。<br>
 要注意区分变量的嵌套引用和变量的递归赋值：</p>
 <ul>
-<li>嵌套引用是用一个变量表示另外一个变量，然后进行多层的引用，而递归展开的变量表示当一个变量存在对其它变量的引用时，对此变量的替换方式</li>
+<li>嵌套引用是用一个变量表示另外一个变量，然后进行多层的引用</li>
+<li>递归展开的变量表示当一个变量存在对其它变量的引用时，对此变量的替换方式</li>
 <li>两种方式是完全可以混用的，比如可以在定义个一个递归展开式变量时使用套嵌引用的方式</li>
 </ul>
 <p>实际使用应该尽量避免过多使用变量嵌套引用，在必须要使用的时候应该做到嵌套层数越少越好，因为使用这种方法表达会比较复杂，可读性不好。</p>
@@ -4978,7 +5311,7 @@ MSYS2 ： <a href="http://sourceforge.net/projects/msys2/">项目主页</a></p>
     <url>/2022/05/09/makefile/</url>
     <content><![CDATA[<h1 id="makefile"><a class="markdownIt-Anchor" href="#makefile"></a> makefile</h1>
 <p>本系列参考 <a href="https://blog.csdn.net/haoel/category_9198_2.html">一起跟我写makefile</a>，在此向原作者致谢。文章经过了我个人的整理、补充、修正、再次排版而完成，记录在此以供大家学习分享。<br>
-另附<a href="https://www.comsince.cn/download/gun_make.pdf">GNU make中文手册</a>以供参考。</p>
+另附<a href="https://www.comsince.cn/download/gun_make.pdf">GNU make中文手册</a>以供参考(两者内容高度重合，也许这就是中文社区特色吧，还是推荐看中文手册，表述更清晰准确)。</p>
 <p><strong>注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序</strong></p>
 <ol>
 <li>
@@ -5129,7 +5462,11 @@ rect.o: rect.cpp
 <h3 id="makefile的构成"><a class="markdownIt-Anchor" href="#makefile的构成"></a> makefile的构成</h3>
 <p>绝大多数的makefile里主要包含了五个东西：显式规则、隐式规则、变量定义、文件指示和注释。</p>
 <ul>
-<li>显式规则，显式规则说明了，如何生成一个或多的的目标文件，这是由makefile的编写者显式指定的，如要生成的文件，生成文件的依赖文件，生成的shell命令等。makefile中的命令必须要以[Tab]键开始(makefile是一个典型的以缩进区分程序结构的语言)</li>
+<li>显式规则，显式规则说明了，如何生成一个或多的的目标文件，这是由makefile的编写者显式指定的，如要生成的文件，生成文件的依赖文件，生成的shell命令等。makefile中的命令必须要以[Tab]键开始
+<ul>
+<li>实际上makefile由两种语言的语法构成，一种是makefile原生语法，另一个是Shell脚本语法，这两者间就看开始是否使用[Tab]键缩进来区分</li>
+</ul>
+</li>
 <li>隐晦规则，主要是由make工具具体支持的自动推导的功能，方便脚本编写</li>
 <li>变量的定义，在makefile中可以定义一系列的变量，变量一般都是字符串</li>
 <li>文件指示，其中主要包括三个部分
@@ -14958,8 +15295,8 @@ itemNames.length; &#x2F;&#x2F; 1<span aria-hidden="true" class="line-numbers-row
       </categories>
       <tags>
         <tag>应用技术</tag>
-        <tag>程序设计语言学习</tag>
         <tag>区块链</tag>
+        <tag>程序设计语言学习</tag>
       </tags>
   </entry>
   <entry>
