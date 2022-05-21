@@ -1,0 +1,556 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>标准输入输出 | hetumessi's Blog</title><meta name="keywords" content="程序设计语言学习"><meta name="author" content="hetumessi"><meta name="copyright" content="hetumessi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="输入与输出并不是c本身的功能 一般讨论的输入输出都是建立在标准输入输出之上的，标准输入(stdin)和标准输出(stdout)是操作系统自动提供给程序访问的 ANSI标准精准地定义了包括输入\输出函数、字符串处理函数、存储管理函数以及数学函数等标准库函数 在任何可以使用c的系统中都有这些函数兼容形式，如果程序的系统交互部分仅用了标准库提供的功能，则可以不经修改地从一个系统移植到另一个系统 这些库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="标准输入输出">
+<meta property="og:url" content="http://hetumessi.github.io/posts/73fc4b87a401">
+<meta property="og:site_name" content="hetumessi&#39;s Blog">
+<meta property="og:description" content="输入与输出并不是c本身的功能 一般讨论的输入输出都是建立在标准输入输出之上的，标准输入(stdin)和标准输出(stdout)是操作系统自动提供给程序访问的 ANSI标准精准地定义了包括输入\输出函数、字符串处理函数、存储管理函数以及数学函数等标准库函数 在任何可以使用c的系统中都有这些函数兼容形式，如果程序的系统交互部分仅用了标准库提供的功能，则可以不经修改地从一个系统移植到另一个系统 这些库">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://hetumessi.github.io/img/newdefaultcover.jpeg">
+<meta property="article:published_time" content="2022-04-26T16:32:56.569Z">
+<meta property="article:modified_time" content="2022-04-26T16:50:03.219Z">
+<meta property="article:author" content="hetumessi">
+<meta property="article:tag" content="程序设计语言学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hetumessi.github.io/img/newdefaultcover.jpeg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://hetumessi.github.io/posts/73fc4b87a401"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":"flase","highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '标准输入输出',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-04-27 00:50:03'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/scroll.css"><link rel="stylesheet" href="/css/footer.css"><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="https://npm.elemecdn.com/animate.css@4.1.1/animate.min.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-artitalk-pro/lib/card.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="hetumessi's Blog" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/author.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">96</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-th"></i><span> article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> entertainment</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> Books</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> Game</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-user"></i><span> guys</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></li><li><a class="site-page child" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/newdefaultcover.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">hetumessi's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-th"></i><span> article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> entertainment</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> Books</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> Game</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-user"></i><span> guys</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></li><li><a class="site-page child" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">标准输入输出</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-26T16:32:56.569Z" title="发表于 2022-04-27 00:32:56">2022-04-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-04-26T16:50:03.219Z" title="更新于 2022-04-27 00:50:03">2022-04-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/c-c-%E5%AD%A6%E4%B9%A0/">c&amp;c++学习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="标准输入输出"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>输入与输出并不是c本身的功能<br>
+一般讨论的输入输出都是建立在标准输入输出之上的，标准输入(stdin)和标准输出(stdout)是操作系统自动提供给程序访问的<br>
+ANSI标准精准地定义了包括输入\输出函数、字符串处理函数、存储管理函数以及数学函数等标准库函数<br>
+在任何可以使用c的系统中都有这些函数兼容形式，如果程序的系统交互部分仅用了标准库提供的功能，则可以不经修改地从一个系统移植到另一个系统<br>
+这些库函数的属性分别在十多个头文件中声明，如&lt;stdio.h&gt;、&lt;string.h&gt;、&lt;ctype.h&gt;等</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="标准输入输出"><a class="markdownIt-Anchor" href="#标准输入输出"></a> 标准输入输出</h1>
+<p>标准库实现了简单的文本输入和输出模式<br>
+文本流由一系列行组成，每行结尾是一个换行符，如果系统没有遵循这种模式，则标准库将通过一些措施使得该系统适应这种模式</p>
+<pre class="line-numbers language-none"><code class="language-none">如:标准库可以在输入端将回车符和换页符都转换为换行符，而在输出端进行反向转换<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="字符输入函数getchar"><a class="markdownIt-Anchor" href="#字符输入函数getchar"></a> 字符输入函数getchar()</h2>
+<p>使用getchar函数从标准输入(一般为键盘)中一次读取一个字符</p>
+<blockquote>
+<p>函数原型:int getchar(void);</p>
+</blockquote>
+<p>getchar函数每次在被调用时返回下一个输入字符，若遇到文件结尾则返回EOF，符号常量EOF在头文件&lt;stdio.h&gt;中定义，其值一般为-1<br>
+不过一般在程序中应使用符号常量EOF来测试文件是否结束，这样才能保证程序与EOF的特定值无关<br>
+在许多环境中，可以使用符号’&lt;'来实现输入重定向，它把键盘输入替换为文件输入</p>
+<pre class="line-numbers language-none"><code class="language-none">如:在程序prog中使用了函数getchar()，则命令行prog &lt;infile将使得程序prog从文件infile(而不是键盘)中getchar()
+并且在事实上程序prog本身并不在意输入方式的改变，字符串&quot;&lt;infile&quot;也不包含在argv的命令行参数中<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>如果输入通过管道机制来自于另一个程序，那么这种输入切换也是不可见的</p>
+<pre class="line-numbers language-none"><code class="language-none">如:在某些系统中，命令行otherprog|prog将运行两个程序otherprog和prog
+并将程序otherprog的标准输出通过管道重定向到程序prog的标准输入上<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="字符输出函数putchar"><a class="markdownIt-Anchor" href="#字符输出函数putchar"></a> 字符输出函数putchar</h2>
+<blockquote>
+<p>函数原型:int putchar(int);</p>
+</blockquote>
+<p>用于输出数据，在程序中往往可以交叉调用函数putchar和printf，输出将按照函数调用的先后顺序依次产生</p>
+<h2 id="格式化输出函数printf"><a class="markdownIt-Anchor" href="#格式化输出函数printf"></a> 格式化输出函数printf</h2>
+<p>输出函数printf将内部数值转换为字符的形式</p>
+<blockquote>
+<p>函数原型:int printf(char*format,arg1,arg2,…);</p>
+</blockquote>
+<p>基本格式：printf(“格式字符串”,输出项列表)<br>
+printf在输出格式format的控制下将其参数进行转换与格式化，并在标准输出设备上打印，返回值为打印的字符数<br>
+输出项可以为变量，常量，表达式，其间用逗号分隔<br>
+格式字符串包含两种类型的对象:普通字符和转换说明(以及%)<br>
+输出时，普通字符将原样不动地复制到输出流中，而转换说明不直接复制到输出流中，而是用于控制printf中参数的转换与打印<br>
+每个转换说明都由一个百分号字符(即%)开始，并以一个转换字符结束，使用修饰符可以控制输出宽度，精度，小数位数，对齐方式等<br>
+在字符%和转换说明中间可能按顺序依次包含下列修饰符:</p>
+<ul>
+<li>负号:用于指定被转换的参数按照左对齐的形式输出</li>
+<li>数(小数点前):用于指定最小字段宽度，转换后的参数将打印不小于最小字段宽度的字段</li>
+<li>如果有必要，字段左边(如果使用左对齐，则为右边)多余字符位置用空格填充以保证最小字段宽度</li>
+<li>小数点:用于将字段宽度和精度分开</li>
+<li>数(小数点后):用于指定精度，即字符串中要打印的最大字符数、浮点数小数点后的位数、整型最少输出的数字数目</li>
+<li>字母h或l:字母h表示将整数作为short类型打印，字母l表示将整数作为long类型打印</li>
+</ul>
+<p>printf转换说明(如果%后面的字符不是一个合法的转换说明则该行为是未定义的):</p>
+<ul>
+<li>%d或%i:参数类型为int，用于输出十进制整型数(整型指本质为整型的数，如int、short、char等)</li>
+<li>%c:参数类型为int，用于输出单个字符</li>
+<li>%s:参数类型为char*，顺序打印字符串中的字符，直到遇到’\0’或已打印了事先指定的精度数的字符数为止</li>
+<li>%o:参数类型为int，以无符号八进制形式输出整数值(没有前导0)</li>
+<li>%x或%X:参数类型为int，以无符号十六进制形式输出整数值(没有前导0或0x)，10-15分别用abcdef或ABCDEF表示</li>
+<li>%u:以无符号形式输出十进制数</li>
+<li>%f:参数类型为double，用于输出十进制小数[-]m.dddddd，d的个数由精度指定(缺省值为6)</li>
+<li>%e或%E:参数类型为double，以科学计数的形式输出十进制小数[-]m.dddddde±xx，[-]mm.ddddddE±xx，d的个数由精度指定(缺省值为6)</li>
+<li>%g或%G:参数类型为double，如果指数小于等于-4或大于等于精度，用%e或%E格式输出，否则用%f格式输出，尾部的0和小数点不打印</li>
+<li>%p:参数类型为void*，指针的值(取决于具体实现)</li>
+<li>%%:参数为’%’，直接打印一个%<br>
+此外，在转换说明中，宽度和精度可以用*表示，这时宽度或精度的值通过转换下一参数(必须为int类型)进行计算</li>
+</ul>
+<pre class="line-numbers language-none"><code class="language-none">如:printf(&quot;%*s&quot;,max,s);表示从字符串s中至多打印max个字符<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">例: int i&#x3D;123;
+printf(&quot;%6d&quot;,i); 输出结果:(三个空格)123        输出结果字段宽度为6字节，不足位用空格填充
+printf(&quot;%06d&quot;,i); 输出结果:000123            6前加0表示字段宽度为6字节，不足位用0填充
+float j&#x3D;1234.567;
+printf(&quot;%9.3f&quot;,j); 输出结果: (空格)1234.567   输出结果共9字段，小数点后保留三位
+printf(&quot;%-9.3f&quot;,j); 输出结果: 1234.5657(空格) 使用负号为左对齐，不用负号为右对齐
+printf(&quot;%0*d&quot;,i); 输出结果: 000123
+printf(&quot;%0*.*f&quot;9,3,j); 输出结果: 01234.567<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>对字符串而言，其输出的字符个数由转换说明中的精度来指定，在宽度不足时用空格填充，空格填充的位置由对齐方式决定</p>
+<pre class="line-numbers language-none"><code class="language-none">例: 
+cout&lt;&lt;printf(&quot;%s&quot;,&quot;hello, world&quot;)&lt;&lt;endl;        输出结果:hello, world12
+cout&lt;&lt;printf(&quot;%10s&quot;,&quot;hello, world&quot;)&lt;&lt;endl;      输出结果:hello, world12
+cout&lt;&lt;printf(&quot;%.10s&quot;,&quot;hello, world&quot;)&lt;&lt;endl;     输出结果:hello, wor10
+cout&lt;&lt;printf(&quot;%-10s&quot;,&quot;hello, world&quot;)&lt;&lt;endl;     输出结果:hello, world12
+cout&lt;&lt;printf(&quot;%.15s&quot;,&quot;hello, world&quot;)&lt;&lt;endl;     输出结果:hello, world12
+cout&lt;&lt;printf(&quot;%-15s&quot;,&quot;hello, world&quot;)&lt;&lt;endl;     输出结果:hello, world   15
+cout&lt;&lt;printf(&quot;%15.10s&quot;,&quot;hello, world&quot;)&lt;&lt;endl;   输出结果:     hello, wor15
+cout&lt;&lt;printf(&quot;%-15.10s&quot;,&quot;hello, world&quot;)&lt;&lt;endl;  输出结果:hello, wor     15
+注意，printf由第一个参数判断后面参数的个数及类型，如果参数的个数不够或者类型错误则将得到错误的结果<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">如:printf(s)中如果字符串包含%则输出错误，printf(&quot;%s&quot;,s)则输出一定正确<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="格式输入函数scanf"><a class="markdownIt-Anchor" href="#格式输入函数scanf"></a> 格式输入函数scanf</h2>
+<p>输入函数scanf对应于输出函数printf，它在后者相反的方向上提供同样的转换功能</p>
+<blockquote>
+<p>函数原型:int scanf(char* format,…);</p>
+</blockquote>
+<p>基本格式：scanf(“格式字符串”,输入项列表)<br>
+scanf函数从标准输入中读取字符序列，按照format中的格式说明对字符序列进行解释，并把结果保存到其余参数中<br>
+其他所有无名参数都必须是指针，用于指定经格式转换后的相应输入保存位置<br>
+当scanf函数扫描完其格式串，或者碰到某些输入无法与格式控制说明匹配的情况时，该函数将终止<br>
+同时成功匹配并赋值的输入项的个数将作为函数值返回，因此scanf函数的返回值可以用来确认已匹配的输入项的个数，如果到达文件的结尾，该函数将返回EOF<br>
+注意，返回EOF与0是不同的，0表示第一个输入字符与格式串中的第一个格式说明不匹配，下次调用scanf将从上一次转换的最后一个字符的下一个字符开始搜索<br>
+同printf一样，scanf的格式串通常也包含转换说明和普通字符，对普通字符而言分两种情况:<br>
+(格式串中加入可打印字符可忽略输入流中的相同字符)<br>
+空格或制表符:在处理过程中所有空白符(包括但不限于空格和制表符)均被忽略(一般用于处理最后的输入项后的空格，因为scanf本身忽略输入项以前和之间的空格)<br>
+普通字符(不包括%):用于匹配输入流中的下一个非空白符字符(该字符将被忽略，只有与输入流中全部字符均匹配成功时scanf函数才能进行赋值)<br>
+scanf的转换说明用于控制下一个输入字段的转换，一般来说，转换结果存放在相应的参数指向的变量中<br>
+同理，转换说明与%中间可能包含修饰符，用于控制输入的转换:</p>
+<ul>
+<li>星号(* ):赋值禁止字符，如果转换说明中有*则跳过一个(用以表示该输入项，读入后不赋予相应的变量，即跳过该输入值)，输入字段不进行赋值</li>
+<li>数:指定最大字段宽度</li>
+<li>字母h、l或L:指定目标对象的长度(字节数)，l表示输入长整型数据和双精度浮点数，h表示输入短整型数据，可以加在转换说明d、i、o、u或x的前面</li>
+</ul>
+<p>前缀h表明参数表的相应参数是一个指向short而非int类型的指针，前缀h表明参数表的相应参数是一个指向long类型的指针<br>
+类似的，转换说明e、f和g的前面也可以加上前缀l，它表明参数表的相应参数是指向double类型而非float类型的指针<br>
+输入字段定义为一个不包含空白符的字符串其边界定义为到下一个空白符或到达指定的字段宽度，这表明scanf函数将越过行边界读取输入，因为换行符也是空白符<br>
+(空白符包括空格符、横向制表符、换行符、回车符、纵向制表符以及换页符)<br>
+转换说明指定对输入字段的解释，对应的参数必须是指针，这是c通过值调用语义所要求的<br>
+scanf转换说明(如果%后面的字符不是一个合法的转换说明则该行为是未定义的):</p>
+<ul>
+<li>%d:参数类型为int*，输入十进制整数</li>
+<li>%i:参数类型为int*，输入整数，可以是八进制(以0开头)或十六进制(以0x或0X开头的)</li>
+<li>%o:参数类型为int*，输入八进制整数(可以0开头也可以不0开头)</li>
+<li>%u:参数类型为unsigned int*，输入无符号十进制整数</li>
+<li>%x:参数类型为int*，输入十六进制整数(可以0x或0X开头也可以不0x或0X开头)</li>
+<li>%c:参数类型为char*，输入字符，将接下来的多个输入字符(默认为1个字符)存放到指定位置，该转换规范通常不跳过空白符，如果需要读入下一个非空白符可使用%1s</li>
+<li>%s:参数类型为char*，输入字符串(不加引号)，指向一个足以存放该字符串的字符数组(包括尾部的字符’\0’的位置)，字符串的末尾将被添加一个结束符’\0’</li>
+<li>%e或%f或%g:参数类型为float*，输入浮点数，它可以包括正负号(可选)、小数点(可选)以及指数部分(可选)</li>
+<li>%%:输入字符%，不进行任何赋值操作</li>
+</ul>
+<pre class="line-numbers language-none"><code class="language-none">例: *可以跳过对应数据赋值操作
+scanf(&quot;%d%*d&quot;,&amp;a,&amp;b); 输入34 45时 a&#x3D;34 b赋到的值是空格(跳过了第二个输入项45)
+scanf(&quot;%d%c&quot;,&amp;a,&amp;b); 输入 45 a时 a&#x3D;45 b值为空格
+scanf(&quot;%d %c&quot;,&amp;a,&amp;b); 输入 45 a时 a&#x3D;45 b&#x3D;a 可以解决上面赋值空格的问题
+scanf(&quot;%d,,,,%c&quot;,&amp;a,&amp;b); 输入 45,a时 a&#x3D;45 b&#x3D;a 同理，可以忽略输入流中的,,,,
+double sum&#x3D;0,v;while(scanf(&quot;%1f&quot;,&amp;v))printf(&quot;\t.2f&quot;,sum+&#x3D;v); 简易计算器
+int day,year;char monthname[20];scanf(&quot;%d %s %d&quot;,&amp;day,monthname,&amp;year); 读取日期格式的输入如:25 Dec 1988
+(数组名本身就是指针，因此monthname的前面 没有加取地址运算符&amp;)
+int day,month,year;scanf(&quot;%d&#x2F;%d&#x2F;%d&quot;,&amp;day,&amp;month,&amp;year); 读取日期格式的输入如:dd&#x2F;mm&#x2F;yy
+如果要读取格式不固定的输入，最好每次读一行，然后再用sscanf将合适的格式分离出来读入<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">如:假定需要读取一些包含日期数据的输入行，日期的格式可以是多种形式
+while(getline(line,sizeof(line))&gt;0)
+&#123;
+    if(sscanf(line,&quot;%d %s %d&quot;,&amp;day,monthname,&amp;year)&#x3D;&#x3D;3)printf(&quot;valid:%s\n,line&quot;);  格式形如:25 Dec 1988
+    else if(sscanf(line,&quot;%d&#x2F;%d&#x2F;%d&quot;,&amp;day,&amp;month,&amp;year)&#x3D;&#x3D;3)printf(&quot;valid:%s\n,line&quot;);格式形如:dd&#x2F;mm&#x2F;yy
+    else printf(&quot;invalid:%s\n,line&quot;);                                              日期格式无效
+&#125;
+scanf函数可以和其他输入函数混合使用，无论调用哪个输入函数，下一个输入函数的调用将从scanf没有读取的第一个字符处开始读取数据
+最后，再次强调注意scanf和sscanf函数的所有参数都必须是指针，最常见的错误是将输入语句scanf(&quot;%d&quot;,&amp;n);写为:scanf(&quot;%d&quot;,n);
+部分编译器在编译时可能是检测不到这类错误的<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="格式化输出函数sprintf与格式化输入函数sscanf"><a class="markdownIt-Anchor" href="#格式化输出函数sprintf与格式化输入函数sscanf"></a> 格式化输出函数sprintf与格式化输入函数sscanf</h2>
+<p>函数sprintf和printf执行的转换与函数printf相同，但它将输出保存到一个字符串中，函数sscanf用于从一个字符串中(而不是标准输入)中读取字符序列</p>
+<blockquote>
+<p>函数原型:<br>
+int sprintf(char* string,char* format,arg1,arg2,…);<br>
+int sscanf(char* string,char* format,arg1,arg2,…);</p>
+</blockquote>
+<p>sprintf函数和printf函数一样，按照format格式格式化参数序列arg1、arg2、…<br>
+区别在于sprintf将输出结果存放到string中，而不是输出到标准输出<br>
+存储字符串的变量string必须足够大以存放输出结果<br>
+函数sscanf用于从一个字符串中(而不是标准输入)中读取字符序列，并将结果分别保存在arg1、arg2、…这些参数中，这些参数必须是指针<br>
+许多程序只需要从一个数据流中读取数据，并且只向一个输出流中输出数据<br>
+对于这样的程序只需使用函数getchar()、putchar()、printf等实现输入输出即可，并且对程序而言一般已经足够<br>
+特别是，如果通过重定向将一个程序的输出连接到另一个程序的输入，仅使用这些函数就足够了</p>
+<pre class="line-numbers language-none"><code class="language-none">如:int main()
+   &#123;
+        int c;
+        while((c&#x3D;getchar())!&#x3D;EOF)putchar(tolower(c));
+        &#x2F;&#x2F;函数tolower定义在&lt;ctype.h&gt;，将大写字母转换小写形式，并降其余字符原样返回
+        return 0;
+    &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>实际上，头文件&lt;stdio.h&gt;的getchar()和putchar()“函数”以及&lt;ctype.h&gt;中的tolower“函数”一般都是宏<br>
+因此可以避免对每个字符都进行函数调用的开销，并且无论&lt;ctype.h&gt;中的函数在给定机器上如何实现，使用这些函数的程序都不必了解字符集的知识</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io">hetumessi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io/posts/73fc4b87a401">http://hetumessi.github.io/posts/73fc4b87a401</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://hetumessi.github.io" target="_blank">hetumessi's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/">程序设计语言学习</a></div><div class="post_share"><div class="social-share" data-image="/img/newdefaultcover.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechatpay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/wechatpay.png"/></a><div class="post-qr-code-desc"></div></li><li class="reward-item"><a href="/img/alipay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/alipay.png"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/a8e179be4596" title="Solidity入门了解"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/w6pOHIGoFMxrTEa.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-01</div><div class="title">Solidity入门了解</div></div></a></div><div><a href="/posts/5bdc88454c74" title="异常处理"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">异常处理</div></div></a></div><div><a href="/posts/b10e41f86dff" title="模板"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">模板</div></div></a></div><div><a href="/posts/c2c914ef34bc" title="多态性与虚函数"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">多态性与虚函数</div></div></a></div><div><a href="/posts/4b50c37306d0" title="运算符重载"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">运算符重载</div></div></a></div><div><a href="/posts/c4844ef45beb" title="单继承和多继承、派生类构造析构规则"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-28</div><div class="title">单继承和多继承、派生类构造析构规则</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Gitalk</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/author.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">hetumessi</div><div class="author-info__description">个人博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">96</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hetumessi"><i class="fab fa-github"></i><span>要来gayhub瞧瞧嘛🤡</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/hetumessi" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/392384886@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/sitemap.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="/404/" target="_blank" title="commonweal"><i class="fa fa-heartbeat"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！有任何问题或者意见，还请QQ：392384886，或者致信QQ邮箱：392384886@qq.com</div></div><div class="card-widget card-pixiv"><div class="card-content"><div class="item-headline"><i class="fa fa-image" aria-hidden="true"></i><span>Pixiv日榜Top50</span></div><iframe src="https://cloud.mokeyjay.com/pixiv" frameborder="0" style="width:99%;height:380px;margin:0;"></iframe></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA"><span class="toc-number">1.</span> <span class="toc-text"> 标准输入输出</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E8%BE%93%E5%85%A5%E5%87%BD%E6%95%B0getchar"><span class="toc-number">1.1.</span> <span class="toc-text"> 字符输入函数getchar()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E8%BE%93%E5%87%BA%E5%87%BD%E6%95%B0putchar"><span class="toc-number">1.2.</span> <span class="toc-text"> 字符输出函数putchar</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%BE%93%E5%87%BA%E5%87%BD%E6%95%B0printf"><span class="toc-number">1.3.</span> <span class="toc-text"> 格式化输出函数printf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E8%BE%93%E5%85%A5%E5%87%BD%E6%95%B0scanf"><span class="toc-number">1.4.</span> <span class="toc-text"> 格式输入函数scanf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%BE%93%E5%87%BA%E5%87%BD%E6%95%B0sprintf%E4%B8%8E%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%BE%93%E5%85%A5%E5%87%BD%E6%95%B0sscanf"><span class="toc-number">1.5.</span> <span class="toc-text"> 格式化输出函数sprintf与格式化输入函数sscanf</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/2ea785cf45aa" title="【转】X86 CPU发展历史"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/20/OsLqfdaU2StnWG8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】X86 CPU发展历史"/></a><div class="content"><a class="title" href="/posts/2ea785cf45aa" title="【转】X86 CPU发展历史">【转】X86 CPU发展历史</a><time datetime="2022-05-19T16:00:27.690Z" title="发表于 2022-05-20 00:00:27">2022-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/05415c493fc8" title="【转】世界双雄：微软和苹果"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/19/lyTsozY2SiWcvMe.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】世界双雄：微软和苹果"/></a><div class="content"><a class="title" href="/posts/05415c493fc8" title="【转】世界双雄：微软和苹果">【转】世界双雄：微软和苹果</a><time datetime="2022-05-18T16:16:50.160Z" title="发表于 2022-05-19 00:16:50">2022-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="makefile编写(3)：条件执行和函数"/></a><div class="content"><a class="title" href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数">makefile编写(3)：条件执行和函数</a><time datetime="2022-05-18T13:06:08.000Z" title="发表于 2022-05-18 21:06:08">2022-05-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9296819e5610" title="【转】PowerPC、X86和ARM架构区别"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/18/c6Edr87qlROypvP.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】PowerPC、X86和ARM架构区别"/></a><div class="content"><a class="title" href="/posts/9296819e5610" title="【转】PowerPC、X86和ARM架构区别">【转】PowerPC、X86和ARM架构区别</a><time datetime="2022-05-17T16:25:36.305Z" title="发表于 2022-05-18 00:25:36">2022-05-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/433fc2487d31" title="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/17/k3B7vgj6TtNsGx1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？"/></a><div class="content"><a class="title" href="/posts/433fc2487d31" title="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？">【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？</a><time datetime="2022-05-16T16:29:30.424Z" title="发表于 2022-05-17 00:29:30">2022-05-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By hetumessi</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">欢迎光临小站！🎉</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.css"><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'kT5o8xhcPPtpRHJzj2KnqvTV-MdYXbMMI',
+      appKey: 'TuUTMrUqindtbui5wMvhOsX7',
+      avatar: 'monsterid',
+      serverURLs: 'https://kT5o8xhc.api.lncldglobal.com',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'facd33fa531a29d93105',
+      clientSecret: '7c0e063309085031b84369f86c21bbbee8e77c64',
+      repo: 'blog_comments',
+      owner: 'hetumessi',
+      admin: ['hetumessi'],
+      id: 'b7d5e77f42794dfe2342070dbe2f9b80',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Valine' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><div class="aplayer no-destroy" data-id="3180545941" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><script defer src="/live2d-widget/autoload.js"></script><script src="//code.tidio.co/msomj1dsaggz8vkbdv2pvnur4efns1ot.js" async></script><script defer src="https://cdn.jsdelivr.net/gh/graingert/wow@1.3.0/dist/wow.min.js"></script><script defer data-pjax src="/js/wow_init.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/null.js" async="async"></script><script>function onTidioChatApiReady() {
+  window.tidioChatApi.hide();
+  window.tidioChatApi.on("close", function() {
+    window.tidioChatApi.hide();
+  });
+}
+if (window.tidioChatApi) {
+  window.tidioChatApi.on("ready", onTidioChatApiReady);
+} else {
+  document.addEventListener("tidioChat-ready", onTidioChatApiReady);
+}
+
+var chatBtnFn = () => {
+  document.getElementById("chat_btn").addEventListener("click", function(){
+    window.tidioChatApi.show();
+    window.tidioChatApi.open();
+  });
+}
+chatBtnFn()
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?hetumessi";
+            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
+            var git_user ="hetumessi";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style></style><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-clock/clock/images/weather/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><script data-pjax>
+  function card_artitalk_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-shuo"><div class="card-content" style="height:auto;min-height:280px;"><div class="item-headline"><i class="fas fa-comments"></i><span><a href="/artitalk/" title="artitalk page link">碎碎念</a></span><a id="cardVisual" style="cursor:pointer;float:right" onclick="cardVisual()">编辑</a></div><div id="artitalk_main" style="width:100%;height:100%;padding:1px"></div></div></div>';
+    console.log('已挂载card_artitalk');
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html);
+    (()=>{
+      const init = () => {
+        new Artitalk(Object.assign({
+          appId: 'YEOLrzwYnNrDKjqYp6sWyxrg-MdYXbMMI',
+          appKey: 'QQNS7Wswk8Aqw6i94V3iVGyY',
+        }, {"serverURL":"https://YEOLrzwY.api.lncldglobal.com","lang":"zh","pageSize":1,"color1":"#89b1f5","color2":"#70c4b6","atEmoji":{"Mafumafu1":"https://cdn.jsdelivr.net/gh/GamerNoTitle/ValineCDN@master/Mafumafu/199749454.png","Mafumafu2":"https://cdn.jsdelivr.net/gh/GamerNoTitle/ValineCDN@master/Mafumafu/199749455.png"}} ))
+      }
+      if (typeof Artitalk === 'function') {
+        init()
+      } else {
+        getScript('https://npm.elemecdn.com/artitalk').then(init)
+      }
+    })()
+    }
+  var elist = '/artitalk/,/posts/'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    card_artitalk_injector_config();
+  }
+  else if (epage === cpage){
+    card_artitalk_injector_config();
+  }
+  </script><script async src="https://npm.elemecdn.com/hexo-butterfly-artitalk-pro/lib/card_visual.js"></script><!-- hexo injector body_end end --></body></html>

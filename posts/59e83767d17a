@@ -1,0 +1,594 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>数组 | hetumessi's Blog</title><meta name="keywords" content="程序设计语言学习"><meta name="author" content="hetumessi"><meta name="copyright" content="hetumessi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="数组：一组具有相同数据类型变量的集合  数组名：表示这组数据的名字    索引：标识数组中数据的位置    数据元素：构成数组的每个数据项，数组名+索引 如:a[i]表示数组a的第i个元素">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数组">
+<meta property="og:url" content="http://hetumessi.github.io/posts/59e83767d17a">
+<meta property="og:site_name" content="hetumessi&#39;s Blog">
+<meta property="og:description" content="数组：一组具有相同数据类型变量的集合  数组名：表示这组数据的名字    索引：标识数组中数据的位置    数据元素：构成数组的每个数据项，数组名+索引 如:a[i]表示数组a的第i个元素">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://hetumessi.github.io/img/newdefaultcover.jpeg">
+<meta property="article:published_time" content="2022-04-25T14:36:01.370Z">
+<meta property="article:modified_time" content="2022-04-25T14:46:17.977Z">
+<meta property="article:author" content="hetumessi">
+<meta property="article:tag" content="程序设计语言学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hetumessi.github.io/img/newdefaultcover.jpeg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://hetumessi.github.io/posts/59e83767d17a"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":"flase","highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '数组',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-04-25 22:46:17'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/scroll.css"><link rel="stylesheet" href="/css/footer.css"><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="https://npm.elemecdn.com/animate.css@4.1.1/animate.min.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-artitalk-pro/lib/card.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="hetumessi's Blog" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/author.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">96</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-th"></i><span> article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> entertainment</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> Books</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> Game</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-user"></i><span> guys</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></li><li><a class="site-page child" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/newdefaultcover.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">hetumessi's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-th"></i><span> article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> entertainment</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> Books</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> Game</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-user"></i><span> guys</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></li><li><a class="site-page child" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">数组</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-25T14:36:01.370Z" title="发表于 2022-04-25 22:36:01">2022-04-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-04-25T14:46:17.977Z" title="更新于 2022-04-25 22:46:17">2022-04-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/c-c-%E5%AD%A6%E4%B9%A0/">c&amp;c++学习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="数组"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="数组一组具有相同数据类型变量的集合"><a class="markdownIt-Anchor" href="#数组一组具有相同数据类型变量的集合"></a> 数组：一组具有相同数据类型变量的集合</h1>
+<blockquote>
+<pre><code>数组名：表示这组数据的名字
+</code></pre>
+</blockquote>
+<blockquote>
+<pre><code>索引：标识数组中数据的位置
+</code></pre>
+</blockquote>
+<blockquote>
+<pre><code>数据元素：构成数组的每个数据项，数组名+索引 如:a[i]表示数组a的第i个元素
+</code></pre>
+</blockquote>
+<span id="more"></span>
+<h2 id="一维数组"><a class="markdownIt-Anchor" href="#一维数组"></a> 一维数组</h2>
+<pre class="line-numbers language-none"><code class="language-none">定义一维数组格式：数据类型 数组名[正整数] 例：float score[10];<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code>数组的初始化是在声明后面紧跟一个初始化表达式列表，列表用花括号括起来，各初始化表达式之间通过逗号分隔
+</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">如:int days[]&#x3D;&#123;31,28,31,30,31,30,31,31,30,31,30,31&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code>定义了一个由12个对象组成的集合，对象存储在相邻的内存区域中
+</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">定义数组时可对数组进行初始化，存在几种不同情况，例：                以按行存储为准
+    int a[5]&#x3D;&#123;12,34,56,78,9&#125;;    标准形式，全部初始化
+    int a[5]&#x3D;&#123;0&#125;;                初始化表达式的个数比数组元素数少，则没有初始化表达式的外部变量、静态变量和自动变量元素将被初始化为0
+    int a[]&#x3D;&#123;11,22,33,44,55&#125;;    不指定的数组长度，则数组空间的长度为初始化的数据个数
+    int a[5]&#x3D;&#123;11&#125;;               部分初始化，第一个数据是11，其余为0
+    int a[5];                    未初始化，其中数据是杂乱无章的<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre><code>如果初始化表达式的个数比数组元素数多，则是错误的
+
+不能跳过前面的数组元素而直接初始化后面的数组元素
+
+一维数组使用：数组名+数组下标
+
+数组下标(index)：从0开始，数组元素的索引
+</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">数组下标可以为常量，整型表达式，并且允许快速随机访问 如：score[i] 可以像普通变量一样使用<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code>一维数组的存储：系统分配一块连续的存储空间，大小为 数据类型大小*数组元素个数
+
+数组名表示数组的首地址(相当于整个数组的地址)，值等于首个元素的地址
+</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">例:int a[10];  假设a的首地址为1000，int占4个字节空间，则 &amp;a[n]为1000+4*n 如 &amp;a[5]&#x3D;1020<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code>因为是连续的地址空间，所以数组中元素的访问速度是非常快的
+
+数组名表示数组的首地址，其值不可改变(常量)
+
+定义两个数组int a[4]=&#123;1,2,3,4&#125;,b[4]; b=a; 是错误的，因为b的值不可改变
+</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">因此，如果想令b的值等于a，则需依次对b中的元素进行修改，如:a[0]&#x3D;b[0],a[1]&#x3D;b[1],a[2]&#x3D;b[2],a[3]&#x3D;b[3];
+                                              或：for(i&#x3D;0,;i&lt;4;i++)b[i]&#x3D;a[j];<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre><code>数组的长度在编译时已经完全确定，它等于数组项的长度乘以项数
+
+因此，可得出项数为:keytab的长度/struct key的长度
+
+c提供了一个编译时(compile-time)一元运算符sizeof，它可以用来计算任一对象的长度
+
+表达式:sizeof 对象 以及 sizeof(类型名) 将返回一个整型值，其数值等于对象或类型占用的存储空间字节数
+
+(严格地说，sizeof的返回值是无符号整型，其类型为size_t，该类型定义在头文件&lt;stddef.h&gt;中定义)
+
+其中对象可以是变量、数组或结构；类型可以是基本类型如int、double、也可以是派生类型如结构类型或指针类型
+</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">如:#define NKEYS (sizeof keytab&#x2F;sizeof(struct key))
+ 或#define NKEYS (sizeof keytab&#x2F;sizeof keytab[0]) 使用这种方法即使类型变了也不需要改动程序<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">一维数组示例程序：显示键盘输入的月份拥有的天数，不包括闰年的天数
+#include&lt;stdio.h&gt;
+int main()
+&#123;
+    int month,i;
+    int days[12]&#x3D;&#123;31,28,31,30,31,30,31,31,30,31,30,31&#125;;
+    scanf(&quot;%d&quot;,&amp;month);
+    printf(&quot;%d月有%d天&quot;,month,days[month-1]);
+&#125;
+一维数组示例2：输入10个学生成绩，输出其中最高分和其在数组中的位置
+#include&lt;stdio.h&gt;
+int main()
+&#123;
+    int score[10];
+    int num,i,j;
+    int highest,topstudent;
+    for(i&#x3D;0;i&lt;10;i++)
+    &#123;
+        scanf(&quot;%d&quot;,&amp;num);
+        score[i]&#x3D;num;              &amp;score[i]与score+i相同都表示score中第i个元素的地址
+        for(j&#x3D;0;j&lt;i;j++)
+    	&#123;
+   	    if(num&lt;&#x3D;score[j])break;
+	    else if(j&#x3D;&#x3D;i-1)highest&#x3D;num,topstudent&#x3D;i;
+        &#125;
+    &#125;
+    printf(&quot;%d\n%d&quot;,highest,topstudent);
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="二维数组"><a class="markdownIt-Anchor" href="#二维数组"></a> 二维数组</h2>
+<pre><code>c提供了类似于矩阵的多维数组，但实际上这种数组的应用不如指针数组广泛(空间浪费过于严重)
+
+二维数组：在c中二维数组就是一种特殊的一维数组，一个二维数组的元素本身是一个一维数组
+
+同理可推 n维数组：一个一维数组的元素本身是一个n-1维数组
+</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">n维数组定义：数据类型 数组名[元素个数1][元素个数2]...[元素个数n]
+例：int two[10][20];two[2][8]&#x3D;1;
+   int three[4][5][3];three[i][j][k]&#x3D;3;
+   错误的写法:two[10,20];<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre><code>除表示方式的差别外，c中二维数组的使用与其他语言一样
+
+数组元素按行存储，因此当按存储顺序访问数组时，最右边的数组下标(列)变化的最快
+
+二维数组的逻辑结构：
+</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">例：两行三列数组a的逻辑结构
+             第一列   第二列   第三列       行数为第一个括号中的数，列数为第二个括号中的数
+    第一行   a[0][0] a[0][1] a[0][2]      行数实际指定了二维数组的长度，列数指定元素的长度
+    第二行   a[1][0] a[1][1] a[1][2]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre><code>二维数组的存储空间大小为 数据类型大小*一维数组个数*一维数组元素数量
+
+二维数组的初始化
+
+数组可以用花括号括起来的初值进行初始化，二维数组每一行由相应的子列表进行初始化
+
+声明二维数组时必须指明数组的列数，而数组行数没有太大的关系
+
+这是由于二维数组在用于函数参数传递等用途时，函数调用的是一个指针，对二维数组而言指针指向“行向量”构成的一维数组
+
+而这个一维数组的长度是需要声明的，否则指针的类型无法确定(指针算术运算时也无法确定应该移动几个连续存储单元)
+
+如:f(int daytab[2][13])&#123;&#125;、f(int daytab[][13])、f(int (*daytab)[13])
+
+一般而言，除数组的第一维可以不指定大小外，其余各维都必须明确指定大小
+</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">二维数组的初始化的几种情况，例：
+    int a[3][3]&#x3D;&#123;1,2,3,4,5,6,7,8,9&#125;;
+    按元素初始化，第1-3个数据为第0行数据，第4-6个是第1行数据，第7-9个是第2行数据
+    int a[3][3]&#x3D;&#123;&#123;1,2,3&#125;,&#123;4,5,6&#125;,&#123;7,8,9&#125;&#125;;
+    按行初始化，第1个一维数组内为第0行数据，第2个一维数组内是第1行数据，第3个一维数组内是第2行数据
+    int a[][3]&#x3D;&#123;&#123;1,2,3&#125;,&#123;4,5,6&#125;,&#123;7,8,9&#125;&#125;;
+    省略行数的按行初始化，根据一维数组数确定行数为3，然后按行初始化即可，编译时将对初值个数进行统计并将这一准确数字填入数组长度
+    int a[3][3]&#x3D;&#123;1,2&#125;;
+    部分初始化，行列数已确定，只初始化前两个元素即第0行第1、2个元素，其他用0填充
+    int a[3][3]&#x3D;&#123;&#123;1,2&#125;,&#123;4&#125;,&#123;7,8,9&#125;&#125;;
+    按行部分初始化，行列数已确定，将给定行的前几个数据初始化，其他用0填充
+    int a[][3]&#x3D;&#123;&#123;1&#125;,&#123;4,5&#125;,&#123;7,8,9&#125;&#125;;
+    省略行数的按行部分初始化，根据一维数组数确定行数为3，然后将给定行的前几个数据初始化，其他用0填充
+    int a[][3]&#x3D;&#123;1,2,3,4,5,6,7&#125;
+    省略行数的按元素部分初始化，列数已确定，给定数据依次为第0，1行和第2行第1个数据，其他用0填充
+    例：int a[][3]&#x3D;&#123;&#123;1,2,3&#125;,&#123;4,5&#125;,&#123;6&#125;,&#123;0&#125;&#125;;
+    printf(&quot;%d,%d,%d&quot;,a[1][1],a[2][1],a[3][1]);   输出结果：5,0,0 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="字符数组"><a class="markdownIt-Anchor" href="#字符数组"></a> 字符数组</h2>
+<pre><code>字符数组是存放字符的数组，每个元素为一个字符
+
+一个一维字符数组可以存放一个字符串
+
+一个二维数组可以存放多个字符串
+
+字符数组声明与初始化
+</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">例：char str[10];                       一般必须指定长度，因为不指定长度char类型默认为1个字符
+    字符数组中因为不一定包含字符串结束符&#39;\0&#39;，所以不一定是字符串
+    与正常的数组一样，可以逐个元素赋值，也可在定义时初始化，例：
+    char str[10]&#x3D;&#123;&#39;c&#39;,&#39;h&#39;,&#39;i&#39;,&#39;n&#39;,&#39;a&#39;&#125;; 用字符进行逐个元素的初始化,前5个元素初始化，不足的用0填充
+    char s1[20]&#x3D;&#123;&quot;How do you do&quot;&#125;;      直接以字符串进行初始化，字符串常量初始化后，自动在结尾加入结束标志\0(或者数值0)
+    char s2[20]&#x3D;&quot;How do you do&quot;         花括号可以省略，此时s2[20]本身就代表一个字符串常量，可以直接按字符串形式输出
+    通过输入输出操作进行初始化，例：
+    单个字符输入输出
+    char str[10];
+    for(i&#x3D;0;i&lt;5;i++)scanf(&quot;%c&quot;,&amp;str[i]);     注意：visual studio中对字符要求使用安全输入函数scanf_s,需要在参数中指定字符长度
+    for(j&#x3D;4;j&gt;&#x3D;0;j--)printf(&quot;%c&quot;,str[j]);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="字符串常量"><a class="markdownIt-Anchor" href="#字符串常量"></a> 字符串常量</h3>
+<pre><code>字符串常量是一个字符数组(但字符数组不一定是字符串)
+
+如:&quot;I am a string&quot;在字符串的内部表示中，字符数组以空字符'\0'结尾
+
+因此程序可以通过检查空字符找到字符串结尾，字符串常量占据的存储单元数也因此比双引号内的字符数大1
+
+字符串常量的主要用法也许就是作为函数参数，如:printf(&quot;hello,world\n&quot;);
+
+在上面的语句中，当类似的字符串出现在程序中是通过字符指针访问字符串，实际上printf接受的就是一个指向字符数组的第一个字符的字符指针
+
+因此字符串常量也可以通过指向其第一个元素的指针访问
+</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">除作为函数参数外，字符串常量还可以对字符指针和字符数组进行赋值，如:char *pmessage&#x3D;&quot;now is the time&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code>该赋值过程没有进行字符串的拷贝，而只涉及指针的操作，实际上此时*pmessage='n'(首元素地址存储的值)而不是整个字符串
+
+同样的，c没有提供将整个字符串作为整体进行处理的运算符
+</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">字符数组示例程序：寻找姓名中含有James的校友
+#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+int main()
+&#123;
+    const int n&#x3D;20,m&#x3D;6;
+    char name[][n]&#x3D;&#123;&quot;Kate.Wate&quot;,&quot;James.Tan&quot;,&quot;Bull.Ben&quot;,&quot;James.Tide&quot;,&quot;James.Ting&quot;,&quot;Lebron.James&quot;&#125;;
+    char James[]&#x3D;&quot;James&quot;;
+    int i,j,k,l,len&#x3D;strlen(&quot;James&quot;);
+    for(i&#x3D;0;i&lt;m;i++)
+    &#123;
+        for(j&#x3D;0;j&lt;len;j++)
+        &#123;
+            if(name[i][j]!&#x3D;James[j])break;
+        &#125;
+        if(j&#x3D;&#x3D;len)printf(&quot;%s\n&quot;,name[i]);
+        for(k&#x3D;strlen(name[i])-len,l&#x3D;0;k&lt;strlen(name[i])&amp;&amp;l&lt;len;k++,l++)
+        &#123;
+            if(name[i][k]!&#x3D;James[l])break;
+	&#125;
+	if(l&#x3D;&#x3D;len)printf(&quot;%s\n&quot;,name[i]);
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io">hetumessi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io/posts/59e83767d17a">http://hetumessi.github.io/posts/59e83767d17a</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://hetumessi.github.io" target="_blank">hetumessi's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/">程序设计语言学习</a></div><div class="post_share"><div class="social-share" data-image="/img/newdefaultcover.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechatpay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/wechatpay.png"/></a><div class="post-qr-code-desc"></div></li><li class="reward-item"><a href="/img/alipay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/alipay.png"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/a8e179be4596" title="Solidity入门了解"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/w6pOHIGoFMxrTEa.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-01</div><div class="title">Solidity入门了解</div></div></a></div><div><a href="/posts/5bdc88454c74" title="异常处理"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">异常处理</div></div></a></div><div><a href="/posts/b10e41f86dff" title="模板"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">模板</div></div></a></div><div><a href="/posts/c2c914ef34bc" title="多态性与虚函数"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">多态性与虚函数</div></div></a></div><div><a href="/posts/4b50c37306d0" title="运算符重载"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">运算符重载</div></div></a></div><div><a href="/posts/c4844ef45beb" title="单继承和多继承、派生类构造析构规则"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-28</div><div class="title">单继承和多继承、派生类构造析构规则</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Gitalk</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/author.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">hetumessi</div><div class="author-info__description">个人博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">96</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hetumessi"><i class="fab fa-github"></i><span>要来gayhub瞧瞧嘛🤡</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/hetumessi" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/392384886@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/sitemap.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="/404/" target="_blank" title="commonweal"><i class="fa fa-heartbeat"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！有任何问题或者意见，还请QQ：392384886，或者致信QQ邮箱：392384886@qq.com</div></div><div class="card-widget card-pixiv"><div class="card-content"><div class="item-headline"><i class="fa fa-image" aria-hidden="true"></i><span>Pixiv日榜Top50</span></div><iframe src="https://cloud.mokeyjay.com/pixiv" frameborder="0" style="width:99%;height:380px;margin:0;"></iframe></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E4%B8%80%E7%BB%84%E5%85%B7%E6%9C%89%E7%9B%B8%E5%90%8C%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%8F%98%E9%87%8F%E7%9A%84%E9%9B%86%E5%90%88"><span class="toc-number">1.</span> <span class="toc-text"> 数组：一组具有相同数据类型变量的集合</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E7%BB%B4%E6%95%B0%E7%BB%84"><span class="toc-number">1.1.</span> <span class="toc-text"> 一维数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84"><span class="toc-number">1.2.</span> <span class="toc-text"> 二维数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E6%95%B0%E7%BB%84"><span class="toc-number">1.3.</span> <span class="toc-text"> 字符数组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F"><span class="toc-number">1.3.1.</span> <span class="toc-text"> 字符串常量</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/2ea785cf45aa" title="【转】X86 CPU发展历史"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/20/OsLqfdaU2StnWG8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】X86 CPU发展历史"/></a><div class="content"><a class="title" href="/posts/2ea785cf45aa" title="【转】X86 CPU发展历史">【转】X86 CPU发展历史</a><time datetime="2022-05-19T16:00:27.690Z" title="发表于 2022-05-20 00:00:27">2022-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/05415c493fc8" title="【转】世界双雄：微软和苹果"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/19/lyTsozY2SiWcvMe.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】世界双雄：微软和苹果"/></a><div class="content"><a class="title" href="/posts/05415c493fc8" title="【转】世界双雄：微软和苹果">【转】世界双雄：微软和苹果</a><time datetime="2022-05-18T16:16:50.160Z" title="发表于 2022-05-19 00:16:50">2022-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="makefile编写(3)：条件执行和函数"/></a><div class="content"><a class="title" href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数">makefile编写(3)：条件执行和函数</a><time datetime="2022-05-18T13:06:08.000Z" title="发表于 2022-05-18 21:06:08">2022-05-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9296819e5610" title="【转】PowerPC、X86和ARM架构区别"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/18/c6Edr87qlROypvP.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】PowerPC、X86和ARM架构区别"/></a><div class="content"><a class="title" href="/posts/9296819e5610" title="【转】PowerPC、X86和ARM架构区别">【转】PowerPC、X86和ARM架构区别</a><time datetime="2022-05-17T16:25:36.305Z" title="发表于 2022-05-18 00:25:36">2022-05-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/433fc2487d31" title="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/17/k3B7vgj6TtNsGx1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？"/></a><div class="content"><a class="title" href="/posts/433fc2487d31" title="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？">【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？</a><time datetime="2022-05-16T16:29:30.424Z" title="发表于 2022-05-17 00:29:30">2022-05-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By hetumessi</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">欢迎光临小站！🎉</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.css"><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'kT5o8xhcPPtpRHJzj2KnqvTV-MdYXbMMI',
+      appKey: 'TuUTMrUqindtbui5wMvhOsX7',
+      avatar: 'monsterid',
+      serverURLs: 'https://kT5o8xhc.api.lncldglobal.com',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'facd33fa531a29d93105',
+      clientSecret: '7c0e063309085031b84369f86c21bbbee8e77c64',
+      repo: 'blog_comments',
+      owner: 'hetumessi',
+      admin: ['hetumessi'],
+      id: 'fd479553b9dc12fc49f15475e5979e52',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Valine' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><div class="aplayer no-destroy" data-id="3180545941" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><script defer src="/live2d-widget/autoload.js"></script><script src="//code.tidio.co/msomj1dsaggz8vkbdv2pvnur4efns1ot.js" async></script><script defer src="https://cdn.jsdelivr.net/gh/graingert/wow@1.3.0/dist/wow.min.js"></script><script defer data-pjax src="/js/wow_init.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/null.js" async="async"></script><script>function onTidioChatApiReady() {
+  window.tidioChatApi.hide();
+  window.tidioChatApi.on("close", function() {
+    window.tidioChatApi.hide();
+  });
+}
+if (window.tidioChatApi) {
+  window.tidioChatApi.on("ready", onTidioChatApiReady);
+} else {
+  document.addEventListener("tidioChat-ready", onTidioChatApiReady);
+}
+
+var chatBtnFn = () => {
+  document.getElementById("chat_btn").addEventListener("click", function(){
+    window.tidioChatApi.show();
+    window.tidioChatApi.open();
+  });
+}
+chatBtnFn()
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?hetumessi";
+            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
+            var git_user ="hetumessi";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style></style><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-clock/clock/images/weather/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><script data-pjax>
+  function card_artitalk_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-shuo"><div class="card-content" style="height:auto;min-height:280px;"><div class="item-headline"><i class="fas fa-comments"></i><span><a href="/artitalk/" title="artitalk page link">碎碎念</a></span><a id="cardVisual" style="cursor:pointer;float:right" onclick="cardVisual()">编辑</a></div><div id="artitalk_main" style="width:100%;height:100%;padding:1px"></div></div></div>';
+    console.log('已挂载card_artitalk');
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html);
+    (()=>{
+      const init = () => {
+        new Artitalk(Object.assign({
+          appId: 'YEOLrzwYnNrDKjqYp6sWyxrg-MdYXbMMI',
+          appKey: 'QQNS7Wswk8Aqw6i94V3iVGyY',
+        }, {"serverURL":"https://YEOLrzwY.api.lncldglobal.com","lang":"zh","pageSize":1,"color1":"#89b1f5","color2":"#70c4b6","atEmoji":{"Mafumafu1":"https://cdn.jsdelivr.net/gh/GamerNoTitle/ValineCDN@master/Mafumafu/199749454.png","Mafumafu2":"https://cdn.jsdelivr.net/gh/GamerNoTitle/ValineCDN@master/Mafumafu/199749455.png"}} ))
+      }
+      if (typeof Artitalk === 'function') {
+        init()
+      } else {
+        getScript('https://npm.elemecdn.com/artitalk').then(init)
+      }
+    })()
+    }
+  var elist = '/artitalk/,/posts/'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    card_artitalk_injector_config();
+  }
+  else if (epage === cpage){
+    card_artitalk_injector_config();
+  }
+  </script><script async src="https://npm.elemecdn.com/hexo-butterfly-artitalk-pro/lib/card_visual.js"></script><!-- hexo injector body_end end --></body></html>

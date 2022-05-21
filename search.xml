@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>置顶当然给小🍆啦</title>
-    <url>/2022/05/08/%E8%B0%A2%E8%B0%A2%E4%BD%A0%EF%BC%8C%E5%89%8D%E8%BE%88/</url>
+    <url>/posts/e24107c6e6ec</url>
     <content><![CDATA[<center> <font face="STCAIYUN" color="8f0080" size="6">我并不想要永恒…… 因为我所看到的世界——现在就存在于此</font></center>
 <hr>
 <center> <img src="https://s2.loli.net/2022/05/12/lBqrdGROuhsLeix.png"> </center>
@@ -44,8 +44,470 @@ Mash Kyrielight   マシュ・キリエライト</center>
       </tags>
   </entry>
   <entry>
+    <title>【转】X86 CPU发展历史</title>
+    <url>/posts/2ea785cf45aa</url>
+    <content><![CDATA[<p>转自<a href="https://blog.csdn.net/Hide_in_Code/article/details/113799454">csdn</a></p>
+<p>近日由于需要，我对x86的CPU架构发展历史进行了调研与学习。目前主流的x86架构，其先进的技术代表厂家就是Intel与AMD，它们相爱相杀的故事广流于家家户户。但是我整理Intel的相关CPU发展就花了2、3个星期（期间还有别的事情），写了我1W5的字，累屎我了，而AMD的相关产品还没来得及整理与写入。关于Intel的芯片发展过程，相关的整理网站其实还不少，但大多数都停在2011年（因为也是那个时候写的），也就是截止到Intel Core架构之前，而后续的介绍文章都很稀碎。我借鉴了很多很多诸如这样的文章与维基百科，主要参考网站都放在了文章末尾，但是没来得及看是否有相关的文献内容，再删减去Intel、AMD、IBM等公司的发展决策与心里路程，仅仅是单单将处理器部分的内容整理出来，形成这篇文章，希望能对自己，以及其他想对ntel x86处理器这么多年来大致的发展过程有些学习的CPU芯片小白们有些许的帮助！<br>
+在内容叙述架构上，由于我去年学习了计算机结构体系内容，因此本文主要按照时间顺序，对Intl发布的主要的几个芯片与新架构进行节选与简单的介绍，前期主要记录何时芯片/架构新加入的技术（如超标量与超线程SMT等）以及架构图，也可以从晶体管和主频的快速增长来感受一下摩尔定律；后期比如Core架构，架构图什么的都找不到了，而引入的一些新的技术与指令集我也不熟悉了，整理的内容可能没有写到重点或关键特色，我更关注在多代产品之间相互的关系（因为网上写的我都乱了，比如：Core品牌、Core架构、Core i系列处理器），只能权当给大家参考——尤其是Intel Core挤牙膏系列，写的我很懵逼，有一种“两代产品差别不大”的感觉…<br>
+期间我搜寻资料学习时，还发现一位CSDN博主，他的博客内容主要是对具体的架构进行更细节的分析，让我如获至宝。若大家看了各个芯片的架构图，还想对每一款的架构进行深入的学习，也可以去看看他的文章：</p>
+<p><a href="https://stkeke.blog.csdn.net/">一凡stkeke_CSDN</a></p>
+<p><a href="https://stkeke.blog.csdn.net/article/details/85230687">8086架构/流水线及其优化</a></p>
+<p>后续呢，我再抽时间把AMD部分补上~别忘了点赞哦亲~(￣▽￣)&quot;</p>
+<hr>
+<h1 id="x86-cpu-发展历史与分析"><a class="markdownIt-Anchor" href="#x86-cpu-发展历史与分析"></a> X86 CPU 发展历史与分析</h1>
+<p>本文作者：SIST——Yippee</p>
+<h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
+<p>PC界有几大优秀的架构代代相传并迭代至今，分别是IBM的Power架构，Intel与AMD相爱相杀的X86架构，移动端独占鳌头的ARM架构，面向高性能科学计算的MIPS架构等。要实现国产的拥有独立知识产权的芯片架构技术，有必要博采众长，学习他人架构之特色而打通各路经脉。</p>
+<p>在一学期的学习之后，对计算机体系结构的基础知识也算是有所了解。通过对网上的资料与博文的学习，我按照个人粗浅的理解以及体系结构的各章节要点，对Intel的X86重要的CPU版本进行学习，对其发展过程与演变之路进行一个总结记录。由于时间与篇幅关系，AMD推出的各型号微处理器未记录于其中。此外，同一款微处理器有不同主频的版本，本文只取其最低主频作为参考。</p>
+<h2 id="intel-x86-cpu的历史发展"><a class="markdownIt-Anchor" href="#intel-x86-cpu的历史发展"></a> Intel X86 CPU的历史发展</h2>
+<h3 id="x86架构前的铺垫"><a class="markdownIt-Anchor" href="#x86架构前的铺垫"></a> X86架构前的铺垫</h3>
+<h4 id="4004首个4位处理器"><a class="markdownIt-Anchor" href="#4004首个4位处理器"></a> 4004——首个4位处理器</h4>
+<img src="https://s2.loli.net/2022/05/20/BUFZgVYKjnJ2arO.png">
+<center>图1 Intel首个4位微处理器4004</center>
+<p>在1971年，年纪轻轻的Intel接到日本Busicom公司的订单，生产出世界首块4位CPU，代号4004。作为Intel的第一代微处理器，基于P沟道MOS硅栅技术，采取10μm工艺，拥有2250个晶体管，主频740KHz，处理速度达到0.06MIPS，前端总线为0.74MHz(4位)，socket为DIP16。</p>
+<img src="https://s2.loli.net/2022/05/20/7nsN1lPFQodK43c.png">
+<center>图2 4004的微体系架构图</center>
+<p>4004处理器可以执行4位运算，支持8位指令集和12位寻址，指令集为<strong>4位BCD编码</strong>。<br>
+4004其性能与首台电子计算机ENIAC相似，但体积较ENIAC需占用一个房间而小了很多。当时年仅3岁的Intel的主营业务是DRAM，缺少CPU方面的技术底蕴，但4004代表着Intel处理器序章的开始。</p>
+<h4 id="8008首个8位处理器"><a class="markdownIt-Anchor" href="#8008首个8位处理器"></a> 8008——首个8位处理器</h4>
+<img src="https://s2.loli.net/2022/05/20/m8zMVCtSLTiHh7q.png">
+<center>图3 Intel首个8位微处理器8008</center>
+<p>1972年，Intel发布世界首块8位CPU 8008，也是首款在PC上使用的处理器，能够执行8位运算，依然基于<strong>P沟道MOS</strong>硅栅技术与10μm工艺，拥有3500个晶体管，主频0.5MHz，处理速度达到0.05MIPS(略慢于4004)，socket位DIP18。</p>
+<img src="https://s2.loli.net/2022/05/20/BUFZgVYKjnJ2arO.png">
+<center>图4 8008的微体系架构图</center>
+<p>8008处理器可以执行8位运算，支持14位寻址，可以访问到16KB的内存。虽然其单位时间执行指令数稍慢于4004，但由于其8位运算的优势使其在大多数应用中拥有更好的性能表现。</p>
+<h4 id="8080新工艺"><a class="markdownIt-Anchor" href="#8080新工艺"></a> 8080——新工艺</h4>
+<img src="https://s2.loli.net/2022/05/20/oMHeuV1zXZavTOI.png">
+<center>图5 Intel微处理器8080</center>
+<p>1972年，Intel发布8080芯片，依然为8位处理器，以<strong>N沟道MOS</strong>取代了P沟道MOS，使用6μm工艺，拥有6000个晶体管，主频2MHz，处理速度达到0.64MIPS，<strong>运算速度比8008提升了10倍</strong>，socket为DIP40。</p>
+<img src="https://s2.loli.net/2022/05/20/Omid1Ab3qcpBuzE.png">
+<center>图6 8080的微体系架构图</center>
+<p>8080是早期8008处理器的增强和拓展：其地址总线为16位，可以访问64KB的内存，是8008的四倍；NMOS取代PMOS的升级；其指令集比8008指令集进一步增强等。8080的成功使其直接影响了后续的x86架构处理器。</p>
+<h3 id="x86架构的开始"><a class="markdownIt-Anchor" href="#x86架构的开始"></a> x86架构的开始</h3>
+<h4 id="8086"><a class="markdownIt-Anchor" href="#8086"></a> 8086</h4>
+<img src="https://s2.loli.net/2022/05/20/1yTuAtoEV84NGMg.png">
+<center>图7 Intel首个16位x86架构微处理器8086</center>
+<p>1978年，Intel推出微处理器8086，也是第一款<strong>16位</strong>处理器，采用3μm工艺与特色的<strong>x86-16指令集</strong>，拥有2.9W个晶体管，主频4.77MHz，处理速度达到0.33MIPS，socket还是DIP40不变。在8086中，对<strong>单一指令仅仅采用2级步骤完成</strong>（取指，执行）同时CPU内只能执行一条指令，非流水线操作。8086所有的内部寄存器、内外数据总线都是16位，因此是完全的16位微处理器。</p>
+<p>其带来的主要新特色有：</p>
+<ul>
+<li>在8086中含有<strong>2个单元部件</strong>：总线BU负责指令的读取与数据传输，执行EU负责执行指令。</li>
+<li>地址分段的内存访问模型。其外部地址总线为20位，可以寻址1MB内存；但是内部地址总线为16位，可以寻址64KB空间。因此内部设立了段寄存器，系统基于“段内偏移”的概念进行内存寻址：由16位段寄存器左移4位作为段基址，加上16位段偏移地址形成20位的物理地址，从而达到最大寻址空间1MB，最大分段64KB。这个模式在后续的80286与80386中被称为“<strong>实模式</strong>”。</li>
+</ul>
+<img src="https://s2.loli.net/2022/05/20/aXLcZUdWMpD3NTe.png">
+<center>图8 实模式下的内存访问模型</center>
+<p>但它也有明显的<strong>安全与功能缺陷</strong>：在实模式下用户程序和操作系统拥有同等权利，对访问的地址即为物理地址，而同时程序可以随意修改自己的段基址，因此可以随意修改任意物理地址甚至操作系统的内容；同时，因为各程序使用的逻辑地址即物理地址——“所见即所得”——故微处理器无法支持”多任务“功能。</p>
+<img src="https://s2.loli.net/2022/05/20/K2mVI95WRUHFYGa.png">
+<center>图9 8086的微体系架构图</center>
+<p>之后，Intel公司发布了8088处理器，采用x86指令集，实际上是外部数据总线削减为8位的8086；以及同样采用x86指令集，为辅助8086起到数学算术运算的协处理器8087，它能完成专门用于对数、指数和三角函数等的数学计算指令，提升科学运算的效率。8086是最成功的X86架构的鼻祖，其使用的X86指令集不断被使用、拓展至今。一年后，IBM公司于其PC中采用8088芯片，在当时RISC为主流的时代环境中，Intel得以初现锋芒。</p>
+<h4 id="80286"><a class="markdownIt-Anchor" href="#80286"></a> 80286</h4>
+<img src="https://s2.loli.net/2022/05/20/ITEnMoU9RfbFZLG.png">
+<center>图10 Intel微处理器80286</center>
+<p>1982年，Intel发布了16位处理器80286。其兼容8086的所有功能，采用1.5μm工艺与相同的<strong>x86-16指令集</strong>，拥有13.4W个晶体管，主频6MHz与外频相同，处理速度达到0.9MIPS，socket为正方形包装的PGA68。在80286中，对单一指令采用<strong>3级步骤</strong>完成(取指，译码，执行)但是CPU内只能执行一条指令，非流水线操作。其内、外部数据总线皆为16位，地址总线24位，可寻址16MB内存。</p>
+<img src="https://s2.loli.net/2022/05/20/hlcCakvTPotgFyA.png">
+<center>图11 80286的微体系架构图</center>
+<p>其带来的主要新特色有：</p>
+<ul>
+<li>在80286中含有<strong>4个功能部件</strong>：指令IU负责指令译码，地址AU负责逻辑地址与物理地址的转换，执行EU，以及总线BU，四个部件并行工作提高处理速度与支持新增加的保护模式的运行。</li>
+<li>从80286开始，CPU的工作方式也演变成两种：<strong>实模式和保护模式</strong>。</li>
+</ul>
+<p><strong>实模式</strong>：即原8086微处理器的内存访问方式。因CPU内寄存器数据为16位，只能寻址1MB的内存空间，因此在实模式下CPU基于段内偏移的物理地址形式进行内存寻址，这会带来系统的不安全性与功能限制。</p>
+<img src="https://s2.loli.net/2022/05/20/E2aovNkU3d4MnfB.png">
+<center>图12 80286保护模式下的内存寻址关系</center>
+<p><strong>保护模式</strong>：80286中新增的保护模式。是为了改进实模式下内存访问的不安全性，它将内存的管理模式分为纯段模式或段页式，给内存段添加了段属性(如段基址、段界限、类型、DPL等)来限制用户程序对内存的操作权限，让用户程序对内存的访问不再“为所欲为”，从而更好的保护系统。在保护模式下，系统即可使用<strong>虚存、页面调度、多任务处理</strong>(此时还需要相关部件配合)等功能。</p>
+<h4 id="80386"><a class="markdownIt-Anchor" href="#80386"></a> 80386</h4>
+<img src="https://s2.loli.net/2022/05/20/iuzoVkwHv2BrCEJ.png">
+<center>图13 Intel首个32位微处理器80386</center>
+<p>1985年，Intel发布了第一款<strong>32位处理器</strong>80386，采用相同的1.5μm工艺与扩充后的<strong>x86-32指令集</strong>，拥有27.5W个晶体管，主频12.5MHz与外频相同，处理速度达到6MIPS，<strong>性能比80286提升约10倍</strong>，socket为PGA132。在80386中，对单一指令依然采用3级步骤完成(取指，译码，执行)，非流水线操作。其数据总线以及地址总线皆为32位，因此能够寻址4GB的内存空间，因此为保护模式的优化创立条件——虚拟8086模式。</p>
+<img src="https://s2.loli.net/2022/05/20/aOilESkbCt3QBej.png">
+<center>图14 80386的微体系架构图</center>
+<p>其带来的主要新特色有：</p>
+<ul>
+<li>在80386中，引入了新的处理器工作模式——<strong>虚拟8086模式</strong>：当处理器进入保护模式后，基于实模式的应用就不能直接运行了，而PC在刚刚启动进入DOS时是实模式，当操作系统(主流OS如Linux、Windows)运行后就工作在保护模式，而保护模式不能切换回实模式。虚拟8086模式实际上就是运行在保护模式中的实模式，其指利用硬件级虚拟化技术，模拟出多个8086芯片，达到实模式的应用(8086程序)能以任务的形式工作在基于保护模式的操作系统上，真正实现各色程序的多任务处理功能。于是80386共具有三种工作模式：实模式，保护模式和虚拟模式，同时能兼容之前的老机型程序。</li>
+<li>首次引入了<strong>L1 Cache(片外)</strong>，极大的提高了CPU访问内存的效率。从此，cache在CPU中的地位便不可或缺。</li>
+<li>添加了内存管理单元(MMU)，从而使得处理器能够有<strong>内存保护，存储器分页管理机制</strong>等功能。</li>
+<li>指令集扩充增加了一些内容等。</li>
+</ul>
+<p>80386位处理器，配合80387协处理器在当时已经可以完成AutoCAD的FLOPS计算。而80386作为首款32位微处理器以及其新增加的各色功能，不仅使Intel成为PC界的领头羊，更是具有划时代的重要意义。</p>
+<h4 id="80486"><a class="markdownIt-Anchor" href="#80486"></a> 80486</h4>
+<img src="https://s2.loli.net/2022/05/20/wD2yQzkGMT9Vhn6.png">
+<center>图15 Intel微处理器80486</center>
+<p>1989年，Intel发布了32位处理器80486，采用1μm工艺，指令集为<strong>x86与x87的集合</strong>(增加了浮点运算部件)，拥有120W个晶体管(<strong>突破百万晶体管的界限</strong>)，主频25MHz，处理速度达到20MIPS，socket为PGA。</p>
+<img src="https://s2.loli.net/2022/05/20/GU3f2IRypv58EkD.png">
+<center>图16 80486的微体系架构图</center>
+<p>其带来的主要新特色有：</p>
+<ul>
+<li>在整数处理单元中首次引入了<strong>流水线(pipeline)<strong>的概念，采用了RISC的技术，建立了</strong>五级流水线</strong>(取指，译码，转址，执行，写回)，使得每一级流水线在同一时刻都运行着不同的指令而不是同一时刻仅有一条指令于CPU中，实现<strong>一个时钟周期内完成一条指令</strong>。虽然当时80486依然是采取顺序执行，但此设计依然使80486的提升为同频率的80386处理器的2倍性能。同时，引入<strong>Forwarding</strong>技术解决data hazard问题；并通过“<strong>Pre-fetch</strong>”的方式<strong>加快指令分支操作</strong>。</li>
+<li><strong>片内集成了指令数据统一的8KB L1 Cache</strong>，同时支持外部L2 Cache。</li>
+<li><strong>片内集成了增强型FPU单元</strong>，其浮点性能甚至明显快于80387。</li>
+<li>提出了<strong>时钟倍频技术</strong>：由于CPU主频的快速提升，而总线外频速度没有跟上，因此Intel在80486中应用了倍频技术，使得CPU的主频通过倍频器等于外频乘上一个倍数(2倍或3倍)，进而保持增长。<br>
+改进了MMU的性能，同时对指令集进行了一定扩充，如XADD，BSWAP，CMPXCHG，INVD，WBINVD，INVLPG。<br>
+采用的新的内部总线传送技术上：<strong>突发传送方式</strong>，大大提高了与内存的数据交换速度。</li>
+</ul>
+<h2 id="p5架构pentium与pentium-mmx"><a class="markdownIt-Anchor" href="#p5架构pentium与pentium-mmx"></a> P5架构——Pentium与Pentium MMX</h2>
+<h4 id="pentium"><a class="markdownIt-Anchor" href="#pentium"></a> Pentium</h4>
+<img src="https://s2.loli.net/2022/05/20/4e1zgRFZuExsXOU.png">
+<center>图17 Intel微处理器Pentium</center>
+<p>1993年，Intel发布了32位处理器Pentium，又被号为80586，使用的<strong>超标量x86微体系架构(称为P5架构)</strong>，是8086兼容处理器系列中的第五代主要产品，<strong>指令集非常接近80486与80386</strong>，仅仅做了简单的指令内容增加。其采用0.8μm工艺，拥有310W个晶体管，主频60MHz，处理速度达到100MIPS(<strong>80486的四倍性能</strong>)，插槽采用Socket4/5/6.</p>
+<img src="https://s2.loli.net/2022/05/20/BYyc5OtoJfIn8ah.png">
+<center>图18 Pentium(80586)的微体系架构图</center>
+<p>其带来的主要新特色有：</p>
+<ul>
+<li>是第一个采用<strong>超标量技术</strong>Intel微处理器，拥有<strong>2条并行</strong>的整型pipeline：pipeline U<strong>处理任意指令</strong>，pipeline V吸收了RISC的特色而负责<strong>处理简单通用指令</strong>，从而提升系统的运行效率。</li>
+<li>由于超标量结构需对数据和指令进行同时读写，因此引入<strong>对L1 Cache进行数据指令分离</strong>：各单独的8K数据L1 Cache和8K指令L1 Cache，减少了指令、数据以及读/写hazard。<strong>但L2 Cache依然是片外的</strong>。拥有<strong>单个更快的浮点数单元</strong>，整个系列的CPU浮点性能都很不错。最显著的是FMUL功能，吞吐量比80486 FPU高出15倍。但可惜此浮点单元爆出存在Bug，使得极少数情况下导致除法运算的精度降低，饱受批评。</li>
+<li>引入了<strong>MESI的Cache coherence协议</strong>，实现更高效的cache写回。</li>
+<li>实施了<strong>分支预测算法(Branch Prediction)<strong>来提前预取指令，避免不必要的闲置等待，引入了</strong>Branch Target Buffer(BTB)结构以及Instruction Prefetch Buffer</strong>.</li>
+<li>Pentium的制造工艺优良，<strong>可超频性能很好</strong>，使得“超频”概念在市场中流行起来。</li>
+<li>从Pentium开始，CPU封装出现<strong>扇热盖</strong>的设计，已解决突显的CPU的发热问题。</li>
+</ul>
+<p>虽然Intel在Pentium实现了超标量、cache分离、分支预测等新技术，但要注意的是，此时Pentium依然采取in-order执行（指令）；同时CPU面对data hazard时pipeline中依然会出现stall。</p>
+<h4 id="pentium-mmx"><a class="markdownIt-Anchor" href="#pentium-mmx"></a> Pentium MMX</h4>
+<p>1996年，Intel推出了基于P5架构的微处理器Pentium MMX，添加了<strong>MMX指令集</strong>，是对P5架构的一次关键升级。采用0.35μm工艺，拥有450W个晶体管，主频166MHz，插槽采用Socket7.</p>
+<img src="https://s2.loli.net/2022/05/20/eQv6hZuGDMJdjyL.png">
+<center>图19 Pentium MMX的微架构图</center>
+<p>其带来的主要新特色有：</p>
+<ul>
+<li>添加了Intel的<strong>MMX(Multi-Media Extension)指令集</strong>，目的是增强提升CPU在2D音像、图形和通信等多媒体应用对诸如编码与解码等工作的效率(只局限于整数的运算)。在架构中，Intel定义了八个64位SIMD寄存器与负责相关快速执行的硬件，由这些硬件需要而对指令集进行相应补充拓展。为CPU增加了57条MMX指令，</li>
+<li><strong>L1 Cache</strong>升级为双倍大小：将CPU芯片内的L1 Cache由8KB指令+8KB数据增加为16KB指令+16KB数据Cache，在Pentium MMX中<strong>没有集成当时卖力不讨好的L2 Cache</strong>，而是独辟蹊径采用MMX技术去增强性能(如上所述)。</li>
+</ul>
+<p>而有了上述两种改进方式，MMX CPU比普通CPU在运行含有MMX指令的程序时，处理多媒体的能力上提高了约60％。由于应用程序都支持MMX指令，这一步操作也增强了英特尔在该领域的垄断地位。MMX技术不但是一个创新，而且还开创了CPU开发的新纪元，后来的SSE，3D NOW！等指令集也是从MMX发展演变过来的，而这种附加指令集机制也成为后来所有x86处理器的基准。</p>
+<h2 id="p6架构pentium-proiiiii"><a class="markdownIt-Anchor" href="#p6架构pentium-proiiiii"></a> P6架构——Pentium Pro/Ⅱ/Ⅲ</h2>
+<h3 id="pentium-pro"><a class="markdownIt-Anchor" href="#pentium-pro"></a> Pentium Pro</h3>
+<img src="https://s2.loli.net/2022/05/20/IHODdwoBXnL4zlP.png">
+<center>图20 Intel微处理器Pentium Pro</center>
+<p>1996年，Intel发布了32位处理器Pentium Pro，此为新的<strong>P6架构</strong>。其采用相同的0.35μm工艺与<strong>x86指令集(没有支持MMX指令集)</strong>，拥有550W个晶体管，主频150MHz，处理速度达到440MIPS(是Pentium的2~3倍性能)，插槽采用Socket8.</p>
+<p>其带来的主要新特色有：</p>
+<ul>
+<li>首次实现CPU的<strong>L2 Cache的片内集成</strong>，采用了<strong>16KB片内L1 Cache(合计)与256KB L2 Cache</strong>。Intel将CPU与L2 Cache两个芯片之间用高频宽的内部通讯总线互连，使得<strong>L2 Cache与CPU同速</strong>，运行在更高的频率上。</li>
+<li>实现了<strong>3路超标量</strong>(之前是Pentium中引入的2路超标量)。</li>
+<li>实现了指令流水线的乱序执行(<strong>OoO-E</strong>)，这是在Pentium超标量结构后的又一次飞跃。Pentium Pro采取的是<strong>Tomasulo动态执行算法</strong>，其策略是<strong>顺序发射，乱序执行，按需提交</strong>，使用了<strong>Reorder buffer与Register renaming</strong>，以及<strong>12级pipeline(也有文献说11级或14级)</strong>。</li>
+</ul>
+<img src="https://s2.loli.net/2022/05/20/TYzyBxSMEqCgme6.png">
+<center>图21 Pentium Pro的微架构图</center>
+<p>Pentium Pro的P6架构标志着Intel x86处理器的架构已经基本成型，之后的Pentium Ⅱ直到Pentium 4，都没有脱离这个体系，学好Pentium Pro的微架构更是后续学习Core架构的重要基础！</p>
+<p>不过当时Cache技术还没有完全成熟，且Cache非常昂贵，因此尽管Pentium Pro性能不错，却远没有达到甩开对手的程度。而其高昂的价格，使得Pentium Pro成为Intel第一个失败的产品，成为了典型的“叫好不叫座”的产品。但Pentium Pro的设计思想和总体架构却对Intel此后的处理器设计造成了深远的影响，其中L2内嵌的模式一直沿用至今。</p>
+<h4 id="pentium-ii"><a class="markdownIt-Anchor" href="#pentium-ii"></a> Pentium Ⅱ</h4>
+<img src="https://s2.loli.net/2022/05/20/FnJ4rjuOV26IbsH.png">
+<center>图22 Intel微处理器Pentium Ⅱ</center>
+<p>1997年，Intel发布了基于Pentium Pro的<strong>P6架构</strong>(此乃Pentum Pro的优点)的32位处理器Pentium Ⅱ，是<strong>对Pentium(P5)与Pentium Pro(P6)的改进版</strong>，其内核代号Klamath，采用0.35μm工艺并支持<strong>x86指令集、MMX指令集</strong>(此乃集合Pentium的优点，Pro中没有支持MMX)，拥有750W个晶体管，主频233MHz，集成了<strong>32KB片内L1 Cache(合计)与512KB 片外L2 Cache(合计)</strong>，socket为Slot1。</p>
+<p>其带来的主要新特色有：</p>
+<ul>
+<li><strong>L2缓存不再与CPU核心保持同速</strong>，考虑到Pentium Pro的失败，以此降低成本。</li>
+<li>采用了<strong>双重独立总线结构</strong>，一条总线连通L2 Cache，另一条负责DRAM。</li>
+<li>首次采用了最新的solt1接口标准，不再用陶瓷封装，而采用了一块带金属外壳的印刷电路板。</li>
+</ul>
+<img src="https://s2.loli.net/2022/05/20/wNE6ajbB4VeCUfp.png">
+<center>图23 Pentium Ⅱ的微架构图</center>
+<p>Pentium Ⅱ基本上是面向消费者的奔腾Pro，整体上与Pentium Pro很相似，只是缓存方面有些不同，而之后随着Pentium Ⅲ的发布被快速取代。但Pentium Ⅱ时期，Intel发布了在PC的商业领域做了很多改进，例如用SDRAM内存取代了老式的EDO DRAM；PC开始引入AGP显卡；发布了面向入门级市场的Celeron(赛扬)系列(即削减了L2 Cache的Pentium Ⅱ，以超频与低价为特点)，以及面向服务器市场的高端处理器Xeon系列(即增强了Cache的版本，以高频与大cache为特点)；开始发布移动版本(面向低能耗)的Pentium Ⅱ等等。</p>
+<h4 id="pentium-iii"><a class="markdownIt-Anchor" href="#pentium-iii"></a> Pentium Ⅲ</h4>
+<img src="https://s2.loli.net/2022/05/20/qLoTbYgWMFD5KGt.png">
+<center>图24 Pentium Ⅲ的微架构图</center>
+<h5 id="第一代pentium-iii内核katmai"><a class="markdownIt-Anchor" href="#第一代pentium-iii内核katmai"></a> 第一代Pentium Ⅲ内核——Katmai.</h5>
+<p>1999年，Intel发布了32位处理器Pentium Ⅲ，<strong>第一代内核代号Katmai</strong>，其实就是<strong>PentiumⅡ的简单改进版</strong>。采用0.25μm工艺，<strong>指令集为IA-32(即x86)、MMX、SSE</strong>，拥有950W个晶体管，主频500MHz，处理速度达到，socket与Pentium Ⅱ相同为Slot 1。</p>
+<p>Katmai除了支持<strong>SSE指令</strong>外其他方面与Pentium II是几乎一样的：</p>
+<p><strong>SSE(Streaming SIMD Extensions)指令集</strong>，共包含70条指令，其中50条<strong>SIMD浮点指令</strong>，12条全新MMX指令和8条系统内存数据流传送优化指令，目的是对<strong>3D游戏性能的显著提升</strong>(MMX指令集的不足)，兼容MMX指令集。由于MMX指令集会借用原浮点寄存器而影响浮点运算的性能，于是Intel为SSE指令集新增了8个全新独立的的128位单精度寄存器，能同时处理4个单精度浮点变量，使得SSE指令集能与其他浮点运算并行。</p>
+<h5 id="第二代pentium-iii内核coppermine"><a class="markdownIt-Anchor" href="#第二代pentium-iii内核coppermine"></a> 第二代Pentium Ⅲ内核——Coppermine.</h5>
+<p>八个月后，Intel发布了<strong>第二代的Pentium Ⅲ</strong>，其<strong>内核版本为Coppermine</strong>， 采用新的0.18μm工艺，主频733MHz，是<strong>Intel历史上首款达到1Ghz的X86处理器</strong>。</p>
+<p>其主要特点有（并非新元素）：</p>
+<ul>
+<li>集成了<strong>32KB片内L1 Cache以及256KB片内L2 Cache(两个都是片内)</strong>(之前Pentium Pro中首次实现，这里L1变大了);</li>
+<li><strong>12级流水线设计</strong>，与后面推出的Pentium Ⅳ架构比短小精悍了，且耗电量低;</li>
+<li><strong>3 路超标量架构</strong>(之前Pentium Pro中首次实现)；</li>
+<li>插槽也更改为Socket 370。</li>
+</ul>
+<p>一般认为，Coppermine才是真正意义上的Pentium，其拥有新架构、新制造工艺、新接口对性能的提升相当巨大，对日后Intel的架构影响深远，后来Intel的Pentium-M以及今天的Core微架构都是脱胎于Coppermine。题外话，在PentiumⅢ的移动版(即Pentium-M架构)中Intel还第一次引入了SpeedStep技能技术，是Intel全新的节约能源技术。</p>
+<h2 id="netburst架构pentium-iv"><a class="markdownIt-Anchor" href="#netburst架构pentium-iv"></a> NetBurst架构——Pentium Ⅳ</h2>
+<img src="https://s2.loli.net/2022/05/20/DIsPiuvSTz6FqAt.png">
+<center>图25 Pentium Ⅳ的微架构图</center>
+<h3 id="第一代pentium-iv内核willametle"><a class="markdownIt-Anchor" href="#第一代pentium-iv内核willametle"></a> 第一代Pentium Ⅳ内核——Willametle</h3>
+<p>2000年，Intel发布了第一款32位Pentium Ⅳ处理器，并没有沿用Pentium Ⅲ的P6架构，而是重新设计了<strong>新微架构NetBurst</strong>。第一款Pentium Ⅳ的<strong>内核为Willametle</strong>。采用0.18μm工艺，拥有4200W个晶体管，主频1.4GHz(轻松过GHz)，采用QPB型FSB，外频达到了400MHz，接口方式为Socket423。</p>
+<p>其主要特点有：</p>
+<ul>
+<li><strong>20级超标量pipeline</strong>，并用各种技术来代偿pipeline停顿产生的性能损失，诸如并行执行，缓冲技术，和投机执行技术。</li>
+<li>采用了<strong>奇贵的RDRAM</strong>来满足Pentium 4的带宽需求。</li>
+<li>在<strong>前端总线引入QDR技术</strong>：在总线的通信信令角度，于DDR的基础上，增加为独立的写接口和读接口，以此达到4倍速率。</li>
+<li>第一次引入<strong>SSE2指令集</strong>。SSE2指令一共144条(SSE包括70条指令)，引入新的数据格式，如：128位SIMD整数运算和64位双精度浮点运算等。</li>
+</ul>
+<p>尽管有着更高的时钟频率，但Willametle同频率的性能表现比AMD的Athlon差了不少，甚至是自家的Pentium Ⅲ在相同的频率下都运行的比它快。同时Willametle不仅发热量大，又采用了价格昂贵的RDRAM，最终成为公认的失败之作，甚至成为高噪音低性能的代名词。</p>
+<h3 id="第二代pentium-iv内核northwood"><a class="markdownIt-Anchor" href="#第二代pentium-iv内核northwood"></a> 第二代Pentium Ⅳ内核——Northwood</h3>
+<p>一年后，Intel发布了第二款Pentium Ⅳ，<strong>内核代号Northwood</strong>。采用精进的0.13μm工艺，拥有5500W个晶体管，主频2GHz，集成了<strong>片内512KB L2 Cache</strong>，socket为Socket478，</p>
+<p>其主要特点有：</p>
+<ul>
+<li>内存改用便宜的<strong>DDR SDRAM</strong>。</li>
+<li>第一次引入<strong>超线程技术(Hyper-Threading)</strong>，也即是课程中学的Simultaneous Multithreading(SMT)(学术叫法)，其实就是以CPU/pipeline的利用率为最大优先，按照“优先将不同线程之间没有hazard的指令装入超标量pipeline”的动态执行的思想来实现系统更高的综合吞吐量。</li>
+</ul>
+<h3 id="第三代pentium-iv内核prescott"><a class="markdownIt-Anchor" href="#第三代pentium-iv内核prescott"></a> 第三代Pentium Ⅳ内核——Prescott</h3>
+<p>2004年，Intel发布了32位处理器，<strong>内核代号为Prescott</strong>的Pentium Ⅳ的重要修订版。采用90nm工艺，拥有1.25亿个晶体管，最高的版本主频达到了3.8GHz，<strong>socket为LGA775</strong>。</p>
+<p>其带来的主要新特色有：</p>
+<ul>
+<li>超深流水线：<strong>31级pipeline</strong>.</li>
+<li>第一次引入<strong>SSE3指令集</strong>。于SSE2的基础上又新增加了13条新指令，一条用于视频解码，两条用于线程同步，其余用于复杂的数学运算、浮点到整数转换和SIMD浮点运算。</li>
+<li><strong>硬件防病毒技术EDB</strong>，与OS相配合后可以防范大部分缓冲区溢出攻击。</li>
+<li>加入了<strong>节能省电技术EIST</strong>，即Pentium-M架构中的SpeedStep技术的改良版，最早在Pentium-M架构中使用。其作用是由OS控制，在CPU使用率低时动态降低CPU的倍率与工作频率，从而实现能耗的降低。</li>
+<li><strong>虚拟化技术Intel VT</strong>，作用是让一个CPU工作起来像多个CPU在并行运行，使一部电脑内同时运行多个OS成为可能。</li>
+</ul>
+<p>Intel将Prescott接口类型的从Socket 478到LGA775，原本是希望能将发热降低，却实际上产生了反作用——功率消耗增加了大约10%，再加之90nm的工艺在当时还不够完满，最终Prescott每个时钟周期<strong>比Northwood多产生大约60%的热量</strong>。Prescott的整体功耗轻松超过百瓦大关，基本上属于火炉级别。</p>
+<h3 id="第一款双核微处理器pentium-d"><a class="markdownIt-Anchor" href="#第一款双核微处理器pentium-d"></a> 第一款双核微处理器Pentium D</h3>
+<p>2005年，Intel发布了“双核”微处理器，Pentium D ，采用与Prescott相同的90nm工艺与socket接口，实际上就是把俩Prescott集成到一个芯片上：<strong>一共有两个die，一个die一个core，而两个core之间的通信不能走内部总线而是走北桥</strong>，被AMD嘲讽为“伪双核”。而其巨大的功耗150w，更不是开玩笑的。</p>
+<p>总结一下<strong>Pentium Ⅳ或NetBurst微架构的核心理念</strong>，四个字概括：<strong>频率至上</strong>。Intel为了与AMD的产品有所区别，而决策开发更高的时钟频率，是经典的<strong>市场驱动技术案例</strong>。为了实现更高的频率，把流水线的级数越拉越大，但pipeline的各级效率也因此降低！而<strong>更高的频率，带来的日益严重的高耗能、高发热以及平庸的性能</strong>，使得Pentium Ⅳ被最终放弃并转入Pentium-M架构，而Intel宣传的Pentium Ⅳ能达到10GHz的目标也因为散热问题化为泡影。这告诉我们，处理器的设计过于被市场需求而不是被架构本身所控制，势必或导致产品本身慢慢地走向歧途。</p>
+<h2 id="移动端架构pentium-m"><a class="markdownIt-Anchor" href="#移动端架构pentium-m"></a> 移动端架构Pentium-M</h2>
+<p>2000年后，便携式PC的需求开始爆发增长，而Intel的相关产品仅有P3与P4架构系列。而P4架构的高能耗高热量难以承载此应用场景——Pentium 4-M功耗35w太高，这使得Intel急需专门研发新的架构来满足移动便携市场的低功耗需求(在此前用Pentium 3-M凑活用)。于是，Intel在基于P6架构(Pentium Pro/Ⅱ/Ⅲ)上研发出了Pentium-M架构，此架构的处理器拥有超越P4的高性能，而且功耗超低，在移动平台留下了深深的烙印。</p>
+<h3 id="第一代pentium-m内核banias"><a class="markdownIt-Anchor" href="#第一代pentium-m内核banias"></a> 第一代Pentium-M内核——Banias</h3>
+<p>2003年，Intel发布了第一代Pentium-M架构，<strong>内核代号为Banias</strong>，是对Pentium Ⅲ(即P6架构)的重大修改（Pentium Ⅲ又是在Pentium Pro基础上改的），采用130nm工艺，拥有7700W个晶体管，主频为1.3GHz~1.6GHz(<strong>性能堪比Pentium Ⅳ的2.8GHz</strong>)，插槽使用了Socket 479(实际上仅478个针脚，且各针脚的定义与桌面款的Socket 478不一样)。</p>
+<p>其带来的主要新特色有：</p>
+<ul>
+<li>Banias的<strong>TDP(最大散热功耗)只有24.5w</strong>，再配合其他节能措施，能够使得笔记本电脑的电池时间提升到3小时以上(比以往架构多了1小时的续航能力)。</li>
+<li><strong>12级流水线</strong>。远远小于NetBurst的流水线长度，既保证了性能也不至于功耗的过高。</li>
+<li><strong>64KB的片上L1 Cache</strong>；4部分<strong>合计总大小为1MB的片上L2 Cache</strong>，可支持单独访问，实现省电降功耗低的目的。</li>
+<li><strong>改进的分支预测和预取机制，预测比Pentium Ⅲ高20%</strong>(presccot的核心成果)；</li>
+<li>第一款x86<strong>支持Micro-ops Fusion(微操作融合)</strong>：在指令解码后的多个微操作作为一个bundle，待它们所需的处理单元都在pipeline中空闲时共同输入pipeline中，以提升pipeline的吞吐量。</li>
+</ul>
+<p>同时，Intel<strong>推出了Centrino(迅驰)平台</strong>——将Pentium-M CPU、i855系列芯片组和802.11b无线网卡捆绑销售——大获成功，也推动了802.11b无线网络的普及。</p>
+<h3 id="第二代pentium-m内核dothan"><a class="markdownIt-Anchor" href="#第二代pentium-m内核dothan"></a> 第二代Pentium-M内核——Dothan</h3>
+<p>2004年，Intel推出了二代Pentium-M架构，<strong>内核代号为Dothan</strong>，采用更精进的90nm工艺，拥有1.4亿个晶体管，主频为1.7GHz~2.0GHz。</p>
+<p>其带来的主要新特色有：</p>
+<ul>
+<li><strong>TDP功耗降低到21瓦</strong>(<strong>比Banias低3.5w</strong>)</li>
+<li><strong>64KB的片上L1 Cache；2MB的片上L2 Cache</strong>(<strong>两倍于Banias，与Banias同技术</strong>)</li>
+<li>基于Dothan的二代迅驰平台推出了<strong>54Mb/s的802.11g无线网络</strong>，带动了整个无线设备市场的更新换代。</li>
+</ul>
+<p>最终可以得到，Dothan的综合性能大多数情况比Banias高出10-20％。</p>
+<h3 id="第三代pentium-m内核yonah"><a class="markdownIt-Anchor" href="#第三代pentium-m内核yonah"></a> 第三代Pentium-M内核——Yonah</h3>
+<img src="https://s2.loli.net/2022/05/20/bgyVsZ49HKeTtEU.png">
+<center>图26 Yonah微架构图</center>
+<p>2006年，Intel发布了第三代Pentium-M架构，<strong>内核代号为Yonah</strong>，<strong>以Core(酷睿)品牌发行</strong>，是<strong>英特尔史上第一种原生双核心x86处理器</strong>，其<strong>本质是两个Dothan的整合</strong>，具体的处理器产品系列号为Core Duo。Yonah采用65nm工艺，主频自1.06GHz到2.33GHz，采用12级流水线(<strong>3.8GHz的Pentium 4完全没法和Yonah相比</strong>)，接口为Socket M。</p>
+<p>其带来的主要新特色有：</p>
+<ul>
+<li>新加入<strong>共享缓存设计</strong>：<strong>两个Core可以共享2MB二级缓存</strong>，而不是独享，显著提升了双核处理器的任务配合能力。</li>
+<li>加入了<strong>SSE3指令集、英特尔虚拟化技术(Intel VT)与英特尔病毒防护技术(Intel EDB)，加入了之前在Pentium Ⅳ首次实施的技术</strong>。</li>
+</ul>
+<p>Yonah是第一款<strong>面向便携式电脑设计的真双核X86处理器</strong>，拥有极佳的性能(比Pentium 4快多了)，保有<strong>24瓦的超低功耗水平，TDP功耗提升到31瓦</strong>，在市场上取得了巨大的成功；其唯一的缺点就是依然是32位处理器。之前的Pentium D双核是一个外壳内封装两个处理器，两个die两个core；而Yonah是一个die两个core。<strong>作为Core品牌的第一款处理器，Yonah实际上却没有使用Core 2的架构，而是Pentium-M架构</strong>。</p>
+<p>在此阶段，P5与P6架构的荣光也就此落幕，而Pentium 4系列更是无地自容，使Pentium 4开发团队引咎辞职。</p>
+<h2 id="core-2系列core架构"><a class="markdownIt-Anchor" href="#core-2系列core架构"></a> Core 2系列(Core架构)</h2>
+<img src="https://s2.loli.net/2022/05/20/aFgCwmGdJrHc5qB.png">
+<center>图27 Core微架构图</center>
+<p>Intel发布了基于Core品牌的内核Yonah，但Yonah的架构是采用Pentium-M，而<strong>真正意义上的Core架构却是从Merom内核开始</strong>(同时Intel称之为Core 2系列)，其具体的产品系列代号为Core 2 Duo。</p>
+<p>2006年7月，Intel发布了<strong>第一款Core架构的内核Merom(移动端)</strong>，是建立在Pentium-M架构(Yonah)基础上，融合了Pentium Ⅳ的经验与教训的产物。采用65nm工艺，使用<strong>x86_64指令集</strong>，接口采用Socket M。</p>
+<p>其带来的主要新特色有：</p>
+<ul>
+<li>Merom实现了<strong>指令四发射</strong>：Merom将<strong>指令分为20%热指令与80%冷指令，可同时解码四道指令</strong>。相比RISC增加并行指令发射数目简单，CISC乱增加发射数目会导致频率上不去，因此之前的x86处理器只能做到三发射(此时的AMD K8架构也只能实现三发射)，这说明在<strong>Merom中实现了指令解码效率提升了33%</strong>。这项成就是Core微架构的最大变化之一，一直是<strong>当时英特尔的技术壁垒</strong>；其竞争度对手AMD的K10架构、新一代(当时)“推土机”架构统统都没有实现四发射，直到Zen架构中才实现这项技术。</li>
+<li><strong>Macro-Ops Fusion(宏操作融合)</strong>——如CMP指令和JMP指令融合，可实现在指令解码阶段，<strong>对多条常用指令组合进行宏代替</strong>，实现解码效率提升与加速并降低功耗，此技术比Micro Fusion(微操作融合)用的更广泛。</li>
+<li><strong>第一个采用Intel-64(EM64T)架构的Intel移动处理器</strong>。说起64位指令集，同样的64位拓展指令集却有好几个名字，千奇百怪容易乱，我细细整理后是这样的过程：<br>
+以前Intel的<strong>32位x86指令集被称为IA-32</strong>；后来Intel开发出<strong>独立的64位、与x86架构完全不同又不兼容的IA-64架构</strong>；IA-64不兼容IA-32使得<strong>AMD开发出的64位指令集AMD-64(兼容IA-32)<strong>在市场上认可度很高，<strong>Intel也有模有样的开发出自己版本的“AMD-64”，命名为Intel-64，又称IA-32e或EM64T</strong>。而市场上</strong>统称IA-64与AMD-64为x86-64指令集</strong>。</li>
+</ul>
+<p>因为Core微架构是Intel在Yonah微架构基础上改进而来，其<strong>架构与Yonah架构的内部结构是几乎相同的</strong>。 它们具有相同的解码流程、乱序执行流程、简单解码单元与复杂解码单元相配合的设计、共享式二级缓存的设计，只是在<strong>解码单元与执行单元的数量</strong>、<strong>内部总线的宽度</strong>以及各个<strong>缓冲区的容量</strong>上的差异。</p>
+<p>后来Intel在台式机市场也推出Core 2系列，<strong>内核为Conroe(扣肉)<strong>的双核处理器，在</strong>内部架构上同Merom没有任何区别</strong>，功能上也完全一致，只是作为台式机可以具有更高的频率(虽然不如Pentium Ⅳ高，但性能是能虐虐它的)。上述这些技术使Core架构极大幅度提高了性能也显著降低了功耗(移动端Merom提升幅度没桌面端大，因为Yonah本身性能很不错)——<strong>与Pentium D相比，Conroe的性能提高了40％，功耗却降低了40％</strong>。最终摧枯拉朽地击败了当时的AMD的Athlon X2系列，其只能依靠性价比优势进行突击。</p>
+<p>在<strong>服务器市场，Intel推出了内核Penryn</strong>，即采用45nm工艺的Merom，四核处理器，新增了一些功能：①加入了<strong>SSE4指令集</strong>——又增加了50条新的增加性能的指令，这些指令有助于编译、媒体、字符/文本处理和程序指向的加速；②<strong>增强型动态加速技术</strong>(Enhanced Dynamic Acceleration Technology)——可以让<strong>一个内核睡眠而令一个内核加速</strong>。</p>
+<h2 id="core-i系列挤牙膏到今天的intel"><a class="markdownIt-Anchor" href="#core-i系列挤牙膏到今天的intel"></a> Core i系列——挤牙膏到今天的Intel</h2>
+<p>自2007年始，Intel实施了<strong>Tick-Tock的发展模式</strong>(2年周期)，从而使芯片设计制造业务更有效率：Intel将在<strong>奇数年(Tick)推出新制成工艺</strong>；<strong>偶数年(Tock)推出新架构的微处理器</strong>。而Tick-Tock战略也被很多用户戏称为**“挤牙膏策略”**——每一代处理器之间的性能差距将会很小。</p>
+<img src="https://s2.loli.net/2022/05/20/D28pBlOybucIAxz.png">
+<center>图28 Intel的Tick-Tock发展战略</center>
+<p>而在<strong>2016年，Intel宣布Tick-Tock将放缓至三年一周期</strong>，从2年的Tick-Tock(工艺-架构)模式更改为<strong>2年周期的PAO(Process-Architecture-Optimization，工艺-架构-优化，又称Tick-Tock-Refresh)模式</strong>，原因就是制造工艺的瓶颈！</p>
+<p><strong>10nm工艺被认为是硅基半导体的转折点；再往后的7nm工艺则已经进入量子学范畴</strong>，使得半导体特性都有变化了，所以研发难度更大，量产良品率也低，需要更多黑科技材料以及新一代EUV光刻设备。如果不对材料进行改进，随着晶体管越来越小、晶体管密度越来越大，随之出现的日益严重的漏电和发热问题。Intel的7nm芯片按照PAQ模式应于2020年发布，结果也延期至2022年了，真的是连“牙膏”都难挤出来了呀。而“摩尔定律将死”的呼声也开始流传开来。</p>
+<p>在2015年，Intel就卡在14nm到10nm工艺之间，后来进入10nm——仅仅相当于20个硅原子宽度——制程后，其制造难度让原本的芯片研发周期更是无法适应，这使得Intel不得不延长原制成的使用周期。更何况Intel是“自产自销”模式，靠自家晶圆厂而不像AMD找台积电代工生产芯片，有报道称其10nm晶体管密度与台积电7nm晶体管密度相当，从而7nm制程良品率限制更多。</p>
+<h3 id="nehalem架构"><a class="markdownIt-Anchor" href="#nehalem架构"></a> Nehalem架构</h3>
+<h4 id="tocknehalem"><a class="markdownIt-Anchor" href="#tocknehalem"></a> Tock——Nehalem</h4>
+<p>2008年11月，Intel推出了升级架构Nehalem，<strong>内核代号也是Nehalem</strong>，采用45nm工艺不变，是<strong>第一代Core i系列处理器</strong>。Nehalem是在Core架构上进行改进的，主频为1.06GHz~3.33GHz，核心支持2-8核，接口采用LGA1366。Intel<strong>按照i7、i5、i3的顺序发布i系列处理器，来分别对应高级、中级与入门级市场，采用相同的内核架构</strong>。</p>
+<img src="https://s2.loli.net/2022/05/20/fMq5rGWIelZSBQA.png">
+<center>图29 Nehalem架构图</center>
+<p>其带来的主要特色有：</p>
+<ul>
+<li>首次引入了<strong>睿频加速技术(Intel Turbo Boost 1.0)</strong>，即使得CPU会根据当前的任务量自动调整主频甚至自动超频，实现性能与省电策略的最大化。</li>
+<li><strong>重新引入了超线程技术</strong>(在Pentium Ⅳ中首次引入)。</li>
+<li><strong>三级Cache</strong>：<strong>其单核L1 Cache为64KB，单核L2 Cache 256KB，共享L3 Cache 4MB~24MB；减少了L2/L3 Cache Line大小(自Netburst的128KB改为64KB，与Pentium-M架构相同)，扩大了共享的L3 Cache大小</strong>。</li>
+<li>将<strong>内存控制器集成于片内(Integrated Memory Controller，IMC)，直接取消了北桥芯片组</strong>。内存控制器决定了计算机系统的内存参数与性能，CPU与内存的通信原本要经过北桥，其带宽受到前端总线FSB的限制难以提升。Intel在Nehalem采用了新的直连架构，使CPU到内存的路径更短，同时采用<strong>片内全新的QPI(Quick Path Interconnect)总线技术(支持多处理器以及允许core间内部互通)</strong>，来大幅度提高CPU与内存的I/O性能，并支持三通道DDR3。</li>
+<li>支<strong>持四种分支预测predictor：Branch Target Buffer(BTB), Loop Detector, Indirect Branch Target Array和Return Stack Buffer (RSB)</strong>。</li>
+<li><strong>20-24级pipeline</strong>。</li>
+<li>采用<strong>64位宏操作融合(MOF)技术</strong>。</li>
+<li><strong>指令与数据共存的二级4路TLB(sTLB)</strong>。</li>
+<li>增大了Core的大小，从而实现更高的性能。比Penryn(Merom内核的后续精工艺版)<strong>降低了30%的功耗，平均提高了15%-20%的单周期性能</strong>(单线程/多线程都有不错的提高)。</li>
+<li><strong>降低了架构中原子操作的50%时延</strong>，例如加锁操作的Compare-and-Swap(CAS)指令。</li>
+</ul>
+<h4 id="tickwestmere"><a class="markdownIt-Anchor" href="#tickwestmere"></a> Tick——Westmere</h4>
+<p>1年后的2010年1月，Intel推出了采用升级工艺32nm的<strong>Westmere内核</strong>，<strong>架构依然是Nehalem</strong>，接口采用LGA1156。Westmere最大的变化就是<strong>片内集成了GPU(核显)</strong>，虽然性能不行但<strong>抢占了AMD宣传好久APU核显的先机</strong>，间接影响了Navida放弃芯片组市场。</p>
+<h3 id="sandy-bridge架构"><a class="markdownIt-Anchor" href="#sandy-bridge架构"></a> Sandy Bridge架构</h3>
+<h4 id="tocksandy-bridge"><a class="markdownIt-Anchor" href="#tocksandy-bridge"></a> Tock——Sandy Bridge</h4>
+<p>2011年1月，Intel推出了<strong>升级架构Sandy Bridge</strong>，<strong>内核代号也是Sandy Bridge</strong>，采用32nm工艺不变，是第二代Core i系列处理器，其架构是Nehalem的后继者。其主频为1.6GHz~3.6GHz，接口采用LGA1155，依然是64KB-256KB-2MB(per core L1, per core L2, shared L3)的Cache模式。</p>
+<img src="https://s2.loli.net/2022/05/20/2AJjTFnbC1ZW4lS.png">
+<center>图30 Sandy Bridge其内Die示意图</center>
+<p>其带来的主要特色有：</p>
+<ul>
+<li>对集成的GPU架构进行修改，<strong>真正实现将GPU与CPU融合的核显</strong>(Integrated Graphics Processor，IGP)，使核显的性能增强，直逼低端的独显，同时核显可以访问共享的L3 Cache。</li>
+<li>采用了**环形总线(Ring Bus)**来链接各个core以及其L1/L2 Cache，从而以简介、高效又灵活的方式使多核之间的通信与交互变得简单。</li>
+<li>支持了<strong>AVX 256-bit指令集</strong>是Sandy Bridge最重要的改进，实现浮点性能、矩阵计算快90%。<strong>AVX指令集是X86指令集的SSE延伸架构</strong>，其全新的命令格式系统同时也为AVX指令集的大幅度后续扩充做好了准备。</li>
+<li>支持<strong>Intel Quick Sync Video技术</strong>，目的是加速硬件视频解码。</li>
+<li>使用了<strong>新一代智能动态加速技术(睿频2.0)</strong>(Intel Turbo Boost 2.0，上一个版本用在了Nehalem上)，增强了CPU自动提速的弹性，除CPU外还可对GFX(核显)进行加速，并随着系统负载的不同协调二者的频率升降，表现得更加智能化。</li>
+<li>支持双通道DDR3-1600；</li>
+<li>采用14到19级的pipeline(取决于微操作cache是否命中)。</li>
+</ul>
+<img src="https://s2.loli.net/2022/05/20/iCSzOcRP34mvIyu.png">
+<center>图31 Sandy Bridge的Ring Bus结构</center>
+<p>这一时期AMD大力鼓吹<strong>异构计算</strong>，其Fusion APU概念让Intel压力山大。</p>
+<h4 id="tickivy-bridge"><a class="markdownIt-Anchor" href="#tickivy-bridge"></a> Tick——Ivy Bridge</h4>
+<p>2012年4月，Intel推出了采用升级工艺22nm的<strong>Ivy Bridge内核</strong>，<strong>架构依然是Sandy Bridge</strong>，是第三代Core i系列处理器。其主频为1.4GHz~4.1GHz，接口采用LGA1155不变，依然是64KB-256KB-2MB(per core L1, per core L2, shared L3)的Cache模式。</p>
+<img src="https://s2.loli.net/2022/05/20/PUS3fiwEMhjtb17.png">
+<center>图32 Ivy Bridge其内Die示意图</center>
+<p>Ivy Bridge是Sandy Bridge的工艺改良版，并没有对架构做出太大修改，其带来的主要特色有：</p>
+<ul>
+<li>首次采用了22nm 3D晶体管工艺，是今后Intel半导体工艺的重要基础；</li>
+<li>CPU内部PCI-E控制器也升级到<strong>PCI-E 3.0标准</strong>，带宽提升了一倍，分配方式也更灵活；</li>
+<li>集成GPU得到一定增强，其<strong>EU(类似CPU中的ALU，EU是GPU的基本运算单元)数从12个提升到16个</strong>，API支持从DX10.1升级到了DX11。</li>
+</ul>
+<h3 id="haswell架构"><a class="markdownIt-Anchor" href="#haswell架构"></a> Haswell架构</h3>
+<h4 id="tockhaswell"><a class="markdownIt-Anchor" href="#tockhaswell"></a> Tock——Haswell</h4>
+<img src="https://s2.loli.net/2022/05/20/gnyoms9wKcM1e3V.png">
+<center>图33 Haswell其内Die示意图</center>
+<p>2013年6月，Intel推出了升级架构Haswell，<strong>内核代号也是Haswell</strong>，采用22nm工艺不变(更成熟，大幅改善因量子穿隧效应而导致的漏电率)，是第四代Core i系列处理器。其Cache依然是64KB-256KB-2MB(per core L1, per core L2, shared L3)模式，接口采用LGA1150。</p>
+<img src="https://s2.loli.net/2022/05/20/IoScuWVbvtGTmf6.png">
+<center>图34 Haswell架构图</center>
+<p>其带来的主要特色有：</p>
+<ul>
+<li>Haswell最引人注目的地方就在于<strong>各种节能设计</strong>：主板上的电压调节模块(VRM)集成到了CPU内部，称为FIVR模块(全集成式电压调节模块)，是Haswell节能设计的一个重大基础，能够实现对CPU内部电压更精准的把控与功耗管理、主板的供电效率的提升以及简化主板设计。</li>
+<li>增加了两个指令集：<strong>针对多线程应用的TSX扩展指令，以及AVX指令的进阶版AVX2指令集</strong>。</li>
+<li>从Haswell架构开始，<strong>核显开始模块化、可扩展的设计</strong>并使用Gen7.5架构，方便走后续暴力堆砌核显规格的道路——最高级的核显拥有40个EU，还有大容量eDRAM作为L4 Cache，可同时提升CPU与GPU性能。</li>
+</ul>
+<h4 id="tick-processbroadwell"><a class="markdownIt-Anchor" href="#tick-processbroadwell"></a> Tick (Process)——Broadwell</h4>
+<p>2014年1月，Intel推出了采用升级工艺14nm的<strong>Broadwell内核</strong>，<strong>架构依然是Haswell，是第五代Core i系列处理器</strong>。</p>
+<p>Broadwell主要用在移动与服务器平台上，且国内没有正式上市所以没啥存在感。实际上，Intel自己也在2014年承认在生产14nm工艺的Broadwell就卡了很久(良品率不够)，以至于砍掉了Broadwell的桌面版，而直接在Tock年推出了后续的Skylake新架构。</p>
+<p>另一方面，Broadwell也不过是Haswell的工艺增强版：Intel表示14nm工艺的每瓦性能比是22nm工艺的2倍；在诸如sTLB的大小、某些指令的延迟、指令调度队列大小等参数上进行了优化改动；实现了IPC提升约5％；同时对核显也进行了一定的优化，使用Gen8架构；微处理器接口也采用LGA1150不变。Broadwell几乎没有对架构进行太多改动。</p>
+<h3 id="skylake架构"><a class="markdownIt-Anchor" href="#skylake架构"></a> Skylake架构</h3>
+<h4 id="tock-architectureskylake"><a class="markdownIt-Anchor" href="#tock-architectureskylake"></a> Tock (Architecture)——Skylake</h4>
+<p>2015年8月，Intel推出了升级架构Skylake，<strong>内核代号也是Skylake</strong>，采用14nm工艺不变(但比Broadwell更成熟)，是<strong>第六代Core i系列处理器</strong>。其最高主频高达4.5 GHz，接口采用LGA1151。</p>
+<p>Skylake同时升级了架构、工艺及核显等，四核称为标配，其带来的CPU主要特色与改进有：</p>
+<ul>
+<li>内存<strong>同时支持DDR3与DDR4</strong>，实现DDR3、DDR4 的无缝接轨。</li>
+<li>更先进的14nm工艺(Broadwel太菜啥也不是)，使用了第二代FinFET晶体管技术，缩小了晶体管的体积，提升了其密度，优化了漏电问题，使Skylake在<strong>提升了频率与性能又明显降低了TDP功耗</strong>(四核处理器的TDP从Haswell)。</li>
+<li><strong>取消了Haswell中引入的FIVR电压控制模块</strong>，使电压控制功能重新回归主板上。因为实现片内集成FIVR电压控制模块增加了处理器的复杂性，虽然FIVR能更易于处理器进行功耗管理，但却也会增加TDP功耗。</li>
+<li>使用<strong>网状总线架构(mesh bus)代替原来的ring Bus(环形总线架构)</strong>。这是因为ring bus的特点是随着核数的增加延迟时间也会增加，当核心数较多时ring bus的是延迟就会比较明显。在Skylake架构的Intel Xeon E7 v4处理器中，内核数量已经达到24个。</li>
+<li>解放了一定的外频，从而强化了可超频性，令Skylake的超频性能很好。</li>
+</ul>
+<p>在GPU方面，Skylake核显与Broadwell相似，但使用<strong>Gen9架构</strong>，每组Subslice(GPU中多个EU加上一些附属部件组合而成)单元依旧是24个EU，但整体规模变得更大了(<strong>暴增到72个EU</strong>)。</p>
+<h4 id="optimization一堆细灰级更新"><a class="markdownIt-Anchor" href="#optimization一堆细灰级更新"></a> Optimization——一堆细灰级更新</h4>
+<p>2016年8月，Intel推出了采用工艺14nm的<strong>Kaby Lake内核</strong>，<strong>架构依然是Skylake</strong>，是Skylake的第一个优化版本，主要改善能耗比，是<strong>第七代Core i系列处理器</strong>，接口也采用LGA1151不变。</p>
+<p>其增加的细微优化内容例如：</p>
+<ul>
+<li>Intel在Kaby Lake上升级为14nm+工艺，采用了更高的鳍片与更宽的栅极间距(晶体管上的)，从而降低晶体管密度、减少漏电概率，如此一来可以实现更高的频率但功耗能没什么变化。</li>
+<li>在<strong>GPU方面采用全新的图形架构——使用Gen9.5架构</strong>，增加了H.265 Main.10、VP9 8/10-bit等格式的硬件解码与编码，可大幅降低3D图形和4K视频播放时的功耗。</li>
+<li><strong>支持DMI 3.0(Direct Media Interface，直接媒体接口)以及Thunderbolt 3</strong>。</li>
+</ul>
+<p>2017年10月，Intel推出了<strong>更精进的14nm工艺的Coffee Lake内核</strong>，<strong>架构依然是Skylake</strong>，是Skylake的第二个优化版本，也是<strong>第八代Core i系列处理器</strong>，接口采用LGA1151-2。此产品主要是为了<strong>应对AMD的初代Ryzen处理器(八核)带来的压力</strong>而也迅速推出的“多核”版本。</p>
+<p>其增加的细微优化内容例如：</p>
+<ul>
+<li><strong>更多的core</strong>(在Kaby Lake对应的i系列产品多增加两个)，并<strong>根据core的数量增加L3 Cache的容量</strong>。</li>
+<li>再次改进制程，升级为14nm++工艺，具有更高的晶体管栅极间距实现更低电流和更多晶体管，从而实现更高的功率(以芯片面积和空闲功率变大为代价)。</li>
+<li><strong>不再支持DDR3内存，同时DDR4内存可支持2400MHz(i3)与2666MHz(i5和i7)</strong>。</li>
+<li><strong>提高了睿频时钟频率</strong>，最高可增加200MHz。</li>
+</ul>
+<p>2019年8月，Intel推出了<strong>精进的14nm工艺(依然是14nm++)的Comet Lake内核</strong>，是<strong>Coffee Lake的更多核心版本(i7,i9)，架构依然是Skylake，是第十代Core i系列处理器</strong>，接口采用LGA1200，其实没有明显变化。</p>
+<p>纵观Intel，在2017到2019年间共发布了5款14nm的Optimization阶段的内核…而算上下面的Process、Architecture阶段，以及上面的Tick阶段发布的第一款14nm工艺的Broadwell内核，Intel在2014年到2018年一共发布了8款14nm工艺的内核…好嘛，我完全能感受到Intel被卡在10nm工艺的痛苦，以及对战略的更改。而这些处理器大部分相邻代之间的修改与调整优势何其细碎，真就是“挤牙膏”呢，性能之间的进步都不如当初4004到8008之间的飞跃(夸张)。</p>
+<h4 id="process流产的cannon-lake与coffee-laker"><a class="markdownIt-Anchor" href="#process流产的cannon-lake与coffee-laker"></a> Process——流产的Cannon Lake与Coffee Lake/R</h4>
+<p>2018年5月，Intel推出了<strong>依然是14nm工艺(理论上应该是10nm)的Cannon Lake内核，架构依然是Skylake，是第九代Core i系列处理器</strong>(P.S. 第十代写在了上面，19年的Comet Lake)。</p>
+<p>虽然Cannon Lake应该是Process(更新工艺)阶段，但是Intel依然卡在14nm到10nm的这道坎，以致于继续推出了14nm的Cannon Lake内核！Cannon Lake被初代10nm工艺所严重拖累，以至于该系列仅推出了一款处理器就被Intel给砍掉了，而为它配套的300系芯片组被修修改改用在了Coffee Lake身上。而由于工艺制成问题无法按期解决，最终Cannon Lake也在Intel的信誓旦旦中悄然凋零，仅有一款实体产品流入了中国市场的教育机(而且性能臭的不行)。</p>
+<p>同年第四季度，Intel推出了<strong>14nm+++(14nm的天花板)工艺的Coffee Lake Refresh内核</strong>(Coffee Lake是17年发布的，上面提到)，架构依然是Skylake，作为正儿八经发售的第九代Core i系列处理器，是历史上<strong>首次支持高达128GB内存的处理器</strong>，接口采用LGA1151-2不变。</p>
+<h3 id="sunny-cove架构"><a class="markdownIt-Anchor" href="#sunny-cove架构"></a> Sunny Cove架构</h3>
+<h4 id="architectureice-lake"><a class="markdownIt-Anchor" href="#architectureice-lake"></a> Architecture——Ice Lake</h4>
+<p>2019年8月，Intel推出了<strong>升级架构Sunny Cove，其内核代号为Ice Lake，也更新采用10nm新工艺</strong>(姗姗来迟)！Ice Lake是第二代10nm工艺处理器(第一代是流产的Cannon Lake)，也是<strong>第十代Core i系列处理器</strong>(另一个是同期发布的Skylake架构的Comet Lake)，接口采用BGA1526。</p>
+<p>其主要特点有：</p>
+<ul>
+<li>更深的缓冲区与更大的缓存结构：<strong>对L2 Cache提升到512KB每核心</strong>、加大了微指令Cache、加大了ROB队列的大小等等数值调整。</li>
+<li>加入了<strong>AVX512指令集</strong>。同时因运算AVX512中指令会提升CPU功耗，因此Ice Lake默认频率被大幅调低以保持TDP功耗。</li>
+<li><strong>支持LPDDR4X内存</strong>。</li>
+<li><strong>集成Thunderbolt 3.0控制器</strong>(Intel与苹果合作开发的硬件接口标准，一个多功能外设接口)。</li>
+<li>基于机器学习辅助的动态调频技术2.0，其实就是<strong>基于机器学习来让CPU提前对未来进行动态睿频</strong>。</li>
+</ul>
+<h4 id="optimizationtiger-lake"><a class="markdownIt-Anchor" href="#optimizationtiger-lake"></a> Optimization——Tiger Lake</h4>
+<p>2020年9月，Intel发布了<strong>代号Tiger Lake的第十一代Core系列微处理器</strong>，同时<strong>架构升级为Willow Cove</strong>，号称近年来处理器史上一次巨大飞跃：工艺到架构都有极大变化，升级力度在这几代酷睿中是非常明显的。</p>
+<p>Tiger Lake采用10nm+工艺，首次采用全新的SuperFin晶体管技术(官方表示它甚至重新定义了FinFET工艺)；得益于先进的工艺，从上代的3.9GHz一下子提升到4.8GHz，保持功耗不变的情况下提升了20%的性能。</p>
+<p>其主要特点有：</p>
+<ul>
+<li><strong>GPU使用全新的Xe架构，最多拥有96个EU</strong>(相比Ice Lake增多了一半)，<strong>浮点性能提升了87%，相当于入门级独显了</strong>。</li>
+<li>支持<strong>AI加速指令集DLBoost</strong>，同时Intel<strong>重写了底层架构，针对全场景AI作了加强</strong>——除了已经支持的BF16，又增加了其内的<strong>VNNI、DP4A等指令集</strong>，带来了更强大的AI性能或矢量神经网络指令，支持低精度指令，可加速基于卷积神经网络的算法。</li>
+<li>加入了独立的<strong>GNA 2.0(Gaussian&amp;Neural Accelerato)单元(Intel的低功耗AI加速器)</strong>，能专门针对工作流负载进行优化，如在听写、翻译或动态降噪方面帮助用户提升体验。其只需低功耗就可以高效推理计算，并且将CPU占用率降低了20%而可以全天候使用——闲时低功耗待机，忙时加速AI运算。</li>
+</ul>
+<h4 id="process"><a class="markdownIt-Anchor" href="#process"></a> Process</h4>
+<p>还未发布。</p>
+<h1 id="intelamd-roadmap将来几代架构的分析"><a class="markdownIt-Anchor" href="#intelamd-roadmap将来几代架构的分析"></a> Intel/Amd Roadmap将来几代架构的分析</h1>
+<p>由于制程工艺已经抵达10nm，不断涌现的材料学与元器件方面的问题会不断制掣其工艺的提升，使难度继续增加。虽然说各界都有在挖寻各色黑科技与材料来尝试对工艺进行突破，但现实一些思考，摩尔定律的减速已经非常明显。回看Intel在22nm-14nm-10nm的痛苦过程，<strong>Intel的优势很大程度上来自于其领先的制程工艺</strong>，据查阅有说法Intel领先其他代工厂3年多，然而在14nm到10nm这根硬骨头上卡得太久太久，使<strong>Intel的工艺优势已经荡然无存了</strong>。</p>
+<p>我有理由认为，芯片半导体的制程工艺精进会非常缓慢，而“多核处理器”的发展基调将会继续保持为未来7、8年的新发布微处理器的主要旋律，但是单纯叠核心数与Cache大小过于无脑。因此，基于多核的任务协调处理机制、对当下架构与老制程的进一步补充优化将会是芯片性能提升的过渡方法。</p>
+<p>其次，自从AMD的APU以及Intel的核显理念与产品的推出，片内集成GPU的地位与效用也不断凸出，因此各厂家都必然会对核显的性能继续深入优化并作为卖点的宣传攻势。</p>
+<p>Intel的历代Core系列的变化，从CPU到GPU再到现在新兴的AI芯片，它们已经逐渐融为一体：<strong>CPU可以提升GPU性能，GPU可以辅助AI计算，而AI芯片也可以辅助CPU处理各色新型任务</strong>。当下并行计算、图形渲染与人工智能的应用场景越来越广泛，那么面向AI的计算芯片也将会成为重非常要的市场热点。</p>
+<h1 id="参考文献与网站"><a class="markdownIt-Anchor" href="#参考文献与网站"></a> 参考文献与网站</h1>
+<p><a href="http://www.mcplive.cn/index.php/article/index/id/10609/viewall/1">见证&quot;芯&quot;路 30年CPU架构发展史(一)Intel</a><br>
+<a href="https://cpu.zol.com.cn/46/461549_all.html">Intel芯片设计35年：从4004到80核心</a><br>
+<a href="https://mp.weixin.qq.com/s/31tCRFr2UNAUvhqA7MCfRA">普及贴：CPU的发展历程（X86篇）</a><br>
+<a href="https://blog.csdn.net/jhkmichael/article/details/105907377">intel和amd处理器发展历史-CSDN</a><br>
+<a href="https://www.shangyexinzhi.com/article/421398.html">X86架构发展史（上）_新知</a><br>
+<a href="https://en.wikipedia.org/wiki/Intel_4004">维基百科Intel CPU 4004</a><br>
+<a href="https://en.wikipedia.org/wiki/Intel_8008">维基百科Intel CPU 8008</a><br>
+<a href="https://en.wikipedia.org/wiki/Intel_8080">维基百科Intel CPU 8080</a><br>
+<a href="https://en.wikipedia.org/wiki/Intel_8086">维基百科Intel CPU 8086</a><br>
+<a href="https://en.wikipedia.org/wiki/Intel_80286">维基百科Intel CPU 80286</a><br>
+<a href="https://blog.csdn.net/qq_37653144/article/details/82818191">实模式和保护模式_CSDN</a><br>
+<a href="https://blog.csdn.net/kennyrose/article/details/7563649">CPU 实模式 保护模式 和虚拟8086模式_CSDN</a><br>
+<a href="https://blog.csdn.net/trochiluses/article/details/8954527">实模式与保护模式解惑之（一）——二者的起源与区别_CSDN</a><br>
+<a href="https://zhuanlan.zhihu.com/p/69334474">x86-64处理器的几种运行模式</a><br>
+<a href="https://www.cnblogs.com/chengxuyuancc/archive/2013/05/12/3073738.html">实模式、保护模式和虚拟模式_博客园</a><br>
+<a href="https://www.cnblogs.com/xiaoxiongcanguan/p/12852788.html">80386学习（一） 80386CPU介绍_博客园</a><br>
+<a href="https://stkeke.blog.csdn.net/article/details/85230687">8086架构/流水线及其优化_CSDN</a><br>
+<a href="https://blog.csdn.net/qq_43401808/article/details/85230797">80286/286/Intel286 架构/流水线及其优化_CSDN</a><br>
+<a href="https://zhuanlan.zhihu.com/p/27653150">80386的缓存Cache_知乎</a><br>
+<a href="https://stkeke.blog.csdn.net/article/details/85231491">80486/486/Intel486 架构/流水线及其优化_CSDN</a><br>
+<a href="https://markcup.top/2020/03/02/cpu%E5%8F%91%E5%B1%95%E7%AE%80%E5%8F%B2/">CPU发展简史_马克的杯子</a><br>
+<a href="https://en.wikipedia.org/wiki/Intel_80386">维基百科Intel CPU 80386</a><br>
+<a href="https://en.wikipedia.org/wiki/Intel_80486">维基百科Intel CPU 80486</a><br>
+<a href="https://en.wikipedia.org/wiki/P5_%28microarchitecture%29">维基百科P5（微体系结构）</a><br>
+<a href="https://en.wikipedia.org/wiki/Pentium_Pro">维基百科Pentium Pro</a><br>
+<a href="https://blog.csdn.net/qq_43401808/article/details/85232214?ops_request_misc=%25257B%252522request%25255Fid%252522%25253A%252522161180433216780264022625%252522%25252C%252522scm%252522%25253A%25252220140713.130102334.pc%25255Fblog.%252522%25257D&amp;request_id=1">Pentium Pro架构/流水线及其优化 (3)_CSDN</a><br>
+<a href="https://en.wikipedia.org/wiki/Pentium_II">维基百科Pentium Ⅱ</a><br>
+<a href="https://blog.csdn.net/qq_43401808/article/details/85316606?ops_request_misc=%25257B%252522request%25255Fid%252522%25253A%252522161182899016780271521418%252522%25252C%252522scm%252522%25253A%25252220140713.130102334.pc%25255Fblog.%252522%25257D&amp;request_id=1">Pentium II &amp; Pentium III架构/微架构/流水线 (7)_CSDN</a><br>
+<a href="https://en.wikipedia.org/wiki/List_of_Intel_CPU_microarchitectures">维基百科List of Intel CPU microarchitectures</a><br>
+【EM64T与AMD64】<br>
+<a href="https://www.cnblogs.com/Alliswell-WP/p/x86-64.html">64位版本为什么叫amd64，而不是intel64？_博客园</a><br>
+<a href="https://blog.csdn.net/x356982611/article/details/48341921">x86,amd64,x86-64,x64区别_CSDN</a><br>
+<a href="https://www.cnblogs.com/yilang/p/10974327.html">常见的CPU指令集介绍_博客园</a><br>
+【基础知识部分】<br>
+<a href="https://www.zhihu.com/question/37849674">Socket为什么常变而PCI规范不常变化？_知乎</a><br>
+<a href="https://zhuanlan.zhihu.com/p/47479121">为什么不把南桥集成进CPU？_知乎_老狼</a><br>
+<a href="https://zhuanlan.zhihu.com/p/51354994">什么是CPU Die？_知乎_老狼</a><br>
+<a href="https://www.zhihu.com/question/26998618">芯片里面有几千万的晶体管是怎么实现的？_知乎</a><br>
+<a href="https://blog.csdn.net/stringNewName/article/details/90443939">计算机体系结构.指令集架构_CSDN</a><br>
+【还没写入】<br>
+<a href="http://www.mcplive.cn/index.php/article/index/id/10610/viewall/1">见证&quot;芯&quot;路 30年CPU架构发展史(二)AMD</a><br>
+【Core架构】<br>
+<a href="https://blog.csdn.net/qq_43401808/article/details/85451822?ops_request_misc=%25257B%252522request%25255Fid%252522%25253A%252522161190351416780299099522%252522%25252C%252522scm%252522%25253A%25252220140713.130102334.pc%25255Fblog.%252522%25257D&amp;request_id=1">Pentium 4处理器架构/微架构/流水线 (3)_CSDN</a><br>
+<a href="https://stkeke.blog.csdn.net/article/details/85452924">Pentium 4处理器架构/微架构/流水线 (12)_CSDN</a><br>
+<a href="https://en.wikipedia.org/wiki/Pentium_M">维基百科Pentium_M</a><br>
+<a href="https://en.wikipedia.org/wiki/Yonah_%28microprocessor%29">维基百科Yonah (microprocessor)</a><br>
+<a href="https://www.anandtech.com/show/1083/4">Intel’s Centrino CPU (Pentium-M)_AnandTech </a><br>
+<a href="http://tech.sina.com.cn/h/2007-03-31/0630277318.shtml">性能将提升45% 45nm Penryn处理器图解_新浪科技</a><br>
+<a href="https://baike.baidu.com/item/Core%E5%BE%AE%E6%9E%B6%E6%9E%84/492445?fromtitle=CORE%E6%9E%B6%E6%9E%84&amp;fromid=3163328">Core微架构_百度百科</a><br>
+<a href="https://zh.wikipedia.org/wiki/Intel_Tick-Tock">维基百科Intel Tick-Tock</a><br>
+<a href="https://en.wikipedia.org/wiki/Tick%E2%80%93tock_model">维基百科Tick–tock model</a><br>
+<a href="https://www.ithome.com/html/mac/217749.htm">Intel“Tick-Tock”进化模式失效_IT之家</a><br>
+<a href="http://www.360doc.com/content/20/1028/18/72127748_942850444.shtml">Intel“Tick-Tock”已死_个人图书馆</a><br>
+<a href="https://blog.csdn.net/qq_43401808/article/details/85553914">Intel® 处理器产品架构/微架构对照表_CSDN</a><br>
+<a href="https://www.d3tt.com/view/111">intel 虚拟化 VT-d VT-x VT-c 有什么区别_DT33</a><br>
+<a href="https://en.wikipedia.org/wiki/Nehalem_%28microarchitecture%29">维基百科Nehalem (microarchitecture)</a><br>
+<a href="https://en.wikipedia.org/wiki/Sandy_Bridge">维基百科Sandy Bridge</a><br>
+<a href="https://baike.baidu.com/item/QPI">QPI总线_百度百科</a><br>
+<a href="https://www.expreview.com/49967-2.html">Intel真的在挤牙膏？_Expreview</a><br>
+<a href="https://www.expreview.com/25926-3.html">全新Haswell架构_Expreview</a><br>
+<a href="https://en.wikichip.org/wiki/intel/microarchitectures/haswell_%28client%29">Haswell - Microarchitectures - Intel_WikiChip</a><br>
+<a href="https://en.wikichip.org/wiki/intel/microarchitectures/broadwell_%28client%29">Broadwell - Microarchitectures - Intel_WikiChip</a><br>
+<a href="https://en.wikipedia.org/wiki/Skylake_%28microarchitecture%29">维基百科Skylake (microarchitecture)</a><br>
+<a href="https://www.gcores.com/articles/124346">Intel是怎么失去自己的性能优势地位的_GAMECORES</a><br>
+<a href="https://zhuanlan.zhihu.com/p/79369799">聊聊已经发布的十代酷睿处理器（2）_知乎</a></p>
+]]></content>
+      <categories>
+        <category>杂记</category>
+        <category>转载</category>
+      </categories>
+      <tags>
+        <tag>计算机小知识</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>【转】世界双雄：微软和苹果</title>
-    <url>/2022/05/19/%E5%BE%AE%E8%BD%AFvs%E8%8B%B9%E6%9E%9C/</url>
+    <url>/posts/05415c493fc8</url>
     <content><![CDATA[<p>转载自<a href="https://zhuanlan.zhihu.com/p/108721687">知乎</a></p>
 <p>苹果和微软，这是一对缠斗了近半个世纪的欢喜冤家，先看一张对比图。</p>
 <img src="https://s2.loli.net/2022/05/19/WjQY2Ja9Ruv6FSU.jpg">
@@ -256,11 +718,15 @@ Apple这个品牌，一度成为电子消费奢侈品的代名词，苹果迎来
 ]]></content>
       <categories>
         <category>杂记</category>
+        <category>转载</category>
       </categories>
+      <tags>
+        <tag>商业小知识</tag>
+      </tags>
   </entry>
   <entry>
     <title>makefile编写(3)：条件执行和函数</title>
-    <url>/2022/05/18/makefile%E8%BF%9B%E9%98%B62/</url>
+    <url>/posts/b643bd4a1cb0</url>
     <content><![CDATA[<p><strong>注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序</strong></p>
 <ol>
 <li>
@@ -412,7 +878,7 @@ TEXT-IF-FALSE<br>
 endif<br>
 endif</p>
 </blockquote>
-<p>ifneq和ifndef实现逻辑运算的方法与ifeq和ifdef原理相同，只不过实现的功能相反。</p>
+<p>ifneq和ifndef实现逻辑运算的方法与ifeq和ifdef原理相同，只不过实现的功能相反。当然实际上除此外还有很多手段实现makefile的逻辑运算，比如可以通过shell函数内嵌Shell脚本来处理条件，部分make工具还支持and和or函数来支持逻辑运算。</p>
 <h1 id="makefile函数"><a class="markdownIt-Anchor" href="#makefile函数"></a> makefile函数</h1>
 <p>makefile函数提供了处理文件名、变量、文本和命令等等的方法。使用函数的makefile可以编写的更加灵活和健壮。可以在需要的地方地调用函数来处理指定<strong>文本</strong>(需要处理的文本作为函数的参数)，函数调用在调用的地方被替换为它的处理结果。函数调用(引用)的展开和变量引用展开的行为基本是相同的，而且是同步进行的。</p>
 <h2 id="makefile函数的基本语法"><a class="markdownIt-Anchor" href="#makefile函数的基本语法"></a> makefile函数的基本语法</h2>
@@ -670,16 +1136,17 @@ override CFLAGS+&#x3D;$(patsubst %,-I%,$(subst :, ,$(VPATH)))<span aria-hidden="
 <h4 id="获取匹配模式文件名函数wildcard"><a class="markdownIt-Anchor" href="#获取匹配模式文件名函数wildcard"></a> 获取匹配模式文件名函数wildcard</h4>
 <ul>
 <li>$(wildcard PATTERN)</li>
-<li>功能：列出当前目录下所有符合模式PATTERN格式的文件名</li>
+<li>功能：列出当前目录下所有符合模式PATTERN(注意wildcard的模式一般指使用通配符)格式的文件名</li>
 <li>返回：空格分割的、存在于<strong>当前目录</strong>下的所有符合模式PATTERN的文件名</li>
+<li>说明：在makefile变量的定义和函数引用时，通配符将失效，这种情况下如果需要通配符有效就需要使用函数wildcard</li>
 <li>示例：
 <ul>
 <li>$(wildcard *.c)返回值为当前目录下所有.c源文件列表</li>
 </ul>
 </li>
 </ul>
-<h3 id="其他常用函数"><a class="markdownIt-Anchor" href="#其他常用函数"></a> 其他常用函数</h3>
-<h4 id="foreach-函数"><a class="markdownIt-Anchor" href="#foreach-函数"></a> foreach 函数</h4>
+<h3 id="特殊函数"><a class="markdownIt-Anchor" href="#特殊函数"></a> 特殊函数</h3>
+<h4 id="遍历函数foreach"><a class="markdownIt-Anchor" href="#遍历函数foreach"></a> 遍历函数foreach</h4>
 <p>foreach函数和别的函数非常的不一样，因为这个函数是用来做循环控制流用的。makefile中的foreach函数几乎是仿照于Unix标准Shell(/bin/sh)中的for语句，或是C-Shell(/bin/csh)中的foreach语句而构建的，它的语法是：</p>
 <blockquote>
 <p>$(foreach VAR,LIST,TEXT)</p>
@@ -692,7 +1159,7 @@ override CFLAGS+&#x3D;$(patsubst %,-I%,$(subst :, ,$(VPATH)))<span aria-hidden="
 <li>重复执行直到LIST的最后一个单词为空时结束</li>
 <li>TEXT所返回的每个字符串所组成的整个字符串(以空格分隔)将会是foreach函数的返回值</li>
 </ul>
-<p>需要注意的是，TEXT中的变量或者函数引用在执行时才被展开，因此如果在TEXT中存在对VAR的引用，那么VAR的值在每一次展开时将会到得到不同的值，同时VAR参数是一个临时的局部变量，当foreach函数执行完后，参数VAR的变量将不在作用，其作用域只在foreach函数当中。一般在foreach函数时，VAR最好是一个变量名，LIST可以是一个表达式，而TEXT中一般会使用VAR这个参数来依次枚举LIST中的单词，下面举例说明：</p>
+<p>需要注意的是，TEXT中的变量或者函数引用在执行时才被展开，因此如果在TEXT中存在对VAR的引用，那么VAR的值在每一次展开时将会到得到不同的值，同时VAR参数是一个临时的局部变量，当foreach函数执行完后，参数VAR的变量将不在作用，其作用域只在foreach函数当中。一般在foreach函数时，VAR最好是一个变量名(虽然VAR在foreach函数中扮演的角色更像是一个中间变量或者“容器”，但还是建议命名尽量见名知义)，LIST可以是一个表达式，而TEXT中一般会使用VAR这个参数来依次枚举LIST中的单词，下面举例说明：</p>
 <blockquote>
 <p>names := a b c d<br>
 files := $(foreach n,$(names),$(n).o)</p>
@@ -701,8 +1168,175 @@ files := $(foreach n,$(names),$(n).o)</p>
 <blockquote>
 <p>find_files=$(wildcard $(dir)/*)<br>
 dirs:=a b c d<br>
-files:=$(foreach dir,$(dirs),$(find_files))</p>
+files:=$(foreach,dir,$(dirs),$(find_files))</p>
 </blockquote>
+<p>需要注意，上例定义的是递归展开的变量find_files，保证了定义时变量值中的引用不展开，而是在表达式被函数处理时才展开(如果这里使用直接展开式的定义将是无效的表达式，因为find_files中需要dir的引用，而后者是foreach函数中的局部变量)。</p>
+<h4 id="条件判断函数if"><a class="markdownIt-Anchor" href="#条件判断函数if"></a> 条件判断函数if</h4>
+<p>if函数提供了一个在函数上下文中实现条件判断的功能，很像makefile所支持的条件语句——ifeq或ifdef，它的语法是：</p>
+<blockquote>
+<p>$(if CONDITION,THEN-PART[,ELSE-PART])</p>
+</blockquote>
+<p>if函数可以包含else部分或是不含，即if函数的参数可以是两个也可以是三个。CONDITION参数是if的表达式，如果为<strong>非空字符串</strong>则返回真。注意跟ifdef不一样，if函数无所谓变量是否定义，只要是完全由空字符组成就返回真。条件表达式CONDITION决定了函数的返回值只能是THEN-PART或ELSE-PART两个之一的计算结果，并且两者只会有一个被计算，当CONDITION返回真时则计算THEN-PART，否则计算ELSE-PART，最后的结果将被作为if函数的返回值，如果CONDITION为假(空字符串)，并且此时ELSE-PART没有被定义那么函数返回空字串，比如：</p>
+<blockquote>
+<p>OBJ:=foo.c<br>
+OBJ:=$(if $(OBJ),$(OBJ)) 此时OBJ返回值为foo.c，如果变量OBJ值为空的话则函数返回空字串</p>
+</blockquote>
+<h4 id="变量定义查询函数origin"><a class="markdownIt-Anchor" href="#变量定义查询函数origin"></a> 变量定义查询函数origin</h4>
+<p>origin函数不像其它的函数，它并不操作变量的值，只是告诉你你的这个变量是哪里来的，也就是变量的出处(定义方式)，其语法是：</p>
+<blockquote>
+<p>$(origin VARIABLE)</p>
+</blockquote>
+<p>VARIBLE是一个变量名而不是变量引用，因此通常origin函数的VARIABLE中不包含$，除非此变量名是一个由变量引用拼接的变量名。origin函数会以其返回值来告诉这个变量的定义方式，下面是origin函数的返回值:</p>
+<ul>
+<li>undefined：VARIABLE从来没有定义过，返回undefined</li>
+<li>default：VARIABLE是一个默认的定义(内嵌变量)，比如CC这个变量，如果在makefile中重新定义这些变量，其定义方式将相应发生变化</li>
+<li>environment：VARIABLE是一个环境变量，并且当makefile被执行时，-e参数没有被指定</li>
+<li>environment override：VARIABLE是一个系统环境变量，并且makefile中存在一个同名的变量定义，make执行时使用-e使环境变量值替代了文件中的变量定义</li>
+<li>file：VARIABLE变量被定义在makefile中</li>
+<li>command line：VARIABLE变量是在命令行定义的</li>
+<li>override：VARIABLE是被override指示符重新定义的</li>
+<li>automatic：VARIABLE是一个命令运行中的自动化变量</li>
+</ul>
+<p>这些信息对于编写Makefile是非常有用的，例如，假设有一个makefile其包了一个定义文件Make.def，在Make.def中定义了一个变量bletch，而系统中也有一个环境变量bletch，假设此时想判断一下如果变量值来源于环境变量，那么就把其重定义了，如果来源于Make.def或是命令行等非默认环境的，那么就不重新定义它，于是在makefile中可以这样写：</p>
+<blockquote>
+<p>ifdef bletch<br>
+ifeq “$(origin bletch)” “environment”<br>
+bletch = barf, gag, etc.<br>
+endif<br>
+endif</p>
+</blockquote>
+<p>当然，直接使用override关键字同样可以重写变量，不过用override同时会把从命令行等其他地方定义的变量都覆盖掉，而采用origin函数可以结合条件判断进行更灵活的重定义。<br>
+(个人测试下觉得这个案例有问题：如果不指定-e那么环境变量本来就会被覆盖，如果指定-e不用override的话bletch那里是重写不了的)</p>
+<h4 id="自己定义函数引用函数call"><a class="markdownIt-Anchor" href="#自己定义函数引用函数call"></a> 自己定义函数引用函数call</h4>
+<p>call函数是唯一一个可以创建定制化参数函数引用的函数，使用这个函数可以实现对用户自己定义函数的引用。可以将一个变量定义为一个复杂的表达式，在表达式中可以定义许多参数，然后用call函数来向表达式传递参数，根据不同参数进行展开来获得不同的结果，其语法是：</p>
+<blockquote>
+<p>$(call VARIABLE,PARAM1,PARAM2,…)</p>
+</blockquote>
+<p>当make执行这个函数时，VARIABLE参数中的临时变量如$(1)，$(2)，$(3)…等(如果只有一位数字的话不加括号也可以，另外序号只表示参数的次序，并不一定与VARIABLE中的变量引用同名)，会被参数PARAM1，PARAM2依次取代，而VARIABLE的返回值就是call函数返回值。同origin函数一样，call函数中VARIBLE也是变量名字而不是引用(call函数做的实际上就类似于使用参数对VARIABLE进行嵌套引用)。call函数对参数的数目没有限制，也可以没有参数值(当然没有参数值的call没有任何实际存在的意义)，执行时变量VARIABLE中有效的临时变量在call函数上下文中被展开(同样的，VARIABLE必须用递归赋值，因为其一定会用到call函数内定义的临时局部变量)，变量定义中的$(1)作为第一个参数，将call函数参数值中的第一个参数赋值给它，变量中的$(2)一样被赋值为call函数的第二个参数值，依此类推(变量$(0)代表变量VARIABLE本身)，之后对变量VARIABLE表达式的计算值，得到函数返回结果，例如：</p>
+<blockquote>
+<p>reverse = $(1) $(2)<br>
+foo = $(call reverse,a,b)<br>
+#此时foo的值就是a b</p>
+</blockquote>
+<p>当然参数的次序是可以自定义的，不一定是数字序号的顺序，如：</p>
+<blockquote>
+<p>reverse = $(2) $(1)<br>
+foo = $(call reverse,a,b)<br>
+#此时的foo的值就是b a</p>
+</blockquote>
+<p>下面以一个例子来简要说明一下自定义函数的方法，假设需要定义一个函数pathsearch可以在PATH路径中搜索第一个指定的程序：<br>
+首先参考下PATH变量的格式：</p>
+<img src="https://s2.loli.net/2022/05/20/exBzMLNhDYIwURG.png">
+<p>发现路径之间使用:分隔，目录名后面不带/，因此首先可以对变量名进行一步处理：</p>
+<blockquote>
+<p>dir_name=$(addsuffix /,$(subst :, ,$(PATH)))</p>
+</blockquote>
+<p>这样使用PATH中的路径构造出了一个文件名序列。同时还需要让pathsearch能够接收call参数以指定路径下的程序名，因此可以在此基础上做下修改，在后面添加一个参数：</p>
+<blockquote>
+<p>dir_name=$(addsuffix /$(1),$(subst :, ,$(PATH)))</p>
+</blockquote>
+<p>接下来就可以完成pathsearch的定义，在工作目录匹配符合PATH路径的文件，取其中第一个：</p>
+<blockquote>
+<p>pathsearch=$(firstword $(wildcard $(dir_name)))</p>
+</blockquote>
+<p>通过call函数可以实现搜索制定程序路径的功能：</p>
+<blockquote>
+<p>LS=$(call pathsearch,ls)</p>
+</blockquote>
+<p>变量VARIBLE不仅可以是自定义函数引用，还可以是makefile的内嵌函数，此时call函数的PARAM参数会按顺序传递给内嵌函数的参数)，不过这种情况对PARAM参数的使用需要注意，因为不合适或不正确的参数将会导致函数的返回值难以预料。函数call还可以套嵌使用，此时每一层call函数的调用都为它自己的局部变量$(1)等赋值，并且覆盖上一层函数为它所赋的值，比如：</p>
+<blockquote>
+<p>map = $(foreach a,$(2),$(call $(1),$(a)))<br>
+o = $(call map,origin,o map MAKE)</p>
+</blockquote>
+<p>此例中，$(call map,origin,o map MAKE)这个函数调用使用了变量map所定义的表达式，两个参数分别为origin函数调用和字串o map MAKE，首先进行第一次展开后外层call函数调用变为$(foreach a,o map MAKE,$(origin $(a)))，此就变成了一个foreach函数调用，返回结果为file file default。</p>
+<h4 id="取变量文本值函数value"><a class="markdownIt-Anchor" href="#取变量文本值函数value"></a> 取变量文本值函数value</h4>
+<p>value函数提供了一种在<strong>不对变量进行展开</strong>的情况下获取变量值的方法，语法格式为：</p>
+<blockquote>
+<p>$(value VARIABLE)</p>
+</blockquote>
+<p>VARIABLE是变量名字使用value函数取这个变量进行取值时得到的是不包含任何引用的字面。注意这并不是说value函数会取消之前已经执行过的替换扩展，此时与变量定义方式是相关的，如果定义一个直接展开的变量，那么在定义过程中直接对其它变量的引用进行替换而得到自身的值，value函数取到的值是替换过后的变量值，但是如果定义的是一个递归展开，那么value取值时就不会展开，而是将定义的字面值返回，比如：</p>
+<pre class="line-numbers language-none"><code class="language-none">FO&#x3D;$PATH
+FOO:&#x3D;P$(FO)
+FOOO&#x3D;$(echo 123)
+all:
+    @echo $(value FOO)   #输出PATH
+    @echo $(value FOOO)  #输出123
+# 首先FO&#x3D;$PATH因为没加括号，所以FO相当于$(P)ATH等于ATH
+# FOO:&#x3D;P$(FO)，定义时就已经展开为PATH，value返回字面值PATH
+# FOOO&#x3D;$(echo 123)在定义时不会展开，因此value返回未展开的字面值$(echo 123)，相当于在Shell中执行echo 123<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h4 id="构造依赖关系链函数eval"><a class="markdownIt-Anchor" href="#构造依赖关系链函数eval"></a> 构造依赖关系链函数eval</h4>
+<p>eval其实在<strong>函数式语言</strong>里面很常见。LISP系语言的解释器，最终执行的是一个apply-eval递归，所以eval就是求值的意思。实际上不只是LISP，可以说任意解释器最终都是apply-eval递归，bash里面也有eval，只不过在LISP里面这种apply-eval通过其(语法…)形式，更加显式地表达出来了，所以LISP里的apply-eval也更著名。makefile中的eval函数是一个非常特殊的函数，使用它可以在makefile中构造一个<strong>可变的规则结构关系(依赖关系链)</strong>，其中可以使用其它变量和函数。eval函数对它的参数进行展开，展开的结果作为makefile的一部分，make可以对展开内容进行语法解析，展开的结果可以包含一个新<strong>变量、目标、隐含规则或者是显式规则</strong>等。eval函数执行时会对它的参数进行两次展开，第一次展开过程是由函数本身完成的，第二次是函数展开后的结果被作为makefile内容时由make解析时展开的，所以基于这一点在eval函数的参数中存在的引用应该使用$$来代替$，并且经常使用函数value来取一个变量的文本值。语法格式如下：</p>
+<blockquote>
+<p>$(eval TEXT)</p>
+</blockquote>
+<p>eval函数非常常见的应用是对于自定义宏包的二次展开，下面是一个简单的例子用以说明：</p>
+<pre class="line-numbers language-none"><code class="language-none">###############################################
+pointer :&#x3D; pointed_value
+define foo
+var :&#x3D; 123
+arg :&#x3D; $1
+$$($1) :&#x3D; ooooo
+endef
+#$(info $(call foo,pointer))
+#$(eval $(call foo,pointer))
+target:
+        @echo -----------------------------
+        @echo var: $(var), arg: $(arg)
+        @echo pointer: $(pointer), pointed_value: $(pointed_value)
+        @echo done.
+        @echo -----------------------------
+###############################################
+#执行$(info $(call foo,pointer))的输出结果：   
+#-----------------------------
+#var: , arg:      
+#从中可以看直接执行$(call foo,pointer)的话返回结果时对宏包foo进行第一次求值
+#而foo求值的过程只是将其中的参数展开就结束了，返回的相当于是一个makefile的代码块，并没有执行
+#pointer: pointed_value, pointed_value:
+#done.
+#-----------------------------
+#执行$(eval $(call foo,pointer))的输出结果：
+#-----------------------------
+#var: 123, arg: pointer
+#eval函数的作用就是进行二次展开，相当于将foo的结果在进行一次展开(求值)，这时foo中的变量就被成功赋值了
+#pointer: pointed_value, pointed_value: ooooo
+#done.
+#-----------------------------
+###############################################<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>下面通过一个逻辑较完整的案例来说明eval函数的用法(来自GNU make手册)：</p>
+<pre class="line-numbers language-none"><code class="language-none"># sample Makefile 
+PROGRAMS &#x3D; server client 
+server_OBJS &#x3D; server.o server_priv.o server_access.o 
+server_LIBS &#x3D; priv protocol  
+client_OBJS &#x3D; client.o client_api.o client_mem.o 
+client_LIBS &#x3D; protocol 
+# Everything after this is generic 
+.PHONY: all 
+all: $(PROGRAMS) 
+define PROGRAM_template 
+$(1): $$($(1)_OBJS) $$($(1)_LIBS:%&#x3D;-l%) 
+ALL_OBJS +&#x3D; $$($(1)_OBJS) 
+endef 
+$(foreach prog,$(PROGRAMS),$(eval $(call PROGRAM_template,$(prog)))) 
+$(PROGRAMS): 
+    $(LINK.o) $^ $(LDLIBS) -o $@ 
+clean: 
+    rm -f $(ALL_OBJS) $(PROGRAMS)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>其中$(LINK.o)为$(CC) $(LDFLAGS)，对所有的.o文件和指定的库文件进行链接，这个makefile的关键点在于</p>
+<blockquote>
+<p>$(foreach prog,$(PROGRAMS),$(eval $(call PROGRAM_template,$(prog))))</p>
+</blockquote>
+<p>可以二次展开(展开并执行)为：</p>
+<blockquote>
+<p>server:$(server_OBJS) -l$(server_LIBS)<br>
+client:$(client_OBJS) -l$(client_LIBS)<br>
+ALL_OBJS=server_OBJS client_OBJS</p>
+</blockquote>
+<h4 id="shell函数"><a class="markdownIt-Anchor" href="#shell函数"></a> shell函数</h4>
+<p>shell函数也不像其它的函数，顾名思义它的参数应该就是操作系统Shell的命令，它和反引号`是相同的功能，也就是说shell函数把系统执行Shell命令后的输出作为函数返回。make仅对shell函数的返回结果进行处理，将函数返回结果中的所有换行符\n或者一对\n\r替换为单空格，去掉末尾的回车符号\n或者\n\r。进行函数展开式时，它所调用的命令(它的参数)得到执行。</p>
+<p>于是，我们可以用操作系统命令以及字符串处理命令awk，sed等等命令来生成一个变量，如：<br>
+contents := $(shell cat foo)<br>
+files := $(shell echo *.c)<br>
+注意，这个函数会新生成一个Shell程序来执行命令，所以你要注意其运行性能，如果你的Makefile中有一些比较复杂的规则，并大量使用了这个函数，那么对于你的系统性能是有害的。特别是Makefile的隐晦的规则可能会让你的shell函数执行的次数比你想像的多得多。</p>
 ]]></content>
       <categories>
         <category>应用程序开发</category>
@@ -715,7 +1349,7 @@ files:=$(foreach dir,$(dirs),$(find_files))</p>
   </entry>
   <entry>
     <title>【转】PowerPC、X86和ARM架构区别</title>
-    <url>/2022/05/18/powerpc%E3%80%81x86%E3%80%81arm/</url>
+    <url>/posts/9296819e5610</url>
     <content><![CDATA[<p>在嵌入式领域，存在着三种处理器通用的架构，PowerPC、X86、ARM，本文将对这三种架构进行对比分析。</p>
 <h1 id="powerpc"><a class="markdownIt-Anchor" href="#powerpc"></a> PowerPC</h1>
 <h2 id="powerpc的由来"><a class="markdownIt-Anchor" href="#powerpc的由来"></a> PowerPC的由来</h2>
@@ -833,6 +1467,7 @@ PowerPC的使用范围除了苹果电脑之外，其他厂商使用的比例极�
 ]]></content>
       <categories>
         <category>杂记</category>
+        <category>转载</category>
       </categories>
       <tags>
         <tag>计算机小知识</tag>
@@ -840,7 +1475,7 @@ PowerPC的使用范围除了苹果电脑之外，其他厂商使用的比例极�
   </entry>
   <entry>
     <title>【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？</title>
-    <url>/2022/05/17/windows%20shell/</url>
+    <url>/posts/433fc2487d31</url>
     <content><![CDATA[<p>转自<a href="https://www.zhihu.com/question/310462143/answer/584141216">知乎：韩朴宇</a></p>
 <h1 id="explorerexe"><a class="markdownIt-Anchor" href="#explorerexe"></a> explorer.exe</h1>
 <p>是Windows95到Windows Me，Windows NT4到Windows10的默认shell(代替了Windows3.2的程序管理器)，同时也是默认的文件管理器(代替了<a href="https://github.com/Microsoft/winfile">WinFile</a>)。</p>
@@ -901,6 +1536,7 @@ Windows Chicago的更多信息<br>
 ]]></content>
       <categories>
         <category>杂记</category>
+        <category>转载</category>
       </categories>
       <tags>
         <tag>计算机小知识</tag>
@@ -908,7 +1544,7 @@ Windows Chicago的更多信息<br>
   </entry>
   <entry>
     <title>makefile编写(2)：变量</title>
-    <url>/2022/05/16/makefile%E7%BC%96%E5%86%99/</url>
+    <url>/posts/a441fae22eb2</url>
     <content><![CDATA[<p><strong>注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序</strong></p>
 <ol>
 <li>
@@ -960,7 +1596,7 @@ prog.o : prog.c
 </li>
 </ul>
 <p>不过为了更加安全地使用，一般还是推荐一律给变量加括号。<br>
-另外还存在的一种特殊情况是在命令中使用变量，是完全可以按照Shell命令的形式写的。只不过由于makefile中符号$有特殊的含义，不能直接按照Shell脚本的格式写，否则默认是在按照makefile的形式引用变量。此时需要使用两个连续的$$“转义”符号$，这样变量就会被解析为Shell脚本的$xx形式。(同理，在规则中需要使用符号$的地方，都需要使用两个连续的$$)</p>
+另外还存在的一种特殊情况是在命令中使用变量，是完全可以按照Shell命令的形式写的。只不过由于makefile中符号$有特殊的含义(元字符)，不能直接按照Shell脚本的格式写，否则默认是在按照makefile的形式引用变量。此时需要使用两个连续的$$“转义”符号$，这样变量就会被解析为Shell脚本的$xx形式。(同理，在规则中需要使用符号$的地方，都需要使用两个连续的$$)</p>
 <h2 id="makefile变量赋值"><a class="markdownIt-Anchor" href="#makefile变量赋值"></a> makefile变量赋值</h2>
 <p>makefile中支持四种变量基本赋值方式。第一种方式是简单的使用=号，可以用一个或多个字串为变量赋值，也可以用其他<strong>变量引用</strong>赋值。注意，在这种情况下如果用变量值来定义变量的话，<strong>右侧变量可以定义在文件的任何一处</strong>，也就是说=右侧不一定非要是已定义的值，也可以用后面定义的值，如：</p>
 <pre class="line-numbers language-none"><code class="language-none">foo &#x3D; $(bar)
@@ -1102,7 +1738,7 @@ $(dir)_sources := $(wildcard $(dir)/*.c)</p>
 </ul>
 <p>实际使用应该尽量避免过多使用变量嵌套引用，在必须要使用的时候应该做到嵌套层数越少越好，因为使用这种方法表达会比较复杂，可读性不好。</p>
 <h2 id="环境变量"><a class="markdownIt-Anchor" href="#环境变量"></a> 环境变量</h2>
-<p>make运行时的系统环境变量可以在make开始运行时被载入到makefile文件中，但是如果makefile中已定义了这个变量，或这个变量由make在命令行中带入，那么系统的环境变量的值将被覆盖(除非make指定了-e参数，那么系统环境变量值将覆盖makefile中定义的变量)。比如当在不同的makefile中指定一部分统一的编译选项(或者说命令行参数)，那么只要设置一个环境变量就可以在读取的所有makefile中默认使用这个变量，在make中已经分别用CFLAGS和LDFLAGS定义了编译选项(-c、-o、-I、-S等)和链接选项(-L、-static等)，如：</p>
+<p>make运行时的系统环境变量可以在make开始运行时被载入到makefile文件中，但是如果makefile中已定义了这个变量，或这个变量由make在命令行中带入，那么系统的环境变量的值将被覆盖(除非make指定了-e参数(在实现上类似于在命令中设置环境变量的值)，那么系统环境变量值将覆盖makefile中定义的变量)。比如当在不同的makefile中指定一部分统一的编译选项(或者说命令行参数)，那么只要设置一个环境变量就可以在读取的所有makefile中默认使用这个变量，在make中已经分别用CFLAGS和LDFLAGS定义了编译选项(-c、-o、-I、-S等)和链接选项(-L、-static等)，如：</p>
 <pre class="line-numbers language-none"><code class="language-none">CFLAGS &#x3D; -g -I.&#x2F;include 
 LDFLAGS &#x3D; -L.&#x2F;lib
 ALL:
@@ -1158,7 +1794,7 @@ bar.o : bar.c
 </blockquote>
 <p>对于同一个目标指定变量，如果使用追加方式赋值，它的局部变量值是：为所有规则定义的全局值+引发它所在规则被执行的目标所指定的值+它所符合的模式指定值+此目标所指定的值。</p>
 <h2 id="多行变量"><a class="markdownIt-Anchor" href="#多行变量"></a> 多行变量</h2>
-<p>还有一种设置变量值的方法是使用define关键字，使用define关键字设置变量值可以包含换行符，命令包的实现其实就是一个这样的变量。define指示符后面跟的是变量的名字，然后重起一行定义变量的值，定义是以endef关键字结束，其工作方式和=操作符一样。变量的值可以包含函数、命令、文字，或是其它变量。因为命令需要以[Tab]键开头，所以用define定义的多行变量中没有以[Tab]键开头，那么make就不会把其认为是命令，下面的这个示例展示了define的用法：</p>
+<p>还有一种设置变量值的方法是使用define关键字，使用define关键字设置变量值可以包含换行符，这样打包起来的变量可以称为宏包，命令包的实现其实就是一个这样的变量。define指示符后面跟的是变量的名字，然后重起一行定义变量的值，定义是以endef关键字结束，其工作方式和=操作符一样。变量的值可以包含函数、命令、文字，或是其它变量。因为命令需要以[Tab]键开头，所以用define定义的多行变量中没有以[Tab]键开头，那么make就不会把其认为是命令，下面的这个示例展示了define的用法：</p>
 <pre class="line-numbers language-none"><code class="language-none">define two-lines
     echo foo
     echo $(bar)
@@ -1179,7 +1815,7 @@ endef<span aria-hidden="true" class="line-numbers-rows"><span></span><span></spa
   </entry>
   <entry>
     <title>【转】命令行界面(CLI)、终端(Terminal)、Shell、TTY的区别</title>
-    <url>/2022/05/15/shell%E3%80%81terminal/</url>
+    <url>/posts/05eccd173a33</url>
     <content><![CDATA[<p>虽然这个话题已是老生常谈，搜索一下应该也能找到大把的相关文章。不过难得提到了这方面，就趁此机会把我的理解写下来，一来看看我是不是真正理解了，二来看看我能不能把它们之间的区别讲得更加简明易懂。</p>
 <h1 id="太长不看"><a class="markdownIt-Anchor" href="#太长不看"></a> 太长不看</h1>
 <ul>
@@ -1321,6 +1957,7 @@ endef<span aria-hidden="true" class="line-numbers-rows"><span></span><span></spa
 ]]></content>
       <categories>
         <category>杂记</category>
+        <category>转载</category>
       </categories>
       <tags>
         <tag>计算机小知识</tag>
@@ -1328,7 +1965,7 @@ endef<span aria-hidden="true" class="line-numbers-rows"><span></span><span></spa
   </entry>
   <entry>
     <title>makefile编写(1)：规则</title>
-    <url>/2022/05/14/makefile%E8%BF%9B%E9%98%B6/</url>
+    <url>/posts/9372e87b32cb</url>
     <content><![CDATA[<p><strong>注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序</strong></p>
 <ol>
 <li>
@@ -1688,7 +2325,7 @@ foo.c : foo.y
   </entry>
   <entry>
     <title>【转】好好地做一万个小时比看起来更难完成</title>
-    <url>/2022/05/13/%E9%B8%A1%E6%B1%A46/</url>
+    <url>/posts/010e578ad717</url>
     <content><![CDATA[<p>Malcolm Gladwell在《离群索居》（Outliers）一书中说，要真正掌握某件事情，需要10000小时的练习。其实，10000只是一个粗略的数字，而且这句话的含义也被过度简化了。我已经断断续续进行了40多年的编程。可能已经写了10000个小时的代码，但我甚至还未能成为一个优秀的程序员，更别提成为大师级的程序员了。<br>
 　　我认为有以下几个原因。首先，在这10000小时中，我主要学习了4种不同的编程语言，以及其他一些辅助语言。我从一种语言换到另一种语言时，发现它们有的概念可以互通，有的完全不同。而有趣的是，在这种语言中没有意义的概念可能用来构建它。<br>
 　　例如，JavaScript没有本地链接列表实现，但如果在V8 GitHub库的src目录下搜索“链表”，会发现有76个commit提到了它。即使它们在语言本身中没有用C的链接列表，但会在引擎下使用C的链接列表。<br>
@@ -1721,6 +2358,7 @@ foo.c : foo.y
 ]]></content>
       <categories>
         <category>杂记</category>
+        <category>转载</category>
       </categories>
       <tags>
         <tag>鸡汤</tag>
@@ -1728,7 +2366,7 @@ foo.c : foo.y
   </entry>
   <entry>
     <title>毕业论文-开题报告篇</title>
-    <url>/2022/05/13/%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87%E4%B8%93%E9%A2%98/</url>
+    <url>/posts/3aee3b98bbe7</url>
     <content><![CDATA[<p>毕业论文要开始准备了，虽然知道早晚躲不过，但还是一点动手开干的欲望也没有。今天早上8点到了图书馆就打开知网看论文，然后一上午四个半小时坐在桌子前看了三章，看完了连题目都忘了叫啥了。。。。明天早起开组会老师还说要拿出成熟方案，不过以目前的形势看估计把我砍成几个人用也拿不出所谓成熟报告了，估计又得拿东拼西凑的东西去糊弄她，哎生死由命了。。。。。</p>
 <p>一上午各种折腾，看看这看看那，反正就是不能静下心深入进去看文献本身。算算时间离开题报告汇报也不远了，也就是说几周内要写好大几千字，现在连点思路都没有，还不能水，真愁死个人。听说上届有外审没过的可能延毕了。。。。。。。。。。。。。。。</p>
 <hr>
@@ -1773,7 +2411,7 @@ foo.c : foo.y
   </entry>
   <entry>
     <title>18.Document Distance</title>
-    <url>/2022/05/12/Document%20Distance/</url>
+    <url>/posts/41d64c1efff2</url>
     <content><![CDATA[<h1 id="document-distance"><a class="markdownIt-Anchor" href="#document-distance"></a> Document Distance</h1>
 <p>这个应该是目前发的里面最难搞的一个了，至今还不知道怎么ac</p>
 <p>Plagiarism is a form of academic dishonesty. To fight with such misconducts, plagiarism checkers are developed to compare any submitted article with all the articles stored in a database. The key is that given two documents, how to judge their similarity, or in other words, document distance? The document distance can be measured with their word metrics. In this project, you are supposed to write a program to calculate the distance of any given pair of documents. Some important terms are defined as follows:</p>
@@ -1915,7 +2553,7 @@ double MultOfVectors(int file1,int file2)&#123;
   </entry>
   <entry>
     <title>17.Color the tree、Self-printable B+ Tree</title>
-    <url>/2022/05/12/color%20the%20tree/</url>
+    <url>/posts/beb87d22ffa2</url>
     <content><![CDATA[<h1 id="color-the-tree"><a class="markdownIt-Anchor" href="#color-the-tree"></a> Color the Tree</h1>
 <p>There is a kind of balanced binary search tree named red-black tree in the data structure.<br>
 It has the following 5 properties:<br>
@@ -2352,7 +2990,7 @@ void printBplustree(Bplusptr root)&#123;
   </entry>
   <entry>
     <title>16.hashing简单版、hashing复杂版、串的模式匹配</title>
-    <url>/2022/05/12/hashing/</url>
+    <url>/posts/362db4955964</url>
     <content><![CDATA[<h1 id="hashing"><a class="markdownIt-Anchor" href="#hashing"></a> Hashing</h1>
 <p>The task of this problem is simple: insert a sequence of distinct positive integers into a hash table, and output the positions of the input numbers. The hash function is defined to be H(key)=key%TSize where TSize is the maximum size of the hash table. Quadratic probing (with positive increments only) is used to solve the collisions. Note that the table size is better to be prime.<br>
 If the maximum size given by the user is not prime, you must re-define the table size to be the smallest prime number which is larger than the size given by the user.</p>
@@ -2532,7 +3170,7 @@ void match(string ptn)&#123;
   </entry>
   <entry>
     <title>【转】对话Linus Torvalds：大多黑客甚至连指针都未理解</title>
-    <url>/2022/05/12/%E5%AF%B9%E8%AF%9Dlinus/</url>
+    <url>/posts/12becdf9bb70</url>
     <content><![CDATA[<p>几周前，Linus Torvalds在Slashdot上回答了一些问题。其中有一条引发了开发者们的强烈关注，当被问到他心目中的内核开发者时，他说自己这些日子已经不怎么看代码了，除非是帮别人审查。他稍微暂停了一下，坦言那些“狡猾”的通过文件名查找高速缓存又抱怨自己能力一般的内核“恶魔”(黑客)才是他欣赏的。<br>
 他说：<br>
 我真的希望更多人能理解真正核心的低层代码。不是无锁名字查找那种大而复杂的代码，只是正确的使用指针的指针而已。比如，我曾看见过许多人通过跟踪上一页条目删除一个单向链接的列表项，然后删除该条目。</p>
@@ -2610,7 +3248,7 @@ node * remove_if(node * head, remove_fn rm)  &#x2F;&#x2F;rm是判定这�
   </entry>
   <entry>
     <title>15.Insert or Merge、Insertion or Heap Sort、Sort with Swap(0, i)</title>
-    <url>/2022/05/11/Sort%20with%20Swap(0,%20i)/</url>
+    <url>/posts/1c0e07d7660d</url>
     <content><![CDATA[<h1 id="insert-or-merge"><a class="markdownIt-Anchor" href="#insert-or-merge"></a> Insert or Merge</h1>
 <p>According to Wikipedia:<br>
 Insertion sort iterates, consuming one input element each repetition, and growing a sorted output list. Each iteration, insertion sort removes one element from the input data, finds the location it belongs within the sorted list, and inserts it there. It repeats until no input elements remain.<br>
@@ -2934,7 +3572,7 @@ int swap0andi()&#123;
   </entry>
   <entry>
     <title>14.公路村村通、关键活动、How Long Does It Take</title>
-    <url>/2022/05/11/%E5%85%AC%E8%B7%AF%E6%9D%91%E6%9D%91%E9%80%9A/</url>
+    <url>/posts/fb2aa5920eaa</url>
     <content><![CDATA[<h1 id="公路村村通"><a class="markdownIt-Anchor" href="#公路村村通"></a> 公路村村通</h1>
 <p>现有村落间道路的统计数据表中，列出了有可能建设成标准公路的若干条道路的成本，求使每个村落都有公路连通所需要的最低成本。</p>
 <h2 id="输入格式"><a class="markdownIt-Anchor" href="#输入格式"></a> 输入格式</h2>
@@ -3218,7 +3856,7 @@ void topsort()&#123;
   </entry>
   <entry>
     <title>13.Subway Map、Public Bike Management</title>
-    <url>/2022/05/11/Subway%20Map/</url>
+    <url>/posts/46af663a24e4</url>
     <content><![CDATA[<h1 id="subway-map"><a class="markdownIt-Anchor" href="#subway-map"></a> Subway Map</h1>
 <p>In the big cities, the subway systems always look so complex to the visitors. To give you some sense, the following figure shows the map of Beijing subway. Now you are supposed to help people with your computer skills! Given the starting position of your user, your task is to find the quickest way to his/her destination.</p>
 <h2 id="input-specification"><a class="markdownIt-Anchor" href="#input-specification"></a> Input Specification</h2>
@@ -3490,7 +4128,7 @@ void dfs(int node)&#123;
   </entry>
   <entry>
     <title>12.救邦德复杂版、Gas Station、条条大路通罗马</title>
-    <url>/2022/05/11/%E6%95%91%E9%82%A6%E5%BE%B7%E5%A4%8D%E6%9D%82%E7%89%88/</url>
+    <url>/posts/77fbe98da0de</url>
     <content><![CDATA[<h1 id="saving-james-bond-hard-version"><a class="markdownIt-Anchor" href="#saving-james-bond-hard-version"></a> Saving James Bond - Hard Version</h1>
 <p>This time let us consider the situation in the movie “Live and Let Die” in which James Bond, the world’s most famous spy, was captured by a group of drug dealers. He was sent to a small piece of land at the center of a lake filled with crocodiles. There he performed the most daring action to escape – he jumped onto the head of the nearest crocodile! Before the animal realized what was happening, James jumped again onto the next big head… Finally he reached the bank before the last crocodile could bite him (actually the stunt man was caught by the big mouth and barely escaped with his extra thick boot). Assume that the lake is a 100 by 100 square one. Assume that the center of the lake is at (0,0) and the northeast corner at (50,50). The central island is a disk centered at (0,0) with the diameter of 15. A number of crocodiles are in the lake at various positions. Given the coordinates of each crocodile and the distance that James could jump, you must tell him a shortest path to reach one of the banks. The length of a path is the number of jumps that James has to make.</p>
 <h2 id="input-specification"><a class="markdownIt-Anchor" href="#input-specification"></a> Input Specification</h2>
@@ -3841,7 +4479,7 @@ int FindMindist(int n)&#123;
   </entry>
   <entry>
     <title>11.列出连通集、Forwards on Weibo、旅游规划</title>
-    <url>/2022/05/11/%E5%88%97%E5%87%BA%E8%BF%9E%E9%80%9A%E9%9B%86%E3%80%81Forward%20in%20weibo/</url>
+    <url>/posts/731ce70d9f1f</url>
     <content><![CDATA[<h1 id="列出连通集"><a class="markdownIt-Anchor" href="#列出连通集"></a> 列出连通集</h1>
 <p>给定一个有N个顶点和E条边的无向图，请用DFS和BFS分别列出其所有的连通集。假设顶点从0到N−1编号。进行搜索时，假设我们总是从编号最小的顶点出发，按编号递增的顺序访问邻接点。</p>
 <h2 id="输入格式"><a class="markdownIt-Anchor" href="#输入格式"></a> 输入格式</h2>
@@ -4183,7 +4821,7 @@ void Dijkstra(int s,int n)&#123;
   </entry>
   <entry>
     <title>10.Huffman Codes、PAT Judge</title>
-    <url>/2022/05/11/Huffman%20Codes/</url>
+    <url>/posts/d675f3d012cb</url>
     <content><![CDATA[<h1 id="huffman-codes"><a class="markdownIt-Anchor" href="#huffman-codes"></a> Huffman Codes</h1>
 <p>In 1953, David A. Huffman published his paper “A Method for the Construction of Minimum-Redundancy Codes”, and hence printed his name in the history of computer science. As a professor who gives the final exam problem on Huffman codes, I am encountering a big problem: the Huffman codes are NOT unique. For example, given a string “aaaxuaxz”, we can observe that the frequencies of the characters ‘a’, ‘x’, ‘u’ and ‘z’ are 4, 2, 1 and 1, respectively. We may either encode the symbols as {‘a’=0, ‘x’=10, ‘u’=110, ‘z’=111}, or in another way as {‘a’=1, ‘x’=01, ‘u’=001, ‘z’=000}, both compress the string into 14 bits. Another set of code can be given as {‘a’=0, ‘x’=11, ‘u’=100, ‘z’=101}, but {‘a’=0, ‘x’=01, ‘u’=011, ‘z’=001} is NOT correct since “aaaxuaxz” and “aazuaxax” can both be decoded fromthe code 00001011001001. The students are submitting all kinds of codes, and I need a computer program to help me determine which ones are correct and which ones are not.</p>
 <h2 id="input-specification"><a class="markdownIt-Anchor" href="#input-specification"></a> Input Specification</h2>
@@ -4526,7 +5164,7 @@ void patjudge()&#123;
   </entry>
   <entry>
     <title>9.List leaves、Tree Traversals Again、</title>
-    <url>/2022/05/11/%20List%20Leaves/</url>
+    <url>/posts/e07bd7854727</url>
     <content><![CDATA[<h1 id="list-leaves"><a class="markdownIt-Anchor" href="#list-leaves"></a> List Leaves</h1>
 <p>Given a tree, you are supposed to list all the leaves in the order of top down, and left to right.</p>
 <h2 id="input-specification"><a class="markdownIt-Anchor" href="#input-specification"></a> Input Specification</h2>
@@ -4836,7 +5474,7 @@ void levelorder(BinTree BT)&#123;
   </entry>
   <entry>
     <title>8.二分查找、有序链表的合并、最大子列和、反转链表、删除序列</title>
-    <url>/2022/05/11/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E3%80%81%E6%9C%80%E5%A4%A7%E5%AD%90%E5%88%97%E5%92%8C/</url>
+    <url>/posts/e8a0a8aad392</url>
     <content><![CDATA[<h1 id="二分查找"><a class="markdownIt-Anchor" href="#二分查找"></a> 二分查找</h1>
 <h2 id="二分查找伪代码"><a class="markdownIt-Anchor" href="#二分查找伪代码"></a> 二分查找伪代码</h2>
 <pre class="line-numbers language-none"><code class="language-none">int binarysearch(int i,int array[],int up,int bottom)&#123;
@@ -5154,7 +5792,7 @@ void popsequence()&#123;
   </entry>
   <entry>
     <title>Qt开发环境和编译工具介绍及相关基本概念</title>
-    <url>/2022/05/10/qt%E4%BB%8B%E7%BB%8D/</url>
+    <url>/posts/d0ab9fa78862</url>
     <content><![CDATA[<h1 id="qt介绍"><a class="markdownIt-Anchor" href="#qt介绍"></a> Qt介绍</h1>
 <p>Qt是跨平台的开发库，主要是开发图形用户界面(Graphical User Interface，GUI)应用程序，当然也可以开发非图形的命令行(Command User Interface，CUI)应用程序。 Qt支持众多的操作系统平台，如通用操作系统Windows、Linux、Unix，智能手机系统Android、iOS、WinPhone，嵌入式系统QNX、VxWorks等等，应用广泛。当然Qt库本身包含的功能模块也日益丰富，一直有新模块和第三方模块扩充。除了与操作系统底层结合特别紧密的，如驱动开发，需要利用操作系统本身的函数库实现之外，其他大部分的应用程序开发都可以用Qt实现的。Qt本身是纯c++开发的，此外Qt还存在Python、Ruby、Perl等脚本语言的绑定，也可以使用脚本语言开发基于Qt的程序。<br>
 在Qt4以前的时代主流的是传统部件(或叫控件)编程，所用的语言一般是c++。Qt5诞生之时，正是手机移动设备蓬勃发展的时候，而传统的c++部件编写的界面对手机应用程序不是很方便，比如手机屏幕显示需要满足随意翻转功能，而这在传统桌面程序里基本遇不到。为了适应手机移动应用开发，Qt5将QML 脚本编程提到与传统c++部件编程相同的高度，力推QML界面编程，当然QML主要用于手机移动应用程序。QML包含大量使用手机移动设备的功能模块，比如基本部件(QtQuick模块)、GPS定位、渲染特效、蓝牙、NFC、WebkKit等等。<br>
@@ -5250,7 +5888,7 @@ int main(int argc, char **argv)
   </entry>
   <entry>
     <title>GNU工具集术语介绍</title>
-    <url>/2022/05/10/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/</url>
+    <url>/posts/de15e3343b28</url>
     <content><![CDATA[<h1 id="gnu工具集"><a class="markdownIt-Anchor" href="#gnu工具集"></a> GNU工具集</h1>
 <p>在上个世纪八十年代，计算机都是奢侈品，操作系统里最著名的是Unix家族，当时还没有Windows、Linux之类的，Unix系统都是商业软件，里面的应用软件也是商业软件，全是封闭的环境。<br>
 系统程序员Richard M.Stallman(RMS)在此环境下创立了与众不同的GNU项目(GNU’s Not Unix)，以及推进自由软件发展的Free Software Foundation(FSF)自由软件基金会。GNU项目是为了创建自由的类Unix系统，也因此开发出来很多开源的系统工具，其中非常著名的就是GCC（GNU Compiler Collection，GNU编译器套件）。在GNU工具集里面，开发时常见到的几个罗列如下（这些工具通常位于Linux或Unix系统里的/usr/bin/目录）：</p>
@@ -5308,7 +5946,7 @@ MSYS2 ： <a href="http://sourceforge.net/projects/msys2/">项目主页</a></p>
   </entry>
   <entry>
     <title>makefile介绍</title>
-    <url>/2022/05/09/makefile/</url>
+    <url>/posts/2ea9a24cd534</url>
     <content><![CDATA[<h1 id="makefile"><a class="markdownIt-Anchor" href="#makefile"></a> makefile</h1>
 <p>本系列参考 <a href="https://blog.csdn.net/haoel/category_9198_2.html">一起跟我写makefile</a>，在此向原作者致谢。文章经过了我个人的整理、补充、修正、再次排版而完成，记录在此以供大家学习分享。<br>
 另附<a href="https://www.comsince.cn/download/gun_make.pdf">GNU make中文手册</a>以供参考(两者内容高度重合，也许这就是中文社区特色吧，还是推荐看中文手册，表述更清晰准确)。</p>
@@ -5544,7 +6182,7 @@ include的语法是：</p>
   </entry>
   <entry>
     <title>7.简单排序算法、统计工龄</title>
-    <url>/2022/05/08/%E7%BB%9F%E8%AE%A1%E5%B7%A5%E9%BE%84/</url>
+    <url>/posts/544c1950bf09</url>
     <content><![CDATA[<h1 id="各种排序"><a class="markdownIt-Anchor" href="#各种排序"></a> 各种排序</h1>
 <p>给定N个（长整型范围内的）整数，要求输出从小到大排序后的结果。本题旨在测试各种不同的排序算法在各种数据情况下的表现。各组测试数据特点如下：<br>
 数据1：只有1个元素；<br>
@@ -5867,7 +6505,7 @@ int main()&#123;
   </entry>
   <entry>
     <title>6.词频统计、电话聊天狂人、QQ帐户的申请与登陆</title>
-    <url>/2022/05/08/%E8%81%8A%E5%A4%A9%E7%8B%82%E4%BA%BA/</url>
+    <url>/posts/c26c4006a7b5</url>
     <content><![CDATA[<h1 id="词频统计"><a class="markdownIt-Anchor" href="#词频统计"></a> 词频统计</h1>
 <p>散列表应用：文件中单词词频统计<br>
 例：给定一个英文文本文件，统计文件中所有单词出现的频率，并输出词频最大的前10%的单词及其词频，假设单词字符定义为大小写字母、数字和下划线，其他字符均认为是单词分隔符，不予考虑</p>
@@ -6155,7 +6793,7 @@ void judgeqq(char cd,const string&amp;idstr,const string&amp;pwstr)&#123;
   </entry>
   <entry>
     <title>【转载】一位计算机系研究生的心路历程</title>
-    <url>/2022/05/08/%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B/</url>
+    <url>/posts/6926d3c72e6d</url>
     <content><![CDATA[<p>时光荏苒，回眸一看，不觉在安大计算机已经过了一学期的研究生生活了.大多数作为计算机学院的研究生，一个很大的误区就是计算机专业毕业出来的研究生都得找编程、写算法方面的工作，于是读研的大部分时间就耗在如何通过增加项目实践经验来充实自己的研究生阶段生活。而以这种作为读研模式的研究生注定了出来找工作很可能还是和一些比较优秀的本科毕业生竞争抢饭碗，most importantly，这不是正确的读研模式。读研究生出来必须能具备本科生所不具备的能力素质和科研修养，要不然研究生学费就白交了，钱是小事，关键是读研所耗费的青春就白白浪费了…多宝贵的3年！很可惜，安大计算机学院大多数实验中心效仿的是这种读研机制…😦<br>
 但关键是看个人，如果自己对某个研究方向感兴趣的话可以自己独立钻研，把计算机专业看做一门科学而不是纯粹的工程实践诚然是一个重大的观念性的转折。<br>
 下面我引用一篇牛人对攻读计算机专业研究生的一些看法：<br>
@@ -6200,6 +6838,7 @@ void judgeqq(char cd,const string&amp;idstr,const string&amp;pwstr)&#123;
 ]]></content>
       <categories>
         <category>杂记</category>
+        <category>转载</category>
       </categories>
       <tags>
         <tag>鸡汤</tag>
@@ -6208,7 +6847,7 @@ void judgeqq(char cd,const string&amp;idstr,const string&amp;pwstr)&#123;
   </entry>
   <entry>
     <title>到了哈佛，你就知道</title>
-    <url>/2022/05/07/%E5%88%B0%E4%BA%86%E5%93%88%E4%BD%9B%EF%BC%8C%E4%BD%A0%E5%B0%B1%E7%9F%A5%E9%81%93/</url>
+    <url>/posts/03e64e662cf9</url>
     <content><![CDATA[<p><em><strong>到了哈佛，你才知道真正的精英并不是天才，都是要付出更多努力的人。<br>
 日前，两张美国哈佛大学图书馆凌晨4点多学生仍在学习的照片，在网上迅速传播。照片显示：凌晨4点的哈佛大学图书馆里，灯火通明，座无虚席……图片配文这样写道：哈佛是一种象征。人到底有怎样的发挥潜力？人的意志，人的才情，人的理想，为什么在哈佛能兑现？哈佛的学生餐厅，很难听到说话的声音，每个学生端着比萨可乐坐下后，往往边吃边看书或是边做笔记。我就没见过哪个学生光吃不读的，更没见过哪个学生边吃边闲聊的。感觉哈佛，餐厅不过是一个可以吃东西的图书馆，是哈佛正宗100个图书馆之外的另类图书馆。哈佛的医院，同样的宁静，同样的不管有多少在候诊的人也无一人说话，无一人不在阅读或记录。医院仍是图书馆的延伸。于是，哈佛产生的诺贝尔奖得主有33位。哈佛产生的美国总统有7位。<br>
 哈佛校园里，不见华丽服饰，不见浓妆异彩，更不见晃里晃荡，只有匆匆的脚步，坚实地写下人生的篇章。哈佛不是神话，哈佛只是一个证明，人的意志，精神，抱负，理想的证明。<br>
@@ -6245,7 +6884,7 @@ void judgeqq(char cd,const string&amp;idstr,const string&amp;pwstr)&#123;
   </entry>
   <entry>
     <title>散列表</title>
-    <url>/2022/05/06/%E6%95%A3%E5%88%97%E8%A1%A8/</url>
+    <url>/posts/b809d98fd460</url>
     <content><![CDATA[<style>
 table th:nth-of-type(1){
 width: 10%;
@@ -7892,7 +8531,7 @@ void DestroyTable( HashTable H )
   </entry>
   <entry>
     <title>继续</title>
-    <url>/2022/05/06/%E9%B8%A1%E6%B1%A45/</url>
+    <url>/posts/a5da8771259e</url>
     <content><![CDATA[<p><em><strong>一位音乐系的学生走进练习室。在钢琴上，摆着一份全新的乐谱。<br>
 “超高难度 …… ”他翻动着乐谱，喃喃自语，感觉自己对弹奏钢琴的信心似乎跌到了谷底，消靡殆尽。<br>
 已经三个月了！自从跟了这位新的指导教授后，不知道，为什么教授要以这种方式整人。<br>
@@ -7914,7 +8553,7 @@ void DestroyTable( HashTable H )
   </entry>
   <entry>
     <title>表排序、桶排序、基数排序</title>
-    <url>/2022/05/06/%E8%A1%A8%E6%8E%92%E5%BA%8F%E3%80%81%E6%A1%B6%E6%8E%92%E5%BA%8F%E3%80%81%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F/</url>
+    <url>/posts/71c24891d81c</url>
     <content><![CDATA[<style>
 table th:nth-of-type(1){
 width: 10%;
@@ -8483,7 +9122,7 @@ void MSDRadixSort( ElementType A[], int N )
   </entry>
   <entry>
     <title>堆排序、归并排序</title>
-    <url>/2022/05/06/%E5%A0%86%E6%8E%92%E5%BA%8F%E3%80%81%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/</url>
+    <url>/posts/8f1ffe4cb905</url>
     <content><![CDATA[<h1 id="堆排序"><a class="markdownIt-Anchor" href="#堆排序"></a> 堆排序</h1>
 <p>堆排序伪代码描述：(自底向上建堆)</p>
 <ul>
@@ -8759,7 +9398,7 @@ void Merge_Sort( ElementType A[], int N )
   </entry>
   <entry>
     <title>希尔排序、快速排序</title>
-    <url>/2022/05/05/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F%E3%80%81%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/</url>
+    <url>/posts/b4e0d940ef9c</url>
     <content><![CDATA[<h1 id="希尔排序"><a class="markdownIt-Anchor" href="#希尔排序"></a> 希尔排序</h1>
 <p>希尔排序(by Donald Shell)：基于插入排序，利用插入排序的简单，同时每次交换相隔较远的元素，使得每次消去不止一个逆序对</p>
 <ul>
@@ -9107,7 +9746,7 @@ void QuickSort( ElementType A[], int N )
   </entry>
   <entry>
     <title>简单排序</title>
-    <url>/2022/05/05/%E7%AE%80%E5%8D%95%E6%8E%92%E5%BA%8F/</url>
+    <url>/posts/c38bdd921611</url>
     <content><![CDATA[<h1 id="排序"><a class="markdownIt-Anchor" href="#排序"></a> 排序</h1>
 <ul>
 <li>前提：void X_Sort(ElementType A[],int N)
@@ -9275,7 +9914,7 @@ void QuickSort( ElementType A[], int N )
   </entry>
   <entry>
     <title>AOV、AOE网络与拓扑排序</title>
-    <url>/2022/05/05/%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/</url>
+    <url>/posts/6f97992c1725</url>
     <content><![CDATA[<img src="https://s2.loli.net/2022/05/04/qUHtbcnLdO4zxV7.png" width="50%" height="50%">
 <span id="more"></span>
 <h1 id="aovactivity-on-vertex网络"><a class="markdownIt-Anchor" href="#aovactivity-on-vertex网络"></a> AOV(Activity On Vertex)网络</h1>
@@ -9488,7 +10127,7 @@ bool TopSort( LGraph Graph, Vertex TopOrder[] )
   </entry>
   <entry>
     <title>最小生成树问题</title>
-    <url>/2022/05/05/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91%E9%97%AE%E9%A2%98/</url>
+    <url>/posts/ab6b4967c58c</url>
     <content><![CDATA[<h1 id="最小生成树问题"><a class="markdownIt-Anchor" href="#最小生成树问题"></a> 最小生成树问题</h1>
 <p>什么是最小生成树(Minimum Spanning Tree, MST)？</p>
 <ul>
@@ -9848,7 +10487,7 @@ int Kruskal( LGraph Graph, LGraph MST )
   </entry>
   <entry>
     <title>5.六度空间、哈利波特的考试</title>
-    <url>/2022/05/05/%E5%85%AD%E5%BA%A6%E7%A9%BA%E9%97%B4%E3%80%81%E5%93%88%E5%88%A9%E6%B3%A2%E7%89%B9%E7%9A%84%E8%80%83%E8%AF%95/</url>
+    <url>/posts/39942f11e23b</url>
     <content><![CDATA[<h1 id="六度空间"><a class="markdownIt-Anchor" href="#六度空间"></a> 六度空间</h1>
 <p>“六度空间”理论又称作“六度分隔（Six Degrees of Separation）”理论。这个理论可以通俗地阐述为：“你和任何一个陌生人之间所间隔的人不会超过六个，也就是说，最多通过五个人你就能够认识任何一个陌生人。“六度空间”理论虽然得到广泛的认同，并且正在得到越来越多的应用。但是数十年来，试图验证这个理论始终是许多社会学家努力追求的目标。然而由于历史的原因，这样的研究具有太大的局限性和困难。随着当代人的联络主要依赖于电话、短信、微信以及因特网上即时通信等工具，能够体现社交网络关系的一手数据已经逐渐使得“六度空间”理论的验证成为可能。假如给你一个社交网络图，请你对每个节点计算符合“六度空间”理论的结点占结点总数的百分比。</p>
 <h2 id="输入格式"><a class="markdownIt-Anchor" href="#输入格式"></a> 输入格式</h2>
@@ -10125,7 +10764,7 @@ void Floyd(int n)&#123;
   </entry>
   <entry>
     <title>多项式的表示和运算</title>
-    <url>/2022/05/05/%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98/</url>
+    <url>/posts/482560d0b6e6</url>
     <content><![CDATA[<h1 id="最短路径问题图的wpl"><a class="markdownIt-Anchor" href="#最短路径问题图的wpl"></a> 最短路径问题(图的WPL)</h1>
 <p>最短路径问题的抽象</p>
 <ul>
@@ -10510,7 +11149,7 @@ bool Floyd( MGraph Graph, WeightType D[][MaxVertexNum], Vertex path[][MaxVertexN
   </entry>
   <entry>
     <title>4.救邦德-简单版</title>
-    <url>/2022/05/05/%E6%95%91%E9%82%A6%E5%BE%B7/</url>
+    <url>/posts/5c4fa5568562</url>
     <content><![CDATA[<h1 id="saving-james-bond-easy-version"><a class="markdownIt-Anchor" href="#saving-james-bond-easy-version"></a> Saving James Bond - Easy Version</h1>
 <p>This time let us consider the situation in the movie “Live and Let Die” in which James Bond, the world’s most famous spy, was captured by a group of drug dealers. He was sent to a small piece of land at the center of a lake filled with crocodiles. There he performed the most daring action to escape – he jumped onto the head of the nearest crocodile! Before the animal realized what was happening, James jumped again onto the next big head… Finally he reached the bank before the last crocodile could bite him (actually the stunt man was caught by the big mouth and barely escaped with his extra thick boot). Assume that the lake is a 100 by 100 square one. Assume that the center of the lake is at (0,0) and the northeast corner at (50,50). The central island is a disk centered at (0,0) with the diameter of 15. A number of crocodiles are in the lake at various positions. Given the coordinates of each crocodile and the distance that James could jump, you must tell him whether or not he can escape.</p>
 <h2 id="input-specification"><a class="markdownIt-Anchor" href="#input-specification"></a> Input Specification:</h2>
@@ -10651,7 +11290,7 @@ bool DST(int v,int n,int jump,bool*Vistied,point*Datapoint,double MGraph[][MaxCo
   </entry>
   <entry>
     <title>图</title>
-    <url>/2022/05/05/%E5%9B%BE/</url>
+    <url>/posts/0d79969cf7e2</url>
     <content><![CDATA[<h1 id="什么是图graph"><a class="markdownIt-Anchor" href="#什么是图graph"></a> 什么是“图”(Graph)？</h1>
 <img src="https://s2.loli.net/2022/05/04/LMlXENzmHRoJ1j5.png" width="50%" height="50%">
 <img src="https://s2.loli.net/2022/05/04/zM6GO9N71ArDoHn.png" width="50%" height="50%">
@@ -11188,7 +11827,7 @@ void BFS ( MGraph Graph, Vertex S, void (*Visit)(Vertex) )
   </entry>
   <entry>
     <title>继续</title>
-    <url>/2022/05/04/%E9%B8%A1%E6%B1%A44/</url>
+    <url>/posts/4facf4eea635</url>
     <content><![CDATA[<p><em><strong>每个人都背负着一个沉重的十字架，在缓慢而艰难地向前行走，突然有个人就停了下来，“上帝，这实在太沉重了，请允许我砍掉一些吧！”，于是他把十字架砍去了一小节，背负着减负的十字架继续前行，虽稍微轻松，但前路漫漫，十字架的压力让人依然感觉行走艰难，哦，上帝，让我再砍去一点点吧。感谢上帝，这样我的旅途就轻松多了。</strong></em></p>
 <p><em><strong>当别人都负重奋力艰难的前行时，他哼着欢快的歌谣，不费力走到了队伍的前头，并暗暗得意于自己的聪明举措。突然前方出现一个宽大的沟壑，眼看着无计可施。这时，后面赶上来的人用他们的十字架搭成了桥梁，顺利渡过。当他也尝试着效仿他们时，才发现他的十字架远远达不到对岸。当别人都已渐渐远行，他只能停在原地懊恼不已。“如果当初不偷懒，我本也可以和他们一样，跨过这道沟壑的”，可是人生很多事情事发后再去后悔已经晚了……</strong></em></p>
 <p><em><strong>其实我们每个人都背负着各种各样的十字架，在艰难前行。它也许是我们的学习、工作中的压力，也许是我们必须承担的责任和义务。</strong></em></p>
@@ -11205,7 +11844,7 @@ void BFS ( MGraph Graph, Vertex S, void (*Visit)(Vertex) )
   </entry>
   <entry>
     <title>优先队列、堆、哈夫曼树</title>
-    <url>/2022/05/04/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%E3%80%81%E5%A0%86%E3%80%81%E5%93%88%E5%A4%AB%E6%9B%BC%E6%A0%91/</url>
+    <url>/posts/b807a686acbe</url>
     <content><![CDATA[<style>
 table th:nth-of-type(1){
 width: 15%;
@@ -11820,7 +12459,7 @@ struct HeapStruct
   </entry>
   <entry>
     <title>二叉搜索树、平衡二叉树</title>
-    <url>/2022/05/03/%E4%BA%8C%E5%8F%89%E6%A0%91%E6%90%9C%E7%B4%A2%E6%A0%91%E5%92%8CAVL%E6%A0%91/</url>
+    <url>/posts/309cccadf437</url>
     <content><![CDATA[<style>
 table th:nth-of-type(1){
 width: 12%;
@@ -12301,7 +12940,7 @@ AVLTree Insert( AVLTree T, ElementType X )
   </entry>
   <entry>
     <title>3.二叉树的同构、判断是否同一棵二叉搜索树</title>
-    <url>/2022/05/03/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%90%8C%E6%9E%84/</url>
+    <url>/posts/2c8d4a984d90</url>
     <content><![CDATA[<h1 id="二叉树的同构"><a class="markdownIt-Anchor" href="#二叉树的同构"></a> 二叉树的同构</h1>
 <p>给定两棵二叉树T1和T2。如果T1可以通过若干次左右孩子互换就变成T2，则称两棵二叉树是“同构”的<br>
 现给定两棵树，请判断是否同构</p>
@@ -12611,7 +13250,7 @@ int judge(Tree T,int N)         &#x2F;&#x2F;更正版本
   </entry>
   <entry>
     <title>二叉树</title>
-    <url>/2022/05/03/%E4%BA%8C%E5%8F%89%E6%A0%91/</url>
+    <url>/posts/83086bddf7a7</url>
     <content><![CDATA[<h1 id="二叉树"><a class="markdownIt-Anchor" href="#二叉树"></a> 二叉树</h1>
 <p>二叉树(Binary Tree):一个有穷的结点集合</p>
 <ul>
@@ -13094,7 +13733,7 @@ void LevelorderTraversal ( BinTree BT )
   </entry>
   <entry>
     <title>2.汉诺塔的非递归实现、File Transfer</title>
-    <url>/2022/05/03/FileTransfer/</url>
+    <url>/posts/a9ffe581d7f0</url>
     <content><![CDATA[<h1 id="汉诺塔的非递归实现"><a class="markdownIt-Anchor" href="#汉诺塔的非递归实现"></a> 汉诺塔的非递归实现</h1>
 <p>借助堆栈以非递归（循环）方式求解汉诺塔的问题（n, a, b, c），即将N个盘子从起始柱（标记为“a”）通过借助柱（标记为“b”）移动到目标柱（标记为“c”），并保证每个移动符合汉诺塔问题的要求。</p>
 <h2 id="输入格式"><a class="markdownIt-Anchor" href="#输入格式"></a> 输入格式</h2>
@@ -13461,7 +14100,7 @@ void Union(SetType S[],ElementType X1,ElementType X2)
   </entry>
   <entry>
     <title>树和集合</title>
-    <url>/2022/05/03/%E6%A0%91%E5%92%8C%E9%9B%86%E5%90%88/</url>
+    <url>/posts/f20d5a67d2ed</url>
     <content><![CDATA[<style>
 table th:nth-of-type(1){
 width: 13%;
@@ -13784,7 +14423,7 @@ SetName Find( SetType S, ElementType X )
   </entry>
   <entry>
     <title>串与串的模式匹配</title>
-    <url>/2022/05/03/%E4%B8%B2%E4%B8%8E%E4%B8%B2%E7%9A%84%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D/</url>
+    <url>/posts/5d5b29a8179b</url>
     <content><![CDATA[<style>
 table th:nth-of-type(1){
 width: 12%;
@@ -14110,7 +14749,7 @@ int main()
   </entry>
   <entry>
     <title>队列</title>
-    <url>/2022/05/03/%E9%98%9F%E5%88%97/</url>
+    <url>/posts/2eaf537c47f5</url>
     <content><![CDATA[<h1 id="队列"><a class="markdownIt-Anchor" href="#队列"></a> 队列</h1>
 <p>“队列(Queue)”：具有一定操作约束的线性表</p>
 <ul>
@@ -14338,7 +14977,7 @@ ElementType DeleteQ( Queue Q )
   </entry>
   <entry>
     <title>继续</title>
-    <url>/2022/05/03/%E9%B8%A1%E6%B1%A43/</url>
+    <url>/posts/d5d42ac5d790</url>
     <content><![CDATA[<p><em><strong>有些事情，你只要知道就可以了，这个更简单。</strong></em></p>
 <p><em><strong>有些事情，你不仅要知道，还要知道为什么？更重要的是，有时还要知道我们该怎么办？这个可就不简单了。</strong></em></p>
 ]]></content>
@@ -14351,7 +14990,7 @@ ElementType DeleteQ( Queue Q )
   </entry>
   <entry>
     <title>从表达式的求值到堆栈</title>
-    <url>/2022/05/03/%E4%BB%8E%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%B1%82%E5%80%BC%E5%88%B0%E5%A0%86%E6%A0%88/</url>
+    <url>/posts/682b01a88b7a</url>
     <content><![CDATA[<h1 id="计算机如何进行表达式求值"><a class="markdownIt-Anchor" href="#计算机如何进行表达式求值"></a> 计算机如何进行表达式求值？</h1>
 <p>例：算术表达式：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>5</mn><mo>+</mo><mn>6</mn><mi mathvariant="normal">/</mi><mn>2</mn><mo>−</mo><mn>3</mn><mo>∗</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">5+6/2-3*4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">6</span><span class="mord">/</span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span></span></span></span></p>
 <p>运算时有优先次序，使得运算符后跟着的操作数并不一定参与这个运算</p>
@@ -14658,7 +15297,7 @@ ElementType Pop( Stack S )
   </entry>
   <entry>
     <title>Ethereum入门了解</title>
-    <url>/2022/05/03/Ethereum%E5%85%A5%E9%97%A8/</url>
+    <url>/posts/9456e876aa66</url>
     <content><![CDATA[<p>本文参考<a href="https://docs.microsoft.com/zh-cn/learn/modules/blockchain-solidity-ethereum-smart-contracts/1-introduction">Microsoft使用 Solidity 编写 Ethereum 智能合同</a>。</p>
 <h1 id="用于处理智能合同的工具"><a class="markdownIt-Anchor" href="#用于处理智能合同的工具"></a> 用于处理智能合同的工具</h1>
 <p>许多工具都可帮助快速高效地开发智能合同。以下各节介绍了一些集成开发环境 (IDE)、扩展和框架。</p>
@@ -14992,7 +15631,7 @@ it(&quot;should return the status Shipped&quot;, async ()&#x3D;&gt; &#123;
   </entry>
   <entry>
     <title>Solidity入门了解</title>
-    <url>/2022/05/01/Solidity%E5%85%A5%E9%97%A8%E4%BA%86%E8%A7%A3/</url>
+    <url>/posts/a8e179be4596</url>
     <content><![CDATA[<p>本文参考<a href="https://docs.microsoft.com/zh-cn/learn/modules/blockchain-learning-solidity/1-introduction">Microsoft了解如何使用Solidity</a>。</p>
 <h1 id="简介"><a class="markdownIt-Anchor" href="#简介"></a> 简介</h1>
 <p>使用一种称为Solidity的编程语言可以编写供应链、在线市场或其他用例的操作代码。<br>
@@ -15301,7 +15940,7 @@ itemNames.length; &#x2F;&#x2F; 1<span aria-hidden="true" class="line-numbers-row
   </entry>
   <entry>
     <title>线性表概念和实现</title>
-    <url>/2022/05/01/%E7%BA%BF%E6%80%A7%E8%A1%A8/</url>
+    <url>/posts/24e1657c8f8e</url>
     <content><![CDATA[<style>
 table th:nth-of-type(1){
 width: 10%;
@@ -15656,7 +16295,7 @@ bool Delete( List L, Position P )                       &#x2F;&#x2F;平均移动
   </entry>
   <entry>
     <title>多项式的表示和运算</title>
-    <url>/2022/05/01/%E5%A4%9A%E9%A1%B9%E5%BC%8F%E7%9A%84%E8%A1%A8%E7%A4%BA/</url>
+    <url>/posts/7349a87dccac</url>
     <content><![CDATA[<style>
 table th:nth-of-type(1){
 width: 10%;
@@ -16081,7 +16720,7 @@ void PrintPoly(Polynomial P)
   </entry>
   <entry>
     <title>1.测试运行时间、最大子列和计算</title>
-    <url>/2022/05/01/%E8%AE%A1%E7%AE%97%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/</url>
+    <url>/posts/f8c524107860</url>
     <content><![CDATA[<pre class="line-numbers language-none"><code class="language-none">&#x2F;&#x2F; 测试运行时间
 #include&lt;iostream&gt;
 #include&lt;cstdio&gt;
@@ -16273,7 +16912,7 @@ int MaxSubseqSum3( int List[], int N )
   </entry>
   <entry>
     <title>数据结构基本概念</title>
-    <url>/2022/04/30/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%A6%82%E5%BF%B5/</url>
+    <url>/posts/61f72dc1fd19</url>
     <content><![CDATA[<p>对于数据结构，官方没有统一概念，以下是三个经典著作中数据结构的定义</p>
 <blockquote>
 <p>数据结构是数据对象，以及存在于该对象的实例和组成该实例的数据元素之间的各种联系。<br>
@@ -16387,7 +17026,7 @@ Swap既可以是函数实现，也可以是宏等方式实现</p>
   </entry>
   <entry>
     <title>异常处理</title>
-    <url>/2022/04/30/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</url>
+    <url>/posts/5bdc88454c74</url>
     <content><![CDATA[<h1 id="异常处理"><a class="markdownIt-Anchor" href="#异常处理"></a> 异常处理</h1>
 <p>在程序运行过程中，有些错误是可以预料，但不可回避的，如：</p>
 <blockquote>
@@ -16511,7 +17150,7 @@ int main()                    &#x2F;&#x2F;输出结果：第3层处理
   </entry>
   <entry>
     <title>模板</title>
-    <url>/2022/04/30/%E6%A8%A1%E6%9D%BF/</url>
+    <url>/posts/b10e41f86dff</url>
     <content><![CDATA[<h1 id="模板"><a class="markdownIt-Anchor" href="#模板"></a> 模板</h1>
 <p>常见的代码重用技术有：<br>
 函数，类与对象，继承与派生，多态(函数重载，运算符重载，虚函数，纯虚函数，抽象类等)，泛型程序设计</p>
@@ -16631,7 +17270,7 @@ int main()
   </entry>
   <entry>
     <title>多态性与虚函数</title>
-    <url>/2022/04/30/%E8%99%9A%E5%87%BD%E6%95%B0%E4%B8%8E%E5%A4%9A%E6%80%81%E6%80%A7/</url>
+    <url>/posts/c2c914ef34bc</url>
     <content><![CDATA[<h1 id="多态"><a class="markdownIt-Anchor" href="#多态"></a> 多态</h1>
 <p>多态是面向对象编程的主要特征之一<br>
 基类指针/引用<strong>可以按照基类的方式来做事，也可以按照派生类的方式</strong>来做事，它有多种形态，或者说有多种表现方式，这种现象即为多态<br>
@@ -16814,7 +17453,7 @@ int main()
   </entry>
   <entry>
     <title>运算符重载</title>
-    <url>/2022/04/30/%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD/</url>
+    <url>/posts/4b50c37306d0</url>
     <content><![CDATA[<h1 id="运算符重载"><a class="markdownIt-Anchor" href="#运算符重载"></a> 运算符重载</h1>
 <p>使用c++编写程序时，不仅要使用基本数据类型，还要设计新的数据类型-&gt;<strong>类</strong></p>
 <p>一般情况下，基本数据类型的运算都是用运算符来表达，语义简单并且直观，如：</p>
@@ -17144,7 +17783,7 @@ void operator delete[](void*ptr)&#123;
   </entry>
   <entry>
     <title>继续</title>
-    <url>/2022/04/30/%E9%B8%A1%E6%B1%A42/</url>
+    <url>/posts/7817132f8a29</url>
     <content><![CDATA[<p><em><strong>人生最清晰的脚印，往往印在最泥泞的路上。</strong></em></p>
 <p><em><strong>如果你想拥有从未有过的东西，那你必须去做从未做过的事情。</strong></em></p>
 <p><em><strong>去做你想做的事情，趁阳光正好，趁现在还年轻！你今日撒下的种子，会在你看不见想不到的某日，悄悄地生根发芽。</strong></em></p>
@@ -17158,7 +17797,7 @@ void operator delete[](void*ptr)&#123;
   </entry>
   <entry>
     <title>【转】大佬事迹</title>
-    <url>/2022/04/30/%E9%B8%A1%E6%B1%A4/</url>
+    <url>/posts/dabc69d6aedc</url>
     <content><![CDATA[<p>绝大多数的互联网企业，要么是源起于技术咖的一个想法，要么是由技术过硬的人掌舵。<br>
 这些人的创业或是成名之路其实相差甚远，但几乎所有人都有一个共同点，就是在初入编程世界时，都给自己定过“至少做十年程序员”、“只想对着电脑写代码”、“至少写十多万行代码”之类的“小目标”。虽然初心的保质期往往不长，但如果连初心都没有，后面的故事自然也不会发生。<br>
 网易丁磊，创办网易时的50万元资金是他写了几年代码积攒下来的。成立网易云之后，丁磊还曾梦想在云计算上投入十亿人民币，解放全国千千万万的程序员。<br>
@@ -17200,7 +17839,7 @@ void operator delete[](void*ptr)&#123;
   </entry>
   <entry>
     <title>区块链入门了解</title>
-    <url>/2022/04/30/%E5%8C%BA%E5%9D%97%E9%93%BE%E5%85%A5%E9%97%A8/</url>
+    <url>/posts/0ae8ab387974</url>
     <content><![CDATA[<p>因为不久后要组队参加区块链比赛，所以新开了这个系列用于记录一些区块链开放相关的知识</p>
 <p>本系列是参考<a href="https://docs.microsoft.com/zh-cn/learn/paths/ethereum-blockchain-development/">Microsoft区块链开发入门</a>内容整理得来的</p>
 <span id="more"></span>
@@ -17374,7 +18013,7 @@ Ethereum是通用协议。Ethereum扩展了比特币创建的内容，提供允�
   </entry>
   <entry>
     <title>单继承和多继承、派生类构造析构规则</title>
-    <url>/2022/04/28/%E5%8D%95%E7%BB%A7%E6%89%BF%E3%80%81%E5%A4%9A%E7%BB%A7%E6%89%BF/</url>
+    <url>/posts/c4844ef45beb</url>
     <content><![CDATA[<h1 id="单继承和多继承"><a class="markdownIt-Anchor" href="#单继承和多继承"></a> 单继承和多继承</h1>
 <p>继承分为单继承和多继承</p>
 <blockquote>
@@ -17593,7 +18232,7 @@ int main()&#123;
   </entry>
   <entry>
     <title>继承、派生</title>
-    <url>/2022/04/28/%E7%BB%A7%E6%89%BF%E3%80%81%E6%B4%BE%E7%94%9F/</url>
+    <url>/posts/39a7f361dc52</url>
     <content><![CDATA[<h1 id="继承-派生"><a class="markdownIt-Anchor" href="#继承-派生"></a> 继承、派生</h1>
 <p>在自然界中，继承与派生是一种非常普遍的现象</p>
 <blockquote>
@@ -17787,7 +18426,7 @@ int main()&#123;
   </entry>
   <entry>
     <title>友元类、组合类</title>
-    <url>/2022/04/28/%E5%8F%8B%E5%85%83%E3%80%81%E7%BB%84%E5%90%88%E7%B1%BB/</url>
+    <url>/posts/cc61d4abf604</url>
     <content><![CDATA[<h1 id="友元关系"><a class="markdownIt-Anchor" href="#友元关系"></a> 友元关系</h1>
 <p>封装的目的是为了实现信息隐蔽，一个对象的私有成员只能通过自己的成员访问到，类外想要访问私有成员只能通过该类提供的公有成员间接地进行<br>
 但是上面这种方式通常是以函数调用的方式进行的，不方便并且开销大，因此，c++提供了友元的机制来打破私有化的界限，即一个类的友元可以访问该类的私有成员</p>
@@ -17936,7 +18575,7 @@ int main()
   </entry>
   <entry>
     <title>静态成员、常成员</title>
-    <url>/2022/04/28/%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E3%80%81%E5%B8%B8%E6%88%90%E5%91%98/</url>
+    <url>/posts/e090730e1012</url>
     <content><![CDATA[<h1 id="静态成员"><a class="markdownIt-Anchor" href="#静态成员"></a> 静态成员</h1>
 <p>当用关键字static说明一个类成员时，该成员为静态成员，包括静态数据成员，静态成员函数<br>
 静态数据成员，如：</p>
@@ -18130,7 +18769,7 @@ const int A::b&#x3D;n;                &#x2F;&#x2F;与一般的静态数据成员
   </entry>
   <entry>
     <title>对象指针、对象数组、对象引用</title>
-    <url>/2022/04/27/%E5%AF%B9%E8%B1%A1%E6%8C%87%E9%92%88/</url>
+    <url>/posts/aaae95315f34</url>
     <content><![CDATA[<h1 id="对象指针"><a class="markdownIt-Anchor" href="#对象指针"></a> 对象指针</h1>
 <p>与c语言类似，c++可以通过使用指向对象的指针变量来访问对象及对象的公共成员<br>
 定义和用法与结构体指针相似，也是数据类型加指针名的形式，如：</p>
@@ -18299,7 +18938,7 @@ int main( )
   </entry>
   <entry>
     <title>构造函数、析构函数</title>
-    <url>/2022/04/27/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E3%80%81%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/</url>
+    <url>/posts/2597eea773d1</url>
     <content><![CDATA[<h1 id="构造函数"><a class="markdownIt-Anchor" href="#构造函数"></a> 构造函数</h1>
 <p>自动解决数据成员的初始化问题<br>
 构造函数是类的一种特殊成员，本质上也是类的成员函数，函数名和类名相同，注意构造函数没有返回类型(因为没有变量来接收返回值)，可以有参数也可以没有<br>
@@ -18542,7 +19181,7 @@ int main()
   </entry>
   <entry>
     <title>类和对象</title>
-    <url>/2022/04/27/%E7%B1%BB%E3%80%81%E5%AF%B9%E8%B1%A1/</url>
+    <url>/posts/6ab4fe401c45</url>
     <content><![CDATA[<h1 id="面向对象技术"><a class="markdownIt-Anchor" href="#面向对象技术"></a> 面向对象技术</h1>
 <p>面向对象技术几大关键特征：</p>
 <ul>
@@ -18807,7 +19446,7 @@ int main()
   </entry>
   <entry>
     <title>函数重载、默认形参</title>
-    <url>/2022/04/27/%E5%87%BD%E6%95%B0%E9%87%8D%E8%BD%BD%E3%80%81%E9%BB%98%E8%AE%A4%E5%BD%A2%E5%8F%82/</url>
+    <url>/posts/f522f8bd17a1</url>
     <content><![CDATA[<h1 id="函数重载"><a class="markdownIt-Anchor" href="#函数重载"></a> 函数重载</h1>
 <p>函数重载本质上是一种多态性的简单体现(<strong>静态绑定</strong>)</p>
 <p>c语言中对不同数据类型的数据进行功能相似的操作时必须编写很多个不同的函数</p>
@@ -18959,7 +19598,7 @@ int main()&#123;
   </entry>
   <entry>
     <title>常量、内联函数、引用</title>
-    <url>/2022/04/27/%E5%B8%B8%E9%87%8F%E3%80%81%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0/</url>
+    <url>/posts/acc21ac0ef42</url>
     <content><![CDATA[<h1 id="常量"><a class="markdownIt-Anchor" href="#常量"></a> 常量</h1>
 <p>常量是指在程序运行过程中，其值不能被改变的量<br>
 在程序中直接使用常量会出现可读性差，可维护性差的缺点。通常用符号常量解决常量的问题<br>
@@ -19070,7 +19709,7 @@ int main()
   </entry>
   <entry>
     <title>命名空间</title>
-    <url>/2022/04/27/%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4/</url>
+    <url>/posts/331b3d146634</url>
     <content><![CDATA[<h1 id="命名空间"><a class="markdownIt-Anchor" href="#命名空间"></a> 命名空间</h1>
 <p>一个中大型软件往往由多名程序员共同开发，会使用大量的变量和函数，不可避免地会出现变量或函数的命名冲突，当所有人的代码都测试通过，没有问题时，但将它们结合到一起就有可能会出现命名冲突<br>
 namespace关键字用来定义一个命名空间，语法格式为：</p>
@@ -19179,7 +19818,7 @@ int main()
   </entry>
   <entry>
     <title>从c到c++</title>
-    <url>/2022/04/27/%E4%BB%8Ec%E5%88%B0c++/</url>
+    <url>/posts/11bafae5ef49</url>
     <content><![CDATA[<p>c是c<ins>的基础，只有充分掌握c并理解c和c</ins>的不同，才能理解和运用c++解决问题</p>
 <span id="more"></span>
 <h1 id="c数据类型"><a class="markdownIt-Anchor" href="#c数据类型"></a> c++数据类型</h1>
@@ -19427,7 +20066,7 @@ int main()
   </entry>
   <entry>
     <title>常见标准库函数</title>
-    <url>/2022/04/27/%E5%B8%B8%E8%A7%81%E6%A0%87%E5%87%86%E5%BA%93%E5%87%BD%E6%95%B0/</url>
+    <url>/posts/8cc46b833174</url>
     <content><![CDATA[<p>标准库提供了很多功能各异的函数<br>
 不同的头文件中声明了功能各不相同的库函数，不同的库函数的实现有时也需要借助其他的库函数<br>
 一般情况只供标准库中其他函数使用的名字以下划线开始，防止与用户程序中的名字冲突，所有标准库都遵循该约定<br>
@@ -19510,7 +20149,7 @@ fabs(x)     x的绝对值</p>
   </entry>
   <entry>
     <title>存储分配</title>
-    <url>/2022/04/27/%E5%AD%98%E5%82%A8%E5%88%86%E9%85%8D/</url>
+    <url>/posts/2284ab999c4d</url>
     <content><![CDATA[<h1 id="c程序的内存映像"><a class="markdownIt-Anchor" href="#c程序的内存映像"></a> c程序的内存映像</h1>
 <p>c语言当中数据存储的内存空间是有区分的  (我自己分的不准确，差不多理解这个意思就行，而且这个问题实际是由操作系统具体实现决定的)</p>
 <blockquote>
@@ -19648,7 +20287,7 @@ int main()
   </entry>
   <entry>
     <title>unix系统调用</title>
-    <url>/2022/04/27/unix%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
+    <url>/posts/bfce6ab57436</url>
     <content><![CDATA[<h1 id="系统调用"><a class="markdownIt-Anchor" href="#系统调用"></a> 系统调用</h1>
 <p>UNIX操作系统通过一系列系统调用提供服务，而这些系统调用实际上是操作系统内的函数，可以被用户程序调用<br>
 在UNIX系统中，经常会需要借助于系统调用以获得最高的效率，或访问标准库中没有的某些功能<br>
@@ -19850,7 +20489,7 @@ st_mode项包含了描述文件的一系列标志，在&lt;sys&#x2F;stat.h&gt;�
   </entry>
   <entry>
     <title>文件输入输出</title>
-    <url>/2022/04/27/%E6%96%87%E4%BB%B6%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/</url>
+    <url>/posts/1783fd2451bc</url>
     <content><![CDATA[<h1 id="文件访问"><a class="markdownIt-Anchor" href="#文件访问"></a> 文件访问</h1>
 <p>UNIX系统程序cat可以说明访问的文件是否已经连接到程序，它把一批命名文件串联后输出到标准输出上<br>
 cat可用来在屏幕上打印文件，对于无法通过名字访问文件的程序而言，它还可以用作通用的输入收集器</p>
@@ -20052,7 +20691,7 @@ int fputs(char*s,FILE*iop)
   </entry>
   <entry>
     <title>标准输入输出</title>
-    <url>/2022/04/27/%E6%A0%87%E5%87%86%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA/</url>
+    <url>/posts/73fc4b87a401</url>
     <content><![CDATA[<blockquote>
 <p>输入与输出并不是c本身的功能<br>
 一般讨论的输入输出都是建立在标准输入输出之上的，标准输入(stdin)和标准输出(stdout)是操作系统自动提供给程序访问的<br>
@@ -20231,7 +20870,7 @@ int sscanf(char* string,char* format,arg1,arg2,…);</p>
   </entry>
   <entry>
     <title>函数、指针、复杂声明</title>
-    <url>/2022/04/26/%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88%E3%80%81%E5%A4%8D%E6%9D%82%E5%A3%B0%E6%98%8E/</url>
+    <url>/posts/34762e3fe2b4</url>
     <content><![CDATA[<h1 id="函数与指针"><a class="markdownIt-Anchor" href="#函数与指针"></a> 函数与指针</h1>
 <h2 id="指针函数"><a class="markdownIt-Anchor" href="#指针函数"></a> 指针函数</h2>
 <p>函数内部数据是地址，需要传递给调用函数，可以将指针返回给函数<br>
@@ -20536,7 +21175,7 @@ void dirdcl()
   </entry>
   <entry>
     <title>函数递归</title>
-    <url>/2022/04/26/%E9%80%92%E5%BD%92/</url>
+    <url>/posts/586bfaec841d</url>
     <content><![CDATA[<h1 id="递归函数"><a class="markdownIt-Anchor" href="#递归函数"></a> 递归函数</h1>
 <p>函数可以调用其他函数，也可以调用自身<br>
 递归函数(Recursive Function),即自调用函数,在函数体内有直接的或间接地自己调用自己的语句<br>
@@ -20645,7 +21284,7 @@ int Divisor(int a,int b)
   </entry>
   <entry>
     <title>函数参数、函数调用</title>
-    <url>/2022/04/26/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E3%80%81%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8/</url>
+    <url>/posts/235554bce98c</url>
     <content><![CDATA[<h1 id="函数参数"><a class="markdownIt-Anchor" href="#函数参数"></a> 函数参数</h1>
 <p>数据传递，函数调用的过程实际上就是将实参数据原样拷贝到形参当中<br>
 参数会出现在两个地方，分别是函数定义处和函数调用处，这两个地方的参数是有区别的<br>
@@ -20873,7 +21512,7 @@ int grepmain_nx(int argc,char*argv[])
   </entry>
   <entry>
     <title>函数</title>
-    <url>/2022/04/26/%E5%87%BD%E6%95%B0/</url>
+    <url>/posts/a6bd64132687</url>
     <content><![CDATA[<h1 id="函数"><a class="markdownIt-Anchor" href="#函数"></a> 函数</h1>
 <blockquote>
 <p>函数是c语言模块化编程的最小单位，可以把每个函数看作一个“模块”(module)<br>
@@ -20991,7 +21630,7 @@ status ReadInfo(char *name,struct student stu[],int *num）       形参
   </entry>
   <entry>
     <title>指针、数组、结构体</title>
-    <url>/2022/04/26/%E6%8C%87%E9%92%88%E3%80%81%E6%95%B0%E7%BB%84%E3%80%81%E7%BB%93%E6%9E%84%E4%BD%93/</url>
+    <url>/posts/54e92e94d217</url>
     <content><![CDATA[<h1 id="指针与一维数组"><a class="markdownIt-Anchor" href="#指针与一维数组"></a> 指针与一维数组</h1>
 <p>通过指针访问内存，执行速度快于通过数组名访问内存，同时可以通过指针移动的方式访问数组<br>
 任何通过数组下标所能完成的操作都可以通过指针来实现<br>
@@ -21207,7 +21846,7 @@ int main() &#123;
   </entry>
   <entry>
     <title>指针</title>
-    <url>/2022/04/25/%E6%8C%87%E9%92%88/</url>
+    <url>/posts/64e329d9289e</url>
     <content><![CDATA[<h1 id="指针"><a class="markdownIt-Anchor" href="#指针"></a> 指针</h1>
 <pre><code>指针是一种保存变量地址的变量
 
@@ -21475,7 +22114,7 @@ int main()
   </entry>
   <entry>
     <title>结构体、联合</title>
-    <url>/2022/04/25/%E7%BB%93%E6%9E%84%E4%BD%93%E3%80%81%E8%81%94%E5%90%88/</url>
+    <url>/posts/d1d3086360dd</url>
     <content><![CDATA[<h1 id="结构体"><a class="markdownIt-Anchor" href="#结构体"></a> 结构体</h1>
 <p>结构体是一个或多个变量的集合，这些变量可能为不同的类型，为了方便处理而将这些变量组织在一个名字之下(某些语言称之为“记录”，比如Pascal语言)。<br>
 区分于数组，结构中变量类型可以不同，结构将一组复杂数据组织在同一连续(一般情况，但不保证)存储单元下，而不是视为独立个体，有助于分析处理复杂的数据，特别是在大型程序中，如:</p>
@@ -21816,7 +22455,7 @@ if(!flags.is_extern&amp;&amp;!flags.is_static)用于对is_extern和is_static进�
   </entry>
   <entry>
     <title>数组</title>
-    <url>/2022/04/25/%E6%95%B0%E7%BB%84/</url>
+    <url>/posts/59e83767d17a</url>
     <content><![CDATA[<h1 id="数组一组具有相同数据类型变量的集合"><a class="markdownIt-Anchor" href="#数组一组具有相同数据类型变量的集合"></a> 数组：一组具有相同数据类型变量的集合</h1>
 <blockquote>
 <pre><code>数组名：表示这组数据的名字
@@ -22033,7 +22672,7 @@ int main()
   </entry>
   <entry>
     <title>变量作用域、存储类型</title>
-    <url>/2022/04/25/%E4%BD%9C%E7%94%A8%E5%9F%9F,%E5%AD%98%E5%82%A8%E7%B1%BB%E5%9E%8B,%E5%88%9D%E5%A7%8B%E5%8C%96/</url>
+    <url>/posts/412f02e6cd7d</url>
     <content><![CDATA[<p><strong>c程序可以看作是一系列外部对象构成</strong>，这些外部对象可能是变量或函数</p>
 <h1 id="外部对象和内部对象"><a class="markdownIt-Anchor" href="#外部对象和内部对象"></a> 外部对象和内部对象</h1>
 <p>external和internal是相对应的，internal用于描述定义在函数内部的函数参数及变量，外部变量定义在函数之外，可以在许多函数中使用。默认情况下，外部变量与函数(默认是external)具有下列性质：</p>
@@ -22182,7 +22821,7 @@ int main()
   </entry>
   <entry>
     <title>头文件、预处理器、宏</title>
-    <url>/2022/04/25/%E5%A4%B4%E6%96%87%E4%BB%B6%E3%80%81%E9%A2%84%E5%A4%84%E7%90%86%E5%99%A8/</url>
+    <url>/posts/382e8937ecec</url>
     <content><![CDATA[<h1 id="头文件"><a class="markdownIt-Anchor" href="#头文件"></a> 头文件</h1>
 <p>在考虑将一个程序分解为若干个源文件的情况下，一般主要考虑的是实际程序中分别来自于不同的单独编译的库，这种情况下，必须考虑定义和声明在这些文件中的共享问题。应尽可能将共享部分集中在一起，这样就只需要一个副本，维护程序时也可以提升可维护性。所谓的头文件，其实它的内容跟源文件中的内容是一样的，都是c的源代码，但头文件一般是不用来进行编译的，只是把把所有的函数声明全部放进一个头文件中，当某一个源文件需要它们时，就可以通过宏命令 “#include”包含进这个源文件中，从而把它们的内容合并到源文件中去，当包含该头文件的源文件被编译时，这些被包含进去的头文件的作用便发挥了。注意，头文件起到的是将程序的不同源文件声明串联起来的作用，与库文件完全不是一个概念(后者是已经编译过的可执行文件)。<br>
 实际应用中，通常一方面希望每个源文件只能访问完成任务所需的信息，另一方面维护过多的头文件较为困难。对于中等规模的程序，最好只用一个头文件存放程序中各部分的共享对象，较大程序可能需要使用更多的头文件，需要精心进行组织。</p>
@@ -22396,7 +23035,7 @@ paste(name,1);                      调用该宏后，宏将创建记号name1;</
   </entry>
   <entry>
     <title>c语言控制流</title>
-    <url>/2022/04/25/%E6%8E%A7%E5%88%B6%E6%B5%81/</url>
+    <url>/posts/307e07dbb681</url>
     <content><![CDATA[<blockquote>
 <p>程序语言中的控制流语句用于控制各运算执行的次序</p>
 </blockquote>
@@ -22799,7 +23438,7 @@ c提供了可随意滥用的goto语句以及标记跳转位置的标号
   </entry>
   <entry>
     <title>c语言知识点总结</title>
-    <url>/2022/04/21/c%E8%AF%AD%E8%A8%80%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/</url>
+    <url>/posts/f56cfbc8bd9c</url>
     <content><![CDATA[<h1 id="词法规则"><a class="markdownIt-Anchor" href="#词法规则"></a> 词法规则</h1>
 <p>程序由存储在文件中的一个或多个翻译单元(translation unit)组成</p>
 <p>程序的翻译分几个阶段完成，翻译的第一阶段完成低级的词法转换，执行以字符#开头的行中的指令，并进行宏定义和宏扩展</p>
@@ -23584,7 +24223,7 @@ c提供了可随意滥用的goto语句以及标记跳转位置的标号
   </entry>
   <entry>
     <title>c语言标准</title>
-    <url>/2022/04/21/c%E8%AF%AD%E8%A8%80%E6%A0%87%E5%87%86/</url>
+    <url>/posts/7ff5cbd303ff</url>
     <content><![CDATA[<p>注：这本笔记c的内容主要参考的是K&amp;R的TCPL第二版，因此实际是ANSI C的标准</p>
 <pre><code>关于C99出现的一些变化均集中整理到这部分来 (c11后面的变化暂时还没整理)
 </code></pre>
@@ -23952,7 +24591,7 @@ c99中，每种整数类型都有一个级别
   </entry>
   <entry>
     <title>第一篇博客，写给自己</title>
-    <url>/2022/04/21/%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2%EF%BC%8C%E5%86%99%E7%BB%99%E8%87%AA%E5%B7%B1/</url>
+    <url>/posts/476c37a9e6e9</url>
     <content><![CDATA[<p>这是我的第一篇博客，早就想用博客记录一些生活中的所学所想，但是一直碍于麻烦，所以一拖再拖，直到今天折腾了好久才把博客搭起来。</p>
 <p>不出意外的话接下来一段时间每天都保持更新，博客的内容基本上是自己之前看视频和论坛整理下来的文本，基本都是非常小白的内容，另外还有一些看过文章的转载。</p>
 <p>我不知道我会在这条道路上走多远多久，既然选择了这条路，那就踏踏实实走下去，最起码学会一点技能也是好的吧。</p>

@@ -1,0 +1,596 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>单继承和多继承、派生类构造析构规则 | hetumessi's Blog</title><meta name="keywords" content="程序设计语言学习"><meta name="author" content="hetumessi"><meta name="copyright" content="hetumessi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="单继承和多继承 继承分为单继承和多继承  单继承：派生类只有一个直接基类(如：A-&gt;B-&gt;C) 多继承：派生类有多个直接基类(如：X,Y-&gt;Z)  定义单继承派生类的基本格式：  class 派生类名：&lt;继承方式&gt;基类名{继承基类的成员,新添加的成员};  定义多继承派生类的基本格式：  class 派生类名：&lt;继承方式1&gt;基类名1,&lt;继承方式2&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单继承和多继承、派生类构造析构规则">
+<meta property="og:url" content="http://hetumessi.github.io/posts/c4844ef45beb">
+<meta property="og:site_name" content="hetumessi&#39;s Blog">
+<meta property="og:description" content="单继承和多继承 继承分为单继承和多继承  单继承：派生类只有一个直接基类(如：A-&gt;B-&gt;C) 多继承：派生类有多个直接基类(如：X,Y-&gt;Z)  定义单继承派生类的基本格式：  class 派生类名：&lt;继承方式&gt;基类名{继承基类的成员,新添加的成员};  定义多继承派生类的基本格式：  class 派生类名：&lt;继承方式1&gt;基类名1,&lt;继承方式2&amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://hetumessi.github.io/img/newdefaultcover.jpeg">
+<meta property="article:published_time" content="2022-04-28T14:53:52.675Z">
+<meta property="article:modified_time" content="2022-05-08T10:25:32.702Z">
+<meta property="article:author" content="hetumessi">
+<meta property="article:tag" content="程序设计语言学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hetumessi.github.io/img/newdefaultcover.jpeg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://hetumessi.github.io/posts/c4844ef45beb"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":"flase","highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '单继承和多继承、派生类构造析构规则',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-08 18:25:32'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/scroll.css"><link rel="stylesheet" href="/css/footer.css"><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="https://npm.elemecdn.com/animate.css@4.1.1/animate.min.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-artitalk-pro/lib/card.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="hetumessi's Blog" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/author.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">96</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-th"></i><span> article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> entertainment</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> Books</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> Game</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-user"></i><span> guys</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></li><li><a class="site-page child" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/newdefaultcover.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">hetumessi's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-th"></i><span> article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> entertainment</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> Books</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> Game</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-user"></i><span> guys</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></li><li><a class="site-page child" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">单继承和多继承、派生类构造析构规则</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-28T14:53:52.675Z" title="发表于 2022-04-28 22:53:52">2022-04-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-08T10:25:32.702Z" title="更新于 2022-05-08 18:25:32">2022-05-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/c-c-%E5%AD%A6%E4%B9%A0/">c&amp;c++学习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="单继承和多继承、派生类构造析构规则"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="单继承和多继承"><a class="markdownIt-Anchor" href="#单继承和多继承"></a> 单继承和多继承</h1>
+<p>继承分为单继承和多继承</p>
+<blockquote>
+<p>单继承：派生类只有一个直接基类(如：A-&gt;B-&gt;C)<br>
+多继承：派生类有多个直接基类(如：X,Y-&gt;Z)</p>
+</blockquote>
+<p>定义单继承派生类的基本格式：</p>
+<blockquote>
+<p>class 派生类名：&lt;继承方式&gt;基类名{继承基类的成员,新添加的成员};</p>
+</blockquote>
+<p>定义多继承派生类的基本格式：</p>
+<blockquote>
+<p>class 派生类名：&lt;继承方式1&gt;基类名1,&lt;继承方式2&gt;基类名2…{继承基类的成员,新添加的成员};</p>
+</blockquote>
+<p>定义的缺省继承方式是私有继承方式</p>
+<span id="more"></span>
+<h1 id="继承关系中构造与析构原则"><a class="markdownIt-Anchor" href="#继承关系中构造与析构原则"></a> 继承关系中构造与析构原则</h1>
+<p>派生类继承了基类成员，对象中既包含基类成员又包含派生类成员，因此初始化时需要通过构造函数同时初始化全部成员<br>
+派生类在构造对象时，先生成自己的基类部分，然后生成自己的成员对象，最后生成自身特有的部分</p>
+<h2 id="构造函数-析构函数调用原则"><a class="markdownIt-Anchor" href="#构造函数-析构函数调用原则"></a> 构造函数、析构函数调用原则</h2>
+<p>在创建派生类对象时(其实创建组合类的情况类似)</p>
+<ul>
+<li>如果派生类没有定义构造函数，则调用基类的无参数的构造函数</li>
+<li>如果派生类定义了构造函数，不论是无参数还是带参数，在创建派生类的对象的时候，首先执行基类无参数的构造方法，然后执行自己的构造函数</li>
+<li>如果派生类的构造函数没有显示调用基类的构造函数，则会调用基类的默认无参构造函数</li>
+<li>如果派生类的构造函数没有显示调用基类的构造函数且基类自己提供了无参构造函数，则会调用基类自己的无参构造函数</li>
+<li>如果派生类的构造函数没有显示调用基类的构造函数且基类只定义了自己的有参构造函数，则会出错
+<ul>
+<li>如果基类只有有参数的构造函数，则派生类必须显示调用此带参构造方法</li>
+</ul>
+</li>
+<li>如果派生类调用基类带参数的构造函数，需要用初始化基类成员对象的方式</li>
+</ul>
+<p>析构函数因为不涉及传入参数初始化的问题，因此直接调用基类的析构函数即可</p>
+<h2 id="单继承情况"><a class="markdownIt-Anchor" href="#单继承情况"></a> 单继承情况</h2>
+<p>派生类初始化与组合类的初始化方式类似，(构造函数)的基本格式为：</p>
+<blockquote>
+<p>派生类名(初始化表):基类名(初始化表),对象成员1(初始化表)…对象成员n(初始化表){新增成员…}</p>
+</blockquote>
+<p>如果基类使用缺省的或不带参数的构造函数，则初始化列表中基类构造函数(参数表)可以省略<br>
+如果没有初始对象成员，则初始化列表中对象成员i(参数表)也可以省略</p>
+<p>例：定义基类椭圆类和派生类圆类</p>
+<pre class="line-numbers language-none"><code class="language-none">class Point&#123;
+    float x,y;
+public:
+    Point(int a,int b):x(a),y(b)&#123;&#125;
+&#125;;
+class Elliptic&#123;
+    float a,b;
+    Point centre;
+public:
+    Elliptic(float a1,float b1,float x,float y):a(a1),b(b1),centre(x,y)&#123;&#125;
+&#125;;
+class Circle:public Elliptic&#123;
+public:
+    Circle(float r,float x,float y):Elliptic(r,r,x,y)&#123;&#125;
+&#125;;                                         &#x2F;&#x2F;创建单位圆对象，先调用Elliptic()，调用Elliptic()时先调用Point()，最后调用Circle()
+int main()&#123;
+    Circle circle(1,0,0);
+&#125;          &#x2F;&#x2F;如果Circle类中的新增成员存在类对象的话也是先构造部分再构造整体<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>构造函数的调用顺序为：(相当于是嵌套调用，自底向上地遍历完整棵继承树)</p>
+<blockquote>
+<p>基类构造函数 对象成员所属类的构造函数 派生类构造函数</p>
+</blockquote>
+<p>析构函数调用顺序相反：</p>
+<blockquote>
+<p>派生类析构函数 对象成员所属类的析构函数 基类析构函数</p>
+</blockquote>
+<h2 id="多继承情况"><a class="markdownIt-Anchor" href="#多继承情况"></a> 多继承情况</h2>
+<p>多继承派生类在创建时也需要调用构造函数，基本格式为：</p>
+<blockquote>
+<p>派生类名(初始化表):<br>
+基类名1(初始化表)…基类名n(初始化表),对象成员1(初始化表),…,对象成员n(初始化表){新增成员…}</p>
+</blockquote>
+<p>多继承构造函数调用的基本顺序与单继承是一样的，也是先基类变量、再对象成员、最后普通变量，多个基类和成员依次按照规则完成各自的构造和初始化，其中基类对象和成员对象的构造函数调用顺序和声明继承关系的顺序有关</p>
+<p>至于析构函数调用顺序和构造函数相反就可以了</p>
+<h1 id="二义性"><a class="markdownIt-Anchor" href="#二义性"></a> 二义性</h1>
+<p>当两个或多个基类中有同名的成员时，如果直接访问该成员会产生命名冲突，编译器不知道使用哪个基类的成员，即出现二义性<br>
+出现二义性存在两种可能的情况：</p>
+<ul>
+<li>访问不同基类具有相同名字的成员</li>
+<li>访问共同基类的成员(多层继承)</li>
+</ul>
+<h2 id="不同基类同名成员"><a class="markdownIt-Anchor" href="#不同基类同名成员"></a> 不同基类同名成员</h2>
+<p>在多继承情况下，访问不同基类的同名成员时存在二义性的问题，例：</p>
+<pre class="line-numbers language-none"><code class="language-none">class A&#123;
+public:
+    int value;
+    void f()&#123;&#125;
+&#125;;
+class B&#123;
+    public:int value;
+    void f()&#123;&#125;
+&#125;;
+class C:public A,public B&#123;
+public:
+    void g()&#123;&#125;
+    void h()&#123;&#125;
+&#125;;
+int main()&#123;
+    C c;
+    c.value&#x3D;10;
+    c.f();
+&#125;             &#x2F;&#x2F; 此时即出现二义性，无法通过编译<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>解决方法是用类名和作用域符对同名成员加以限定，例：</p>
+<pre class="line-numbers language-none"><code class="language-none">int main()&#123;
+    C c;
+    c.A::value&#x3D;10;
+    c.B::value&#x3D;10;
+    c.A::f();
+    c.B::f();
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="多层继承"><a class="markdownIt-Anchor" href="#多层继承"></a> 多层继承</h2>
+<p>当存在多层继承(重复继承)的时候，会存在一个基类的多份拷贝，此时也会会存在二义性<br>
+基类的成员在派生类中被继承后，再次向下继承，此时单单指明最上层的基类是不够的，例：</p>
+<pre class="line-numbers language-none"><code class="language-none">class A0&#123;
+public:
+    int a;
+&#125;;
+class A11:public A0&#123;&#125;;
+class A12:public A0&#123;&#125;;
+class A2:public A11,public A12&#123;&#125;;
+int main()&#123;
+    A2 a2;
+    a2.A0::a&#x3D;10
+&#125;                 &#x2F;&#x2F;出现二义性，无法通过编译，因为A2继承的两个基类A1和A2都有A0的a成员，仅指明公共基类A0是不明确的<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>一种解决方法是明确指明成员是继承自哪个类，例：</p>
+<pre class="line-numbers language-none"><code class="language-none">int main()&#123;
+    A2 a2;
+    a2.A11::a&#x3D;10,a2.A12::a&#x3D;10;
+&#125;  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="虚继承"><a class="markdownIt-Anchor" href="#虚继承"></a> 虚继承</h2>
+<p>对于多层继承，如果对一个基类每层都只有一个拷贝，就可以达到消除二义性的目的，例：</p>
+<pre class="line-numbers language-none"><code class="language-none">class A0&#123;&#125;;
+class A11:public A0&#123;&#125;;
+class A12:public A0&#123;&#125;;
+class A2:public A11,public A12&#123;&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>在上面的例子中，类A0是派生类A2两条继承路径上的公共基类，因此这个公共基类会在派生类对象中产生两个基类子对象，虽然可以通过类限定符避免二义性，但问题关键在于我们不需要在派生类对象中存在多个基类对象的拷贝，要达到这种目的则需要将基类设置为虚基类，例：</p>
+<pre class="line-numbers language-none"><code class="language-none">class A11:virtual public A0&#123;&#125;;
+class A12:virtual public A0&#123;&#125;;
+int main()&#123;
+    A2 a2;
+    a2.A0::a&#x3D;10;
+    cout&lt;&lt;a2.A0::a;
+&#125;  &#x2F;&#x2F;输出结果：10<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>引进虚基类的目的就是为了解决二义性，使公共基类在其对象中只生成一个基类子对象(虚类子对象被合并成一个子对象)<br>
+由于多继承生成对象时是按声明顺序依次调用基类的构造函数，依次如果声明为虚基类时就会检查之前的拷贝，如果已经存在虚继承自相同基类的情况则将之前的那份对象的引用作为自身的拷贝，从而达到只有一份基类拷贝的目的<br>
+引申来说，虚继承只影响从指定了虚基类的派生类中进一步派生出来的类，它不会影响派生类本身。(因为虚派生出来的类中还是有基类的拷贝，只有当这个派生的类再次派生出类时虚继承的作用才能体现出来，即多重继承来的成员只保存一份拷贝，换句话说虚继承解决的是隔一代的问题)</p>
+<p>在都定义虚基类的情况下，基类只有对具有第一份拷贝的(先声明的)那个虚继承派生类是真基类，对其余的虚继承派生类而言是假基类(虚基类)，因此虚基类是一种相对的概念</p>
+<h3 id="虚基类对象的初始化"><a class="markdownIt-Anchor" href="#虚基类对象的初始化"></a> 虚基类对象的初始化</h3>
+<p>虚基类构造函数调用次序的规则为：</p>
+<ul>
+<li>虚基类构造函数在非虚基类之前调用</li>
+<li>若在同一层次中包含多个虚基类，那么虚基类构造函数按照声明的顺序调用</li>
+<li>若虚基类由上层基类派生，则还是遵守先调用基类构造函数，再调用派生类构造函数的规则</li>
+</ul>
+<p>例：虚基类对象的初始化示例</p>
+<pre class="line-numbers language-none"><code class="language-none">class A01&#123;public:A01()&#123;cout&lt;&lt;&quot;构造A01&quot;&lt;&lt;&#39; &#39;;&#125;&#125;;
+class A02&#123;public:A02()&#123;cout&lt;&lt;&quot;构造A02&quot;&lt;&lt;&#39; &#39;;&#125;&#125;;
+class A03&#123;public:A03()&#123;cout&lt;&lt;&quot;构造A03&quot;&lt;&lt;&#39; &#39;;&#125;&#125;;
+class A11:public A01,virtual public A02&#123;public:A11()&#123;cout&lt;&lt;&quot;构造A11&quot;&lt;&lt;&#39; &#39;;&#125;&#125;;
+class A12:virtual public A02,virtual public A03&#123;public:A12()&#123;cout&lt;&lt;&quot;构造A12&quot;&lt;&lt;&#39; &#39;;&#125;&#125;;
+class A2:public A11,virtual public A12&#123;public:A2()&#123;cout&lt;&lt;&quot;构造A2&quot;&lt;&lt;&#39; &#39;;&#125;&#125;;
+int main()&#123;
+    A2 a2;
+&#125;    &#x2F;&#x2F;输出结果：构造A02 构造A03 构造A12 构造A01 构造A11 构造A2  <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上例的分析：</p>
+<ul>
+<li>定义A2对象，首先调用A2构造函数
+<ul>
+<li>A2构造函数先调用虚基类A12构造函数
+<ul>
+<li>A12构造函数先调用第一个声明的虚基类A02构造函数，打印&quot;构造A02&quot;</li>
+<li>A12构造函数再调用第二个声明的虚基类A03构造函数，打印&quot;构造A03&quot;</li>
+<li>A12打印&quot;构造A12&quot;，完成A12的构造</li>
+<li>返回A2构造函数</li>
+</ul>
+</li>
+<li>A2构造函数再调用非虚基类A11构造函数
+<ul>
+<li>A11构造函数先调用虚基类A02构造函数，打印&quot;构造A02&quot;</li>
+<li>A11构造函数再调用非虚基类A01构造函数，打印&quot;构造A01&quot;</li>
+<li>A11打印构造&quot;构造A11&quot;，完成A11的构造</li>
+<li>返回A2构造函数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>A2打印&quot;构造A2&quot;，完成A2的构造</li>
+</ul>
+<h3 id="虚基类表"><a class="markdownIt-Anchor" href="#虚基类表"></a> 虚基类表</h3>
+<p>从内存分布角度看，对于虚继承，大部分编译器会把基类成员变量放在派生类成员变量的后面，这与正常的继承方式相反(正常是继承的成员在前，新定义的在后)。<br>
+虚基类的子对象，也就是共享部分的偏移量会随着继承层次的增加而改变。关于如何计算共享部分的偏移细节，c<ins>标准并没有定义，不过c</ins>提供了虚基类表用于派生类中虚基类对象的检索与访问。</p>
+<p>如果某个派生类有一个或多个虚基类，编译器就会在派生类对象中安插一个指针vbptr，指向虚基类表vbtable<br>
+虚基类表其实就是一个数组，保存的是所有虚基类（包括直接继承自基类和间接继承自祖先基类得到的）成员相对于当前对象的首地址的偏移，这样通过派生类指针访问虚基类的成员变量时，不管继承层次都多深，只需要一次间接转换就可以。(注意虚基类指针本身也会被继承下去)<br>
+假设A是B的虚基类，同时B又是C的虚基类，C是D的非虚基类，那么各对象的内存模型如下图所示：(仅用于举例，真正的内存分布要看不同编译器的具体实现)</p>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/05/Pr83SytUQHEj9eX.png" width="50%" height="50%">
+<p>另外，这种方案还可以避免有多个虚基类时让派生类对象额外背负过多的指针，每派生一次只会新建一个vbptr和虚基类表</p>
+<p>注意vbtable和vftable的区别</p>
+<ul>
+<li>最大的区别在于前者属于一个对象实例，而后者属于一个类
+<ul>
+<li>因为类的成员函数是在代码区中共享的，因此只需要在定义类时在类中加入一个虚函数的“接口”就可以让之后实例化的每个对象都通过这个接口访问该类独有的虚函数</li>
+</ul>
+</li>
+<li>前者解决多重继承中数据重复的问题，后者是为了实现多态性</li>
+<li>前者的作用要隔代才能体现出来，后者的作用主要体现在直接继承的关系中(因为派生类是以直接基类的vftable为模板进行改写的)</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io">hetumessi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io/posts/c4844ef45beb">http://hetumessi.github.io/posts/c4844ef45beb</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://hetumessi.github.io" target="_blank">hetumessi's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/">程序设计语言学习</a></div><div class="post_share"><div class="social-share" data-image="/img/newdefaultcover.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechatpay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/wechatpay.png"/></a><div class="post-qr-code-desc"></div></li><li class="reward-item"><a href="/img/alipay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/alipay.png"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/a8e179be4596" title="Solidity入门了解"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/w6pOHIGoFMxrTEa.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-01</div><div class="title">Solidity入门了解</div></div></a></div><div><a href="/posts/5bdc88454c74" title="异常处理"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">异常处理</div></div></a></div><div><a href="/posts/b10e41f86dff" title="模板"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">模板</div></div></a></div><div><a href="/posts/c2c914ef34bc" title="多态性与虚函数"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">多态性与虚函数</div></div></a></div><div><a href="/posts/4b50c37306d0" title="运算符重载"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">运算符重载</div></div></a></div><div><a href="/posts/39a7f361dc52" title="继承、派生"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-28</div><div class="title">继承、派生</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Gitalk</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/author.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">hetumessi</div><div class="author-info__description">个人博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">96</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hetumessi"><i class="fab fa-github"></i><span>要来gayhub瞧瞧嘛🤡</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/hetumessi" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/392384886@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/sitemap.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="/404/" target="_blank" title="commonweal"><i class="fa fa-heartbeat"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！有任何问题或者意见，还请QQ：392384886，或者致信QQ邮箱：392384886@qq.com</div></div><div class="card-widget card-pixiv"><div class="card-content"><div class="item-headline"><i class="fa fa-image" aria-hidden="true"></i><span>Pixiv日榜Top50</span></div><iframe src="https://cloud.mokeyjay.com/pixiv" frameborder="0" style="width:99%;height:380px;margin:0;"></iframe></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%95%E7%BB%A7%E6%89%BF%E5%92%8C%E5%A4%9A%E7%BB%A7%E6%89%BF"><span class="toc-number">1.</span> <span class="toc-text"> 单继承和多继承</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB%E4%B8%AD%E6%9E%84%E9%80%A0%E4%B8%8E%E6%9E%90%E6%9E%84%E5%8E%9F%E5%88%99"><span class="toc-number">2.</span> <span class="toc-text"> 继承关系中构造与析构原则</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E5%8E%9F%E5%88%99"><span class="toc-number">2.1.</span> <span class="toc-text"> 构造函数、析构函数调用原则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E7%BB%A7%E6%89%BF%E6%83%85%E5%86%B5"><span class="toc-number">2.2.</span> <span class="toc-text"> 单继承情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E7%BB%A7%E6%89%BF%E6%83%85%E5%86%B5"><span class="toc-number">2.3.</span> <span class="toc-text"> 多继承情况</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E4%B9%89%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text"> 二义性</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E5%90%8C%E5%9F%BA%E7%B1%BB%E5%90%8C%E5%90%8D%E6%88%90%E5%91%98"><span class="toc-number">3.1.</span> <span class="toc-text"> 不同基类同名成员</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E5%B1%82%E7%BB%A7%E6%89%BF"><span class="toc-number">3.2.</span> <span class="toc-text"> 多层继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E7%BB%A7%E6%89%BF"><span class="toc-number">3.3.</span> <span class="toc-text"> 虚继承</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%9A%E5%9F%BA%E7%B1%BB%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">3.3.1.</span> <span class="toc-text"> 虚基类对象的初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%99%9A%E5%9F%BA%E7%B1%BB%E8%A1%A8"><span class="toc-number">3.3.2.</span> <span class="toc-text"> 虚基类表</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/2ea785cf45aa" title="【转】X86 CPU发展历史"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/20/OsLqfdaU2StnWG8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】X86 CPU发展历史"/></a><div class="content"><a class="title" href="/posts/2ea785cf45aa" title="【转】X86 CPU发展历史">【转】X86 CPU发展历史</a><time datetime="2022-05-19T16:00:27.690Z" title="发表于 2022-05-20 00:00:27">2022-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/05415c493fc8" title="【转】世界双雄：微软和苹果"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/19/lyTsozY2SiWcvMe.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】世界双雄：微软和苹果"/></a><div class="content"><a class="title" href="/posts/05415c493fc8" title="【转】世界双雄：微软和苹果">【转】世界双雄：微软和苹果</a><time datetime="2022-05-18T16:16:50.160Z" title="发表于 2022-05-19 00:16:50">2022-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="makefile编写(3)：条件执行和函数"/></a><div class="content"><a class="title" href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数">makefile编写(3)：条件执行和函数</a><time datetime="2022-05-18T13:06:08.000Z" title="发表于 2022-05-18 21:06:08">2022-05-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9296819e5610" title="【转】PowerPC、X86和ARM架构区别"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/18/c6Edr87qlROypvP.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】PowerPC、X86和ARM架构区别"/></a><div class="content"><a class="title" href="/posts/9296819e5610" title="【转】PowerPC、X86和ARM架构区别">【转】PowerPC、X86和ARM架构区别</a><time datetime="2022-05-17T16:25:36.305Z" title="发表于 2022-05-18 00:25:36">2022-05-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/433fc2487d31" title="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/17/k3B7vgj6TtNsGx1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？"/></a><div class="content"><a class="title" href="/posts/433fc2487d31" title="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？">【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？</a><time datetime="2022-05-16T16:29:30.424Z" title="发表于 2022-05-17 00:29:30">2022-05-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By hetumessi</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">欢迎光临小站！🎉</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.css"><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'kT5o8xhcPPtpRHJzj2KnqvTV-MdYXbMMI',
+      appKey: 'TuUTMrUqindtbui5wMvhOsX7',
+      avatar: 'monsterid',
+      serverURLs: 'https://kT5o8xhc.api.lncldglobal.com',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'facd33fa531a29d93105',
+      clientSecret: '7c0e063309085031b84369f86c21bbbee8e77c64',
+      repo: 'blog_comments',
+      owner: 'hetumessi',
+      admin: ['hetumessi'],
+      id: '30d6b00f70a45bb622a9fa3bc46db194',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Valine' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><div class="aplayer no-destroy" data-id="3180545941" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><script defer src="/live2d-widget/autoload.js"></script><script src="//code.tidio.co/msomj1dsaggz8vkbdv2pvnur4efns1ot.js" async></script><script defer src="https://cdn.jsdelivr.net/gh/graingert/wow@1.3.0/dist/wow.min.js"></script><script defer data-pjax src="/js/wow_init.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/null.js" async="async"></script><script>function onTidioChatApiReady() {
+  window.tidioChatApi.hide();
+  window.tidioChatApi.on("close", function() {
+    window.tidioChatApi.hide();
+  });
+}
+if (window.tidioChatApi) {
+  window.tidioChatApi.on("ready", onTidioChatApiReady);
+} else {
+  document.addEventListener("tidioChat-ready", onTidioChatApiReady);
+}
+
+var chatBtnFn = () => {
+  document.getElementById("chat_btn").addEventListener("click", function(){
+    window.tidioChatApi.show();
+    window.tidioChatApi.open();
+  });
+}
+chatBtnFn()
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?hetumessi";
+            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
+            var git_user ="hetumessi";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style></style><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-clock/clock/images/weather/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><script data-pjax>
+  function card_artitalk_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-shuo"><div class="card-content" style="height:auto;min-height:280px;"><div class="item-headline"><i class="fas fa-comments"></i><span><a href="/artitalk/" title="artitalk page link">碎碎念</a></span><a id="cardVisual" style="cursor:pointer;float:right" onclick="cardVisual()">编辑</a></div><div id="artitalk_main" style="width:100%;height:100%;padding:1px"></div></div></div>';
+    console.log('已挂载card_artitalk');
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html);
+    (()=>{
+      const init = () => {
+        new Artitalk(Object.assign({
+          appId: 'YEOLrzwYnNrDKjqYp6sWyxrg-MdYXbMMI',
+          appKey: 'QQNS7Wswk8Aqw6i94V3iVGyY',
+        }, {"serverURL":"https://YEOLrzwY.api.lncldglobal.com","lang":"zh","pageSize":1,"color1":"#89b1f5","color2":"#70c4b6","atEmoji":{"Mafumafu1":"https://cdn.jsdelivr.net/gh/GamerNoTitle/ValineCDN@master/Mafumafu/199749454.png","Mafumafu2":"https://cdn.jsdelivr.net/gh/GamerNoTitle/ValineCDN@master/Mafumafu/199749455.png"}} ))
+      }
+      if (typeof Artitalk === 'function') {
+        init()
+      } else {
+        getScript('https://npm.elemecdn.com/artitalk').then(init)
+      }
+    })()
+    }
+  var elist = '/artitalk/,/posts/'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    card_artitalk_injector_config();
+  }
+  else if (epage === cpage){
+    card_artitalk_injector_config();
+  }
+  </script><script async src="https://npm.elemecdn.com/hexo-butterfly-artitalk-pro/lib/card_visual.js"></script><!-- hexo injector body_end end --></body></html>

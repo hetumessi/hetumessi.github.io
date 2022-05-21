@@ -1,0 +1,591 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>头文件、预处理器、宏 | hetumessi's Blog</title><meta name="keywords" content="程序设计语言学习"><meta name="author" content="hetumessi"><meta name="copyright" content="hetumessi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="头文件 在考虑将一个程序分解为若干个源文件的情况下，一般主要考虑的是实际程序中分别来自于不同的单独编译的库，这种情况下，必须考虑定义和声明在这些文件中的共享问题。应尽可能将共享部分集中在一起，这样就只需要一个副本，维护程序时也可以提升可维护性。所谓的头文件，其实它的内容跟源文件中的内容是一样的，都是c的源代码，但头文件一般是不用来进行编译的，只是把把所有的函数声明全部放进一个头文件中，当某一个源">
+<meta property="og:type" content="article">
+<meta property="og:title" content="头文件、预处理器、宏">
+<meta property="og:url" content="http://hetumessi.github.io/posts/382e8937ecec">
+<meta property="og:site_name" content="hetumessi&#39;s Blog">
+<meta property="og:description" content="头文件 在考虑将一个程序分解为若干个源文件的情况下，一般主要考虑的是实际程序中分别来自于不同的单独编译的库，这种情况下，必须考虑定义和声明在这些文件中的共享问题。应尽可能将共享部分集中在一起，这样就只需要一个副本，维护程序时也可以提升可维护性。所谓的头文件，其实它的内容跟源文件中的内容是一样的，都是c的源代码，但头文件一般是不用来进行编译的，只是把把所有的函数声明全部放进一个头文件中，当某一个源">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://hetumessi.github.io/img/newdefaultcover.jpeg">
+<meta property="article:published_time" content="2022-04-25T13:45:57.000Z">
+<meta property="article:modified_time" content="2022-05-16T12:05:03.314Z">
+<meta property="article:author" content="hetumessi">
+<meta property="article:tag" content="程序设计语言学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://hetumessi.github.io/img/newdefaultcover.jpeg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://hetumessi.github.io/posts/382e8937ecec"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":"flase","highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '头文件、预处理器、宏',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-16 20:05:03'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/scroll.css"><link rel="stylesheet" href="/css/footer.css"><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="https://npm.elemecdn.com/animate.css@4.1.1/animate.min.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-artitalk-pro/lib/card.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="hetumessi's Blog" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/author.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">96</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-th"></i><span> article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> entertainment</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> Books</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> Game</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-user"></i><span> guys</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></li><li><a class="site-page child" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/newdefaultcover.jpeg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">hetumessi's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-th"></i><span> article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> entertainment</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> Books</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> Game</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-user"></i><span> guys</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></li><li><a class="site-page child" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">头文件、预处理器、宏</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-04-25T13:45:57.000Z" title="发表于 2022-04-25 21:45:57">2022-04-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-16T12:05:03.314Z" title="更新于 2022-05-16 20:05:03">2022-05-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/c-c-%E5%AD%A6%E4%B9%A0/">c&amp;c++学习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>16分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="头文件、预处理器、宏"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="头文件"><a class="markdownIt-Anchor" href="#头文件"></a> 头文件</h1>
+<p>在考虑将一个程序分解为若干个源文件的情况下，一般主要考虑的是实际程序中分别来自于不同的单独编译的库，这种情况下，必须考虑定义和声明在这些文件中的共享问题。应尽可能将共享部分集中在一起，这样就只需要一个副本，维护程序时也可以提升可维护性。所谓的头文件，其实它的内容跟源文件中的内容是一样的，都是c的源代码，但头文件一般是不用来进行编译的，只是把把所有的函数声明全部放进一个头文件中，当某一个源文件需要它们时，就可以通过宏命令 “#include”包含进这个源文件中，从而把它们的内容合并到源文件中去，当包含该头文件的源文件被编译时，这些被包含进去的头文件的作用便发挥了。注意，头文件起到的是将程序的不同源文件声明串联起来的作用，与库文件完全不是一个概念(后者是已经编译过的可执行文件)。<br>
+实际应用中，通常一方面希望每个源文件只能访问完成任务所需的信息，另一方面维护过多的头文件较为困难。对于中等规模的程序，最好只用一个头文件存放程序中各部分的共享对象，较大程序可能需要使用更多的头文件，需要精心进行组织。</p>
+<p>一般的c语言项目工程的头文件应该具有的内容：</p>
+<ul>
+<li>宏定义（#define)，包括带参和不带参的</li>
+<li>结构体、联合体和枚举类型等自定义类型的定义</li>
+<li>函数的声明</li>
+<li>全局变量的声明(当然全局变量是默认初始化的，定义不定义都差不多)</li>
+<li>typedef的声明</li>
+</ul>
+<p>除了static，inline，extern函数，正常的函数不在.h里实现，只将声明放在头文件里，实现放在源文件里，永远不把外部函数原型(即外部函数声明)放到源文件中。声明或宏定义需要在多个文件中共享时，尤其需要把它们放入头文件中，但如果宏定义或声明为一个源文件私有的(意思是只有该源文件用得到)，则最好留在源文件中。</p>
+<ul>
+<li>不把定义放在头文件中，因为头文件可能会被程序中的多个文件包含(通过预处理器在包含位置展开)，此时发生重定义错误</li>
+<li>不把声明放在源文件中，因为要引用的地方可能与定义并不在一个文件中，如果在源文件中声明的话就意味着声明定义不在同一文件，在编译时就无法进行一致性检查(虽然编译阶段没有问题，但实际运行可能有各种问题)</li>
+</ul>
+<p>实际开发中一般是将函数和变量的声明放到头文件，再在对应的源文件中#include进来，如果变量的值是固定的，最好使用宏来代替。.h和.c在项目中承担的角色不一样：.c 件主要负责实现，也就是定义函数和变量；.h文件主要负责声明（包括变量声明和函数声明）、宏定义、类型定义等，这些不是c语言语法规定的内容，而是约定成俗的规范，或者说是长期形成的事实标准。<br>
+在项目开发中可以将一组相关的变量和函数定义在一个.c文件中，并用一个同名的.h文件（头文件）进行声明，其他模块如果需要使用某个变量或函数，那么引入这个头文件就可以。这样做的另外一个好处是可以保护版权，在发布相关模块之前可以将它们都编译成目标文件或者打包成静态或动态库，只要向用户提供头文件，用户就可以将这些模块链接到自己的程序中(这也是标准库的做法)。</p>
+<h2 id="标准头文件和标准库"><a class="markdownIt-Anchor" href="#标准头文件和标准库"></a> 标准头文件和标准库</h2>
+<p>c语言在发布的时候已经将标准库打包成了静态库，并提供了相应的头文件，如：stdio.h、stdlib.h、string.h等。Linux系统一般将库文件放在/lib和/user/lib目录下，头文件放在/usr/include目录下。很久以前，Linux下的c标准库是libc，不过后来渐渐已经不再维护了，目前的Linux大多以glic(GNU C Library)作为c标准库的实现(GNU C函数库最开始本质上是个第三方库，因为GNU组织是研发编译套件的，它本身就可以附带自己的库以增加功能，方便用户开发，争夺市场份额)。不过现在的不同的Linux发行版对这两个函数库有不同的处理方法，有的可能已经集成在同一个库里了。</p>
+<p>以下是在我自己的系统上的测试结果：(两个系统只找到了c++库，难道现在默认没有标准c库了吗？有待考证)</p>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/14/nsX5KECLqSgv7FJ.png" width="50%">
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/14/7znoRbVEFIkCsX5.png" width="50%">
+<ul>
+<li>在GNU/Linux上，c++库为GNU的libstdc++
+<ul>
+<li>动态库：/usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.so.6</li>
+<li>静态库：/usr/lib/gcc/x86_64-linux-gnu/11/libstdc++.a</li>
+</ul>
+</li>
+<li>在MacOS，c++库为LLVM的libc++
+<ul>
+<li>/usr/lib/libSystem.B.dylib</li>
+</ul>
+</li>
+</ul>
+<p>windows系统我是没有的，据说在windows下标准库由Visual Studio IDE携带，在安装目录下的\VC\include文件夹中会看到头文件，包括常用的stdio.h、stdlib.h等；在\VC\lib文件夹中有.lib文件，是链接器要用到的静态库。</p>
+<h1 id="c语言预处理器"><a class="markdownIt-Anchor" href="#c语言预处理器"></a> c语言预处理器</h1>
+<p>c语言通过预处理器提供了一些功能，从概念上讲，预处理是编译过程中单独执行的第一个步骤(宏替换——&gt;预处理——&gt;编译)。两个最常用的预处理命令是#include指令(用于在编译期间把指定文件的内容包含进当前文件中)以及#define指令(用于以任意字符序列替代一个标记)。预处理指令的语法与c语言本体的语法是完全独立的(主要是为了提前把预处理的部分搞完再进行程序编译)。在gcc中其实也有专门的预处理命令生成.i文件：</p>
+<blockquote>
+<p>$gcc -E demo.c -o demo.i  -E表示只进行预编译</p>
+</blockquote>
+<p>.i文件也是包含c语言代码的源文件，只不过所有的宏已经被展开，所有包含的文件已经被插入到当前文件中，当你无法判断宏定义是否正确，或者文件包含是否有效时，可以查看.i文件来确定问题。只不过.i实际大体上相当于是比较臃肿的并且加入了一些辅助信息的c语言文件，在开发中大多数情况意义不太大，所以.i文件和上面的gcc命令较少提及用的也不多。</p>
+<h2 id="文件包含"><a class="markdownIt-Anchor" href="#文件包含"></a> 文件包含</h2>
+<p>文件包含指令，即#include指令可以使处理大量#define指令以及声明更加方便，基本格式为：</p>
+<blockquote>
+<p>#include “文件名” 或 #include&lt;文件名&gt;</p>
+</blockquote>
+<p>形如以上两种形式的行实际上是将被替换为由文件名指定的文件的内容</p>
+<ul>
+<li>如果文件名用引号引起来，则在源文件所在的位置(目录)查找该文件</li>
+<li>如果在该位置没有找到文件，或者文件名用尖括号括起来，则根据相应的规则查找该文件，这个规则同具体实现有关
+<ul>
+<li>在多数情况下，使用尖括号&lt;&gt;编译器会到系统路径(环境变量)下查找头文件，而使用双引号&quot;&quot;编译器首先在当前目录下查找头文件，如果没有找到再到系统路径下查找
+<ul>
+<li>一般情况下Linux中c/c++头文件路径对应环境变量为C_INCLUDE_PATH或CPLUS_INCLUDE_PATH</li>
+<li>静态库和动态库文件路径对应环境变量分别为LIBRARY_PATH和LD_LIBRARY_PATH</li>
+</ul>
+</li>
+<li>使用绝对路径的方式引入头文件时，&lt;&gt;和&quot;&quot;没有任何区别，因为头文件路径已经写死了，都是从根部开始查找</li>
+</ul>
+</li>
+<li>虽然文件既可以指定绝对路径，也可以指定相对路径，但是一般情况下都使用相对路径
+<ul>
+<li>因为实际开发中一般头文件放在当前工程目录下，这样即使后来改变了工程所在目录，也无需修改包含语句，因为源文件的相对位置没有改变</li>
+<li>使用绝对路径的情况一般是环境变量出现问题时难以解决，此时指定绝对路径一定可以找到包含文件</li>
+</ul>
+</li>
+<li>除了默认的环境变量外，用户还可以自定义环境变量或者在编译时指定参数(比如gcc -I指定头文件、gcc -L指定链接的库)，从而自己指定搜索路径
+<ul>
+<li>虽然可以添加环境变量但其实这种做法并不好，因为这样属于是系统层面上全局的配置，影响所有项目并且增加维护难度，如果非要指定一个路径的话可能写个makefile好点</li>
+</ul>
+</li>
+</ul>
+<p>在UNIX系统中，头文件一般放在目录/usr/include中，被包含的文件本身也可包含#include指令。文件的开始处通常都会有多个#include指令，用以从头文件中包含常见的#define语句和extern声明，以及访问该文件需要的库函数的函数原型声明(严格地说，这些内容没有必要单独存放在文件中，访问头文件的细节与具体实现有关)。<br>
+在较大的程序中，#include指令是将所有声明捆绑在一起的较好实现，他保证所有源文件都具有相同的定义与变量声明，可以避免出现不必要的错误。但是另一方面，如果某个包含文件的内容发生了变化，那么所有依赖于该包含文件的源文件都必须重新编译。</p>
+<h2 id="宏替换"><a class="markdownIt-Anchor" href="#宏替换"></a> 宏替换</h2>
+<p>在c语言中，可以采用命令#define来定义宏，该命令允许把一个名称指定成任何所需的文本，例如一个常量值或者一条语句。在定义了宏之后，无论宏名称出现在源代码的何处，预处理器都会把它用定义时指定的文本替换掉。宏的作用域是从定义位置开始，到其当前所在文件结束或宏对应的#undef指令，即宏定义只属于当前这个文件，其他文件如果没有这个文件就不能使用这个宏定义。如果相同作用域内定义了同名的宏，那么原来的宏也会被覆盖。宏虽然可以在预处理指令中展开，但是并不能用于生成整个预处理指令(因为预处理指令的处理是有先后的，比如至少要在包含进其他头文件以后再依次展开所有的宏定义)。</p>
+<p>宏定义的基本格式为:</p>
+<blockquote>
+<p>#define 名字 替换文本</p>
+</blockquote>
+<p>这是最基本的宏替换格式，后续所有出现<strong>宏名字记号</strong>的地方都将被换为替换文本。#define指令中名字与变量名的命名方式相同，替换文本可以是任何字符串，惯例将宏名称每个字母采用大写，这有助于区分宏与一般的变量。通常情况下#define指令单独占一行，替换文本是#define指令行尾部的所有剩余部分内容。#define指令定义的名字的作用域从其定义点开始，到被编译的源文件末尾处结束。#define指令也可以使用之前定义过的宏，如:</p>
+<blockquote>
+<p>#define TEST1<br>
+#define TEST1 TEST2</p>
+</blockquote>
+<p>替换只对整个记号进行，并且对字符串常量(字符串字面量是不同于宏的预处理记号)是不能进行替换的，如：</p>
+<blockquote>
+<p>#define YES ‘1’<br>
+YESMAN;printf(“YES”);      其中的YES均不会被进行替换</p>
+</blockquote>
+<p>替换文本可以是任意的，如：</p>
+<blockquote>
+<p>#define forever while(1); 无限循环</p>
+</blockquote>
+<p>宏定义也可以带参数，使之可以对不同的宏调用使用不同的替换文本，带参宏定义的基本格式为：</p>
+<blockquote>
+<p>#define 宏名(形参列表) 替换文本</p>
+</blockquote>
+<p>调用格式为：</p>
+<blockquote>
+<p>宏名(实参列表)</p>
+</blockquote>
+<p>宏的使用很像是函数调用，但宏调用是直接将替换文本插入代码中，形式参数的每次出现都将被替换成对应的实际参数，如：</p>
+<blockquote>
+<p>#define max(A,B) ((A)&gt;(B)?(A):(B))           宏可以将A,B自动识别为参数<br>
+x=max(p+q,r+s);                              将被替换为x=((p+q)&gt;(r+s)?(p+q):(r+s));</p>
+</blockquote>
+<p>这种带参宏定义的一个好处在于如果对各种类型参数的处理是一致的，则可将该宏应用于任何数据类型而无需针对不同的数据类型定义不同函数。另外考虑带参宏的展开式，会发现其存在一定的缺陷，其中作为参数的表达式并不是值传递而是拷贝字符序列，所以表达式会执行两次，导致表达式可能存在副作用(如含有自增/自减运算符或输入输出)，如：</p>
+<blockquote>
+<p>max(i++,j++)中将对每个参数执行两次自增操作</p>
+</blockquote>
+<p>因此必须要注意适当使用圆括号以保证计算次序的正确性，如：</p>
+<blockquote>
+<p>#define square(x) x*x;  功能存在歧义<br>
+square(z+1);            此时宏扩展后的结果为z*z+1=2*z+1!=z*z<br>
+正确形式应为:#define square(x) (x)*(x);</p>
+</blockquote>
+<p>注意宏定义没有数据类型只是单纯的替换，所以无法替换数组和指针(如果在参数前上[]或*的话是无法识别宏参数的)。</p>
+<p>宏替换在c语言中是十分具有价值的，头文件&lt;stdio.h&gt;中有一个很实用的例子: getchar与putchar函数在实际中常常被定义为宏，可以避免处理字符时经常需要调用函数所需的运行时开销。此外头文件&lt;ctype.h&gt;中定义的函数也常常是通过宏实现的。</p>
+<p>可以通过#undef指令取消名字的宏定义，这样可以保证后续调用是函数调用而不是宏调用，宏替换在编译之前，所以有同名宏存在函数是无法调用的，如：</p>
+<blockquote>
+<p>#undef getchar<br>
+int gartchar(void){…}</p>
+</blockquote>
+<p>宏定义可以包含两个专用的预处理运算符：#和##，编译器不识别这两个运算符，他们会在预处理时被执行。如果替换文本中参数名以#为前缀，则结果将被扩展为由实际参数替换该参数的的带引号的字符串(#运算符所执行操作可理解为“字符串化”)，如：</p>
+<blockquote>
+<p>#define deprint(expr) printf(#expr) 将#与字符串连接运算结合起来编写一个调试打印宏<br>
+deprint(“hello\tworld”);            控制台将输出&quot;hello\tworld&quot;而不是hello    world<br>
+#definr deprint(expr) printf(#expr&quot;=%g&quot;,expr)<br>
+deprint(x/y);                       调用该宏后，宏被扩展为printf(“x/y”&quot;=%g&quot;,x/y);等价于printf(“x/y=%g”,x/y);</p>
+</blockquote>
+<p>#运算符实际上等同于将字符串字面值的双引号&quot;替换为\&quot;，反斜杠’\‘替换为’\\’，因此替换后的字符串是合法的字符串常量，如：</p>
+<blockquote>
+<p>字符串&quot;hello\tworld&quot;是先转为&quot;“hello\\tworld”“再作为字符串输出，结果为&quot;hello\tworld”</p>
+</blockquote>
+<p>如果替换文本中的参数与##相邻，则该参数将被实参替换，##与前后空白符将被删除，并对替换后的结果进行扫描，这为宏扩展提供了连接实参的手段，如:</p>
+<blockquote>
+<p>#define paste(front,back) front ## back<br>
+paste(name,1);                      调用该宏后，宏将创建记号name1;</p>
+</blockquote>
+<h2 id="条件包含"><a class="markdownIt-Anchor" href="#条件包含"></a> 条件包含</h2>
+<p>可以使用条件语句对预处理本身进行控制，这种条件语句的值是在预处理执行过程中进行运算，这种方式为在编译过程中根据运算所得条件值而选择性地包含不同代码提供了一种手段。<br>
+#if语句对其中的常量整型表达式求值</p>
+<ul>
+<li>其中不能包含sizeof、类型转换运算符或enum常量，原因主要在于预处理器不检查类型名</li>
+<li>虽然条件编译中无法使用sizeof，但在#define中使用sizeof是合法的，因为预处理器并不计算#define语句的表达式，它只是为了原样在程序中展开</li>
+</ul>
+<p>若该表达式值为真(非0)，则包含其后的各行，直到遇到#endif、#elif或#else语句为止(预处理语句#elif类似于else if)。在#if语句中可以使用表达式defined(名字)，该表达式值遵循下列规则:当名字已经定义时，值为1，否则值为0，(defined也是预处理指令)</p>
+<p>例1:保证hdr.h文件的内容没有重复包含，可以将该文件内容保存在条件语句中</p>
+<pre class="line-numbers language-none"><code class="language-none">#if !defined(HDR)       &#x2F;&#x2F;第一次包含该头文件时，HDR还没有被定义
+#define HDR             &#x2F;&#x2F;进入if分支，定义HDR
+&#x2F;&#x2F;hdr.h文件的内容
+#endif                  &#x2F;&#x2F;如果HDR已被定义，则!defined(HDR)为0，直接跳转到endif处，避免重复包含<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>对这种情况，c专门定义了两个预处理语句#ifdef和#ifndef，用于测试某个名字是否已经定义，因此上例可改写为例2:</p>
+<pre class="line-numbers language-none"><code class="language-none">#ifndef HDR
+#define HDR
+&#x2F;&#x2F;hdr.h文件的内容
+#endif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>如果多个头文件能够一致地使用这种结构，那么每个头文件都可以将其所依赖的任何头文件包含进来，用户不必考虑和处理头文件之间的各种依赖关系</p>
+<p>例2:测试系统变量SYSTEM，根据该变量的值确定包含哪个版本的头文件</p>
+<pre class="line-numbers language-none"><code class="language-none">#if SYSTEM&#x3D;&#x3D;SYSV
+#define HDR &quot;sysv.h&quot;
+#elif SYSTEM&#x3D;&#x3D;BSD
+#define HDR &quot;bsd.h&quot;
+#elif SYSTEM&#x3D;&#x3D;MSDOS
+#define HDR &quot;msdos.h&quot;
+#else
+#define HDR &quot;default.h&quot;
+#endif
+#include HDR<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="预处理器的简要工作流程"><a class="markdownIt-Anchor" href="#预处理器的简要工作流程"></a> 预处理器的简要工作流程</h2>
+<p>预处理过程主要是处理那些源文件和头文件中以#开头的命令，比如 #include、#define、#ifdef等，其规则(以Linux系统为例)一般如下：</p>
+<ol>
+<li>从源代码文件中读取并转换字符，如果必要则将字符转换成源代码指定字符集的字符
+<ul>
+<li>如果行尾字符不是换行符时自动添加换行符，宽字符替换成对应单字符</li>
+<li>如果添加换行符后存在反斜线符跟着换行符的情况，则将两者都删除(除非在文件的结尾需要以换行符结束)</li>
+</ul>
+</li>
+<li>将源代码文件分解成若干预处理器标记和空格符序列
+<ul>
+<li>删除所有的注释//和/* … */，每个注释都被看作一个空格</li>
+</ul>
+</li>
+<li>处理所有条件编译命令，比如 #if、#ifdef、#elif、#else、#endif等</li>
+<li>处理#include命令，将被包含文件的内容插入到该命令所在的位置，这与复制粘贴的效果一样
+<ul>
+<li>这个过程是递归进行的，也就是说被包含的文件可能还会包含其他的文件</li>
+</ul>
+</li>
+<li>删除所有#define，展开宏调用</li>
+<li>添加行号和文件名标识，便于在调试和出错时给出具体的代码位置</li>
+<li>保留所有的#pragma命令，因为编译器需要使用它们</li>
+<li>字符常量和字符串字面量中的字符和转义序列被转换成运行字符集中对应的字符
+<ul>
+<li>相邻的字符串字面量被连接为一个字符串</li>
+</ul>
+</li>
+<li>预处理的结果是生成.i文件</li>
+</ol>
+<p>当然只要不影响结果，在编译器具体实现中可以将多个步骤打乱并结合在一起。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io">hetumessi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io/posts/382e8937ecec">http://hetumessi.github.io/posts/382e8937ecec</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://hetumessi.github.io" target="_blank">hetumessi's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/">程序设计语言学习</a></div><div class="post_share"><div class="social-share" data-image="/img/newdefaultcover.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechatpay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/wechatpay.png"/></a><div class="post-qr-code-desc"></div></li><li class="reward-item"><a href="/img/alipay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/alipay.png"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/a8e179be4596" title="Solidity入门了解"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/w6pOHIGoFMxrTEa.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-01</div><div class="title">Solidity入门了解</div></div></a></div><div><a href="/posts/5bdc88454c74" title="异常处理"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">异常处理</div></div></a></div><div><a href="/posts/b10e41f86dff" title="模板"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">模板</div></div></a></div><div><a href="/posts/c2c914ef34bc" title="多态性与虚函数"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">多态性与虚函数</div></div></a></div><div><a href="/posts/4b50c37306d0" title="运算符重载"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-30</div><div class="title">运算符重载</div></div></a></div><div><a href="/posts/c4844ef45beb" title="单继承和多继承、派生类构造析构规则"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/newdefaultcover.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-04-28</div><div class="title">单继承和多继承、派生类构造析构规则</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Gitalk</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/author.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">hetumessi</div><div class="author-info__description">个人博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">96</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hetumessi"><i class="fab fa-github"></i><span>要来gayhub瞧瞧嘛🤡</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/hetumessi" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/392384886@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/sitemap.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="/404/" target="_blank" title="commonweal"><i class="fa fa-heartbeat"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！有任何问题或者意见，还请QQ：392384886，或者致信QQ邮箱：392384886@qq.com</div></div><div class="card-widget card-pixiv"><div class="card-content"><div class="item-headline"><i class="fa fa-image" aria-hidden="true"></i><span>Pixiv日榜Top50</span></div><iframe src="https://cloud.mokeyjay.com/pixiv" frameborder="0" style="width:99%;height:380px;margin:0;"></iframe></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%B4%E6%96%87%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text"> 头文件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E5%A4%B4%E6%96%87%E4%BB%B6%E5%92%8C%E6%A0%87%E5%87%86%E5%BA%93"><span class="toc-number">1.1.</span> <span class="toc-text"> 标准头文件和标准库</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#c%E8%AF%AD%E8%A8%80%E9%A2%84%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text"> c语言预处理器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="toc-number">2.1.</span> <span class="toc-text"> 文件包含</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8F%E6%9B%BF%E6%8D%A2"><span class="toc-number">2.2.</span> <span class="toc-text"> 宏替换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="toc-number">2.3.</span> <span class="toc-text"> 条件包含</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%A4%84%E7%90%86%E5%99%A8%E7%9A%84%E7%AE%80%E8%A6%81%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-number">2.4.</span> <span class="toc-text"> 预处理器的简要工作流程</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/2ea785cf45aa" title="【转】X86 CPU发展历史"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/20/OsLqfdaU2StnWG8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】X86 CPU发展历史"/></a><div class="content"><a class="title" href="/posts/2ea785cf45aa" title="【转】X86 CPU发展历史">【转】X86 CPU发展历史</a><time datetime="2022-05-19T16:00:27.690Z" title="发表于 2022-05-20 00:00:27">2022-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/05415c493fc8" title="【转】世界双雄：微软和苹果"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/19/lyTsozY2SiWcvMe.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】世界双雄：微软和苹果"/></a><div class="content"><a class="title" href="/posts/05415c493fc8" title="【转】世界双雄：微软和苹果">【转】世界双雄：微软和苹果</a><time datetime="2022-05-18T16:16:50.160Z" title="发表于 2022-05-19 00:16:50">2022-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="makefile编写(3)：条件执行和函数"/></a><div class="content"><a class="title" href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数">makefile编写(3)：条件执行和函数</a><time datetime="2022-05-18T13:06:08.000Z" title="发表于 2022-05-18 21:06:08">2022-05-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9296819e5610" title="【转】PowerPC、X86和ARM架构区别"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/18/c6Edr87qlROypvP.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】PowerPC、X86和ARM架构区别"/></a><div class="content"><a class="title" href="/posts/9296819e5610" title="【转】PowerPC、X86和ARM架构区别">【转】PowerPC、X86和ARM架构区别</a><time datetime="2022-05-17T16:25:36.305Z" title="发表于 2022-05-18 00:25:36">2022-05-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/433fc2487d31" title="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/17/k3B7vgj6TtNsGx1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？"/></a><div class="content"><a class="title" href="/posts/433fc2487d31" title="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？">【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？</a><time datetime="2022-05-16T16:29:30.424Z" title="发表于 2022-05-17 00:29:30">2022-05-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By hetumessi</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">欢迎光临小站！🎉</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.css"><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'kT5o8xhcPPtpRHJzj2KnqvTV-MdYXbMMI',
+      appKey: 'TuUTMrUqindtbui5wMvhOsX7',
+      avatar: 'monsterid',
+      serverURLs: 'https://kT5o8xhc.api.lncldglobal.com',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'facd33fa531a29d93105',
+      clientSecret: '7c0e063309085031b84369f86c21bbbee8e77c64',
+      repo: 'blog_comments',
+      owner: 'hetumessi',
+      admin: ['hetumessi'],
+      id: '427cb827f991cebcbff30bc4cf56fd28',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Valine' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><div class="aplayer no-destroy" data-id="3180545941" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><script defer src="/live2d-widget/autoload.js"></script><script src="//code.tidio.co/msomj1dsaggz8vkbdv2pvnur4efns1ot.js" async></script><script defer src="https://cdn.jsdelivr.net/gh/graingert/wow@1.3.0/dist/wow.min.js"></script><script defer data-pjax src="/js/wow_init.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/null.js" async="async"></script><script>function onTidioChatApiReady() {
+  window.tidioChatApi.hide();
+  window.tidioChatApi.on("close", function() {
+    window.tidioChatApi.hide();
+  });
+}
+if (window.tidioChatApi) {
+  window.tidioChatApi.on("ready", onTidioChatApiReady);
+} else {
+  document.addEventListener("tidioChat-ready", onTidioChatApiReady);
+}
+
+var chatBtnFn = () => {
+  document.getElementById("chat_btn").addEventListener("click", function(){
+    window.tidioChatApi.show();
+    window.tidioChatApi.open();
+  });
+}
+chatBtnFn()
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?hetumessi";
+            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
+            var git_user ="hetumessi";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style></style><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-clock/clock/images/weather/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><script data-pjax>
+  function card_artitalk_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-shuo"><div class="card-content" style="height:auto;min-height:280px;"><div class="item-headline"><i class="fas fa-comments"></i><span><a href="/artitalk/" title="artitalk page link">碎碎念</a></span><a id="cardVisual" style="cursor:pointer;float:right" onclick="cardVisual()">编辑</a></div><div id="artitalk_main" style="width:100%;height:100%;padding:1px"></div></div></div>';
+    console.log('已挂载card_artitalk');
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html);
+    (()=>{
+      const init = () => {
+        new Artitalk(Object.assign({
+          appId: 'YEOLrzwYnNrDKjqYp6sWyxrg-MdYXbMMI',
+          appKey: 'QQNS7Wswk8Aqw6i94V3iVGyY',
+        }, {"serverURL":"https://YEOLrzwY.api.lncldglobal.com","lang":"zh","pageSize":1,"color1":"#89b1f5","color2":"#70c4b6","atEmoji":{"Mafumafu1":"https://cdn.jsdelivr.net/gh/GamerNoTitle/ValineCDN@master/Mafumafu/199749454.png","Mafumafu2":"https://cdn.jsdelivr.net/gh/GamerNoTitle/ValineCDN@master/Mafumafu/199749455.png"}} ))
+      }
+      if (typeof Artitalk === 'function') {
+        init()
+      } else {
+        getScript('https://npm.elemecdn.com/artitalk').then(init)
+      }
+    })()
+    }
+  var elist = '/artitalk/,/posts/'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    card_artitalk_injector_config();
+  }
+  else if (epage === cpage){
+    card_artitalk_injector_config();
+  }
+  </script><script async src="https://npm.elemecdn.com/hexo-butterfly-artitalk-pro/lib/card_visual.js"></script><!-- hexo injector body_end end --></body></html>

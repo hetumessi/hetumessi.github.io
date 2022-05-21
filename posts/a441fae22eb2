@@ -1,0 +1,648 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>makefile编写(2)：变量 | hetumessi's Blog</title><meta name="keywords" content="工具使用,makefile,编译原理实例"><meta name="author" content="hetumessi"><meta name="copyright" content="hetumessi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序   makefile介绍   makefile编写(1)：规则   makefile编写(2)：变量   makefile编写(3)：条件执行和函数    makefile变量 在makefile中的定义的变量从效果和实现来看比较像c&#x2F;c++语言中的宏，它代表一个文本字串(没有数据类型)，可以使用在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="makefile编写(2)：变量">
+<meta property="og:url" content="http://hetumessi.github.io/posts/a441fae22eb2">
+<meta property="og:site_name" content="hetumessi&#39;s Blog">
+<meta property="og:description" content="注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序   makefile介绍   makefile编写(1)：规则   makefile编写(2)：变量   makefile编写(3)：条件执行和函数    makefile变量 在makefile中的定义的变量从效果和实现来看比较像c&#x2F;c++语言中的宏，它代表一个文本字串(没有数据类型)，可以使用在">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png">
+<meta property="article:published_time" content="2022-05-16T08:53:33.554Z">
+<meta property="article:modified_time" content="2022-05-20T07:42:57.086Z">
+<meta property="article:author" content="hetumessi">
+<meta property="article:tag" content="工具使用">
+<meta property="article:tag" content="makefile">
+<meta property="article:tag" content="编译原理实例">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://hetumessi.github.io/posts/a441fae22eb2"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":"flase","highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'makefile编写(2)：变量',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-20 15:42:57'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/scroll.css"><link rel="stylesheet" href="/css/footer.css"><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="https://npm.elemecdn.com/animate.css@4.1.1/animate.min.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-artitalk-pro/lib/card.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="hetumessi's Blog" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/author.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">96</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-th"></i><span> article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> entertainment</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> Books</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> Game</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-user"></i><span> guys</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></li><li><a class="site-page child" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">hetumessi's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-th"></i><span> article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> entertainment</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> Books</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> Game</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-user"></i><span> guys</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></li><li><a class="site-page child" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">makefile编写(2)：变量</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-05-16T08:53:33.554Z" title="发表于 2022-05-16 16:53:33">2022-05-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-20T07:42:57.086Z" title="更新于 2022-05-20 15:42:57">2022-05-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/">应用程序开发</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>16分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="makefile编写(2)：变量"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><strong>注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序</strong></p>
+<ol>
+<li>
+<a href="/2022/05/09/makefile/" title="makefile介绍">makefile介绍</a>
+</li>
+<li>
+<a href="/2022/05/14/makefile%E8%BF%9B%E9%98%B6/" title="makefile编写(1)：规则">makefile编写(1)：规则</a>
+</li>
+<li>
+<a href="/2022/05/16/makefile%E7%BC%96%E5%86%99/" title="makefile编写(2)：变量">makefile编写(2)：变量</a>
+</li>
+<li>
+<a href="/2022/05/18/makefile%E8%BF%9B%E9%98%B62/" title="makefile编写(3)：条件执行和函数">makefile编写(3)：条件执行和函数</a>
+</li>
+</ol>
+<h1 id="makefile变量"><a class="markdownIt-Anchor" href="#makefile变量"></a> makefile变量</h1>
+<p>在makefile中的定义的变量从效果和实现来看比较像c/c++语言中的宏，它代表一个文本字串(没有数据类型)，可以使用在目标文件、依赖文件、命令或是makefile的其它部分中，在makefile中执行时其会自动地展开在引用的地方。但是与c/c++的宏所不同的是，makefile的变量值是可以在文中改变的，具有“变量”的性质(其实只要把makefile的执行过程单纯类比于c程序的预处理过程，会发现两者并没什么不同)。下面给出一个简单的例子：</p>
+<pre class="line-numbers language-none"><code class="language-none"># 变量会在使用它的地方精确地展开，就像c&#x2F;c\++中的宏一样
+f &#x3D; c
+prog.o : prog.$(f)
+    $(f)$(f) -$(f) prog.$(f)
+# 展开后得到：
+prog.o : prog.c
+    cc -c prog.c<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>上例仅仅是为了说明变量展开的过程，实际编程肯定不会这样做。</p>
+<h2 id="makefile变量的基本语法"><a class="markdownIt-Anchor" href="#makefile变量的基本语法"></a> makefile变量的基本语法</h2>
+<p>在makefile中，自定义变量的命名可以包含字符、数字，下划线(可以是数字开头)，但不应该有:、#、=或空字符(空格、换行、Tab等)。变量是大小写敏感的，foo、Foo和FOO是三个不同的变量名(与UNIX的风格一致)。传统的makefile的变量名是全大写的命名方式，但还是推荐使用驼峰命名，如：MakeFlags，这样可以避免与预定义环境变量冲突而覆盖掉后者。<br>
+定义变量的基本语法如下：</p>
+<blockquote>
+<p>变量的名称=值列表</p>
+</blockquote>
+<p>值列表中既可以是零项，又可以是一项或者是多项。等号左右的空白符没有明确的要求，因为make解析时多余的空白符会被自动删除，变成Shell的赋值形式。注意makefile变量值都是字符串，所以任何情况下都不要额外加&quot;&quot;和’’(除非是在Shell命令中)，否则会被单纯的看作是字面值本身加上引号。<br>
+引用变量时的格式为：</p>
+<blockquote>
+<p>$(值列表)或${值列表T}</p>
+</blockquote>
+<p>存在一个特殊情况，就是在之前定义f=c的例子中，变量f不加括号实际是一样的：</p>
+<ul>
+<li>变量名为单字符的情况下，直接使用$x的格式就可以实现变量引用
+<ul>
+<li>自动化变量其实也是使用这种格式</li>
+</ul>
+</li>
+<li>多字符变量的引用必须使用括号，否则make将把变量名的首字母作为作为变量而不是整个字符串
+<ul>
+<li>比如$PATH会被解释为$§后面再加一个ATH符号</li>
+<li>这一点和Shell中变量引用方式不同，Shell中$xx可以直接引用变量xx</li>
+</ul>
+</li>
+</ul>
+<p>不过为了更加安全地使用，一般还是推荐一律给变量加括号。<br>
+另外还存在的一种特殊情况是在命令中使用变量，是完全可以按照Shell命令的形式写的。只不过由于makefile中符号$有特殊的含义(元字符)，不能直接按照Shell脚本的格式写，否则默认是在按照makefile的形式引用变量。此时需要使用两个连续的$$“转义”符号$，这样变量就会被解析为Shell脚本的$xx形式。(同理，在规则中需要使用符号$的地方，都需要使用两个连续的$$)</p>
+<h2 id="makefile变量赋值"><a class="markdownIt-Anchor" href="#makefile变量赋值"></a> makefile变量赋值</h2>
+<p>makefile中支持四种变量基本赋值方式。第一种方式是简单的使用=号，可以用一个或多个字串为变量赋值，也可以用其他<strong>变量引用</strong>赋值。注意，在这种情况下如果用变量值来定义变量的话，<strong>右侧变量可以定义在文件的任何一处</strong>，也就是说=右侧不一定非要是已定义的值，也可以用后面定义的值，如：</p>
+<pre class="line-numbers language-none"><code class="language-none">foo &#x3D; $(bar)
+bar &#x3D; $(ugh)
+ugh &#x3D; Huh?
+all:
+    echo $(foo)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>执行make all将会打印出的变量$(foo)的值是Huh? ($(foo)的值是$(bar)，$(bar)的值是$(ugh)，$(ugh)的值是Huh?)，可见变量是可以使用后面的变量来定义的。这主要是因为脚本语言都是不需要提前声明变量的，而Shell的特点是只要变量第一次出现就<strong>默认创建</strong>，如果没有给出初始化值则变量会被赋予一个<strong>空字符串</strong>。之后的过程与宏展开类似，make在读入所有变量以后，将变量最终的值展开在所有引用处(作用域内)。不过这也带来了一个严重的问题，那就是可能形成递归定义，如：</p>
+<pre class="line-numbers language-none"><code class="language-none">CFLAGS &#x3D; $(CFLAGS) -O
+A &#x3D; $(B)
+B &#x3D; $(A)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>这相当于形成了循环依赖，make将会报错。另外如果在变量中使用函数时，使用=赋值这种方式效率很低，并且可能发生不可预知的错误，因为这两个函数调用将会因为递归调用而不可控。因此，=赋值在makefile中又被称为递归赋值，赋值语句可能影响多个变量，所有定值变量相关的其他定值变量都受影响。<br>
+为了避免上面的这些情况，可以使用make中的:=操作符来=定义变量，使用方法如：</p>
+<pre class="line-numbers language-none"><code class="language-none">x :&#x3D; foo
+y :&#x3D; $(x) bar
+x :&#x3D; later
+# 其等价于：
+# y :&#x3D; foo bar
+# x :&#x3D; later<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>反之，如果是这样的话：</p>
+<pre class="line-numbers language-none"><code class="language-none">y :&#x3D; $(x) bar
+x :&#x3D; foo<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>此时y的值是bar，而不是foo bar，也就是说并不是与最终的赋值相同(变量的值在程序中不同位置是不同的)。:=与c/c++等语言中常规理解的赋值方式是一致的，只对赋值语句之后的变量有效，这种赋值方式又称为覆盖赋值。<br>
+一个特别的用法是借助:=定义一个空字符变量：</p>
+<blockquote>
+<p>nullstring :=<br>
+space := $(nullstring) # end of the line</p>
+</blockquote>
+<p>此例中nullstring是一个空变量，其中什么也没有，而space值是一个空格。因为在操作符的右边是很难描述一个空格的(make会默认删除)，因此先用一个空变量来标明变量的值，而后面采用#注释符来表示变量定义的终止，这样就可以定义出值是一个空格的变量(这是我自己测试的结果，推测可能是跟c语言注释一样被转换为一个空格了)。注意这里关于#的使用，如果这样定义一个变量：</p>
+<blockquote>
+<p>dir := /foo/bar    # directory to put the frobs in</p>
+</blockquote>
+<p>dir这个变量的值是/foo/bar后面还跟个空格，如果使用这样的变量$(dir)/file来指定目录那么是错误的，因此在赋值语句时一定不要在同行写注释时加上空格(除非想在变量值中增加空字符)。</p>
+<p>此外还有两种常用的赋值操作符是?=和+=。?=表示条件赋值，如果变量未定义则使用符号中的值定义变量，如果该变量已经赋值(只要是显式的赋值就算，哪怕是空串)则该赋值语句无效，如：</p>
+<pre class="line-numbers language-none"><code class="language-none">FOO ?&#x3D; bar
+# 实际上这条语句等价于：
+# ifeq ($(origin FOO), undefined)
+# FOO &#x3D; bar
+# endif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>+=表示追加赋值，被赋值的变量用空格隔开的方式在原本值后面追加一个新值，因此：</p>
+<pre class="line-numbers language-none"><code class="language-none">objects &#x3D; main.o foo.o bar.o utils.o
+objects +&#x3D; another.o
+# 等价于
+# objects &#x3D; main.o foo.o bar.o utils.o another.o<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>需要注意的是：</p>
+<ul>
+<li>如果变量之前没有定义过，那么+=会自动变成=</li>
+<li>如果前面变量上次被=或?=赋值过，那么+=会以=的方式(可以由之后的值在此展开)在后面追加内容，并且+=的结果可以作为递归赋值的在所有引用处展开</li>
+<li>如果前面变量上次被:=赋值过，那么+=会以:=的方式(直接用变量当前值展开)在后面追加内容</li>
+</ul>
+<p>下面是一个例子：</p>
+<pre class="line-numbers language-none"><code class="language-none">variable1 :&#x3D; $(variable3)value1
+variable1 +&#x3D; $(variable3)
+variable2 &#x3D; $(variable3)
+variable2 ?&#x3D; another
+variable2 +&#x3D; $(variable3)
+variable3 +&#x3D; value3
+variable3 &#x3D; more
+variable3 +&#x3D; value3
+test:
+    @echo $(variable1)
+    @echo $(variable2)
+    @echo $(variable3)
+# 输出结果为：
+#value1
+more value3 more value3
+more value3
+# 因此这段makefile等价于：
+# variable1 :&#x3D; value1                   此时$(variable3)为空串
+# variable1 :&#x3D; value1                   +&#x3D;在此处追加一个空串$(variable3)
+# variable2 &#x3D; $(variable3) $(variable3) variable2上次是?&#x3D;赋值，所以variable2此时值为$(variable3)，+&#x3D;按递归的方式再追加一个$(variable3)
+# variable3 &#x3D; more                      variable3先被+&#x3D;赋值为value3，&#x3D;将之前+&#x3D;的值覆盖为more
+# variable3 &#x3D; mare value3               variable3在上一步的基础上追加一个value3<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="变量替换引用"><a class="markdownIt-Anchor" href="#变量替换引用"></a> 变量替换引用</h2>
+<p>在makefile中可以替换变量中共有的部分，其格式为：</p>
+<blockquote>
+<p>$(var:a=b) 或是 ${var:a=b}</p>
+</blockquote>
+<p>上面的意思是把变量var中所有以a字符为后缀的字串替换为b结尾。结尾的含义是空格(一般Tab也算)之前(变量值多个字之间使用空格分开)。而对于变量其它部分的a字符不进行替<br>
+换，比如：</p>
+<blockquote>
+<p>foo := a.o b.o c.o<br>
+bar := $(foo:.o=.c)</p>
+</blockquote>
+<p>此例中先定义了一个$(foo)变量，第二行的意思是把$(foo)中所有以.o字串结尾全部替换成.c，所以$(bar)的值就是a.c b.c c.c。注意括号中的变量使用的是变量名而不是变量名的引用，变量名的后面要使用冒号和参数选项分开，表达式中间不能使用空格。另外一种常用的变量替换是与模式字符结合起来使用(形式与规则目标依赖关系中的静态模式相同)，如：</p>
+<blockquote>
+<p>foo := a.o b.o c.o<br>
+bar := $(foo:%.o=%.c)</p>
+</blockquote>
+<p>这个例子中加不加%都是一样的，不过加上%在这种替换中能起到的作用并不仅于此。实际中对变量值的操作往往不只是修改后缀字符，可能改变字串中的不同位置的字符，比如：(加上%还可以匹配前缀)</p>
+<pre class="line-numbers language-none"><code class="language-none">foo:&#x3D;a123c a1234c a12345c
+obj1&#x3D;$(foo:a%c&#x3D;x%y)
+obj2&#x3D;$(foo:a%c&#x3D;x5%y)
+obj3&#x3D;$(foo:a1%c&#x3D;x%5y)
+obj4&#x3D;$(foo:a%5c&#x3D;x5%y)
+obj5&#x3D;$(foo:a%2%c&#x3D;x5%3%y)
+All:
+	@cat makefile  
+	@echo $(obj1)  # 输出x123y x1234y x12345y
+	@echo $(obj2)  # 输出x123y x1234y x12345y
+	@echo $(obj3)  # 输出x5123y x51234y x512345y
+	@echo $(obj4)  # 输出a123c a1234c x51234y
+    @echo $(obj5)  # 输出a123c a1234c a12345c(我自己的测试结果，看来一个模式中不能有多个\% \?)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看到<br>
+实际上，变量的替换引用其实是函数patsubst的一个简化实现，在make中两者的行为是一致的。</p>
+<h2 id="变量嵌套引用"><a class="markdownIt-Anchor" href="#变量嵌套引用"></a> 变量嵌套引用</h2>
+<p>变量嵌套引用可以理解为“把变量的值再当成变量”，先看一个例子：</p>
+<blockquote>
+<p>x = y<br>
+y = z<br>
+a := $($(x))</p>
+</blockquote>
+<p>此例中，$(x)的值是y，所以$($(x))就是$(y)，于是$(a)的值就是z，注意这里是x=y而不是x=$(y)。使用更多层次进行嵌套也是一样的，比如：</p>
+<blockquote>
+<p>x = $(y)<br>
+y = z<br>
+z = u<br>
+u = Hello<br>
+a := $($($(x)))#输出为Hello</p>
+</blockquote>
+<p>这里的$($($(x)))被替换成了$($(z))，因为$(z)值是u，所以最终结果是：a:=$(u)，也就是Hello。使用变量时并不是只能引用一个变量，可以有多个变量的引用以及任意的文本字符，最后变量的引用是其中所有字符展开后的结果，比如：</p>
+<blockquote>
+<p>first_second = Hello<br>
+a = first<br>
+b = second<br>
+all = $($a_$b)</p>
+</blockquote>
+<p>上例中$a_$b组成了first_second，于是$(all)的值就是Hello。因为展开后的字串是变量引用的形式，所以这种嵌套引用同样可以用在表达式左值：</p>
+<blockquote>
+<p>dir = foo<br>
+$(dir)_sources := $(wildcard $(dir)/*.c)</p>
+</blockquote>
+<p>上例中定义了三个变量：dir、foo_sources和foo_print。<br>
+要注意区分变量的嵌套引用和变量的递归赋值：</p>
+<ul>
+<li>嵌套引用是用一个变量表示另外一个变量，然后进行多层的引用</li>
+<li>递归展开的变量表示当一个变量存在对其它变量的引用时，对此变量的替换方式</li>
+<li>两种方式是完全可以混用的，比如可以在定义个一个递归展开式变量时使用套嵌引用的方式</li>
+</ul>
+<p>实际使用应该尽量避免过多使用变量嵌套引用，在必须要使用的时候应该做到嵌套层数越少越好，因为使用这种方法表达会比较复杂，可读性不好。</p>
+<h2 id="环境变量"><a class="markdownIt-Anchor" href="#环境变量"></a> 环境变量</h2>
+<p>make运行时的系统环境变量可以在make开始运行时被载入到makefile文件中，但是如果makefile中已定义了这个变量，或这个变量由make在命令行中带入，那么系统的环境变量的值将被覆盖(除非make指定了-e参数(在实现上类似于在命令中设置环境变量的值)，那么系统环境变量值将覆盖makefile中定义的变量)。比如当在不同的makefile中指定一部分统一的编译选项(或者说命令行参数)，那么只要设置一个环境变量就可以在读取的所有makefile中默认使用这个变量，在make中已经分别用CFLAGS和LDFLAGS定义了编译选项(-c、-o、-I、-S等)和链接选项(-L、-static等)，如：</p>
+<pre class="line-numbers language-none"><code class="language-none">CFLAGS &#x3D; -g -I.&#x2F;include 
+LDFLAGS &#x3D; -L.&#x2F;lib
+ALL:
+    $(CC) $(CFLAGS) $(LDFLAGS) main.c<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>如果makefile中定义了CFLAGS和LDFLAGS，那么则会使用makefile中的这些变量，如果没有定义则使用此时系统环境变量CFLAGS的值。当make嵌套调用时，上层makefile中定义的环境变量会传递到下层的makefile中，默认情况下只有通过这种方式或者在make命令中设置的变量会被传递，而定义在文件中的变量，如果要向下层makefile传递，则需要使用export关键字来声明。但是<strong>不推荐</strong>使用环境变量的方式(注意make做的只是引用并在局部覆盖环境变量，如果要修改或添加环境变量的话是Shell才能做的事)来完成普通变量的工作，特别是在make的嵌套调用中，任何一个环境变量的错误定义都对系统上的所有make产生影响，甚至是毁坏性的。因为环境变量具有全局的特征，所以尽量不要污染环境变量，大多数的合格系统管理员都应该明白环境变量对系统是多么的重要。</p>
+<h3 id="override指示符"><a class="markdownIt-Anchor" href="#override指示符"></a> override指示符</h3>
+<p>如果变量是在make命令参数中设置的，那么makefile对这个变量的赋值会被忽略。实际上从这里可以看出虽然环境变量和make命令中的变量都会从外部向makefile中引入变量，但两者的行为是有差异的：</p>
+<ul>
+<li>环境变量是把已经定义好的值引入到makefile中，如果makefile中存在同名变量则会在局部将其覆盖</li>
+<li>make命令中设置的变量是将makefile中的同名变量用其值直接替换</li>
+</ul>
+<p>如果想在makefile中设置这类参数的值，或者说不希望makefile的变量定义被替代，那么可以在makefile中使用指示符override来对这个变量进行声明，其语法是：</p>
+<blockquote>
+<p>override &lt;variable&gt; = &lt;value&gt;<br>
+override &lt;variable&gt; := &lt;value&gt;<br>
+override &lt;variable&gt; += &lt;more text&gt;</p>
+</blockquote>
+<p>从另外一个角度来说，override是实现了在makefile中增加或者修改命令行参数的一种机制。通常可能会有这样的需求：通过命令行来指定一些附加的编译参数，对一些通用参数或者必需的编译参数在makefile中指定，而在命令中指定一些特殊的参数，对于这种需求就可以使用指示符override来实现(通用的直接写在命令中，特殊的在makefile中追加)，如：</p>
+<pre class="line-numbers language-none"><code class="language-none">EXEF &#x3D; foo 
+override CFLAGS +&#x3D; -Wall –g 
+...
+$(EXEF) : foo.c
+    $(CC) $(CFLAGS) $(addsuffix .c,$@) –o $@<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>假设一般情况下默认以-O2优化级别进行编译，那么执行makefile时只需用：</p>
+<blockquote>
+<p>make CFLAGS=-O2</p>
+</blockquote>
+<p>此时既可以-O2优化级别进行编译，同时又加入了该makefile目标文件编译时的特殊要求-Wall -g。</p>
+<h2 id="目标指定变量"><a class="markdownIt-Anchor" href="#目标指定变量"></a> 目标指定变量</h2>
+<p>正常在makefile中定义一个变量，那么这个变量对此makefile的所有规则都是有效的，在整个文件都可以访问这些变量，它就像是一个“全局变量”（仅限于定义那个makefile中的所有规则，如果需要对其它的makefile有效，需要使用export声明)，类似于c语言中外部静态变量，使用static声明的全局变量）。不过在makefile中同样可以为某个目标设置局部变量，这种变量被称为目标指定变量，可以和“全局变量”同名，因为它的作用范围只在指定它的规则的上下文中有效，不会影响规则链以外的全局变量的值。其语法是：</p>
+<blockquote>
+<p>&lt;target …&gt; : &lt;variable-assignment&gt;<br>
+&lt;target …&gt; : override &lt;variable-assignment&gt;</p>
+</blockquote>
+<p>&lt;variable-assignment&gt;可以是任何有效的赋值表达式。这个特性非常有用，比如设置了这样一个变量，这个变量可以作用到由这个目标所引发的所有的规则中去：</p>
+<pre class="line-numbers language-none"><code class="language-none">prog : CFLAGS &#x3D; -g
+bar : CFLAGS &#x3D; -Wall -g
+prog : prog.o foo.o
+    $(CC) $(CFLAGS) prog.o foo.o
+prog.o : prog.c
+    $(CC) $(CFLAGS) prog.c
+foo.o : foo.c
+    $(CC) $(CFLAGS) foo.c
+bar : bar.o
+    $(CC) $(CFLAGS) bar.o
+bar.o : bar.c
+    $(CC) $(CFLAGS) bar.c<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>此例中不管全局的$(CFLAGS)值是什么，在prog目标文件以及其所<strong>引发的所有规则</strong>中(prog.o foo.o的规则)，$(CFLAGS)值都是-g，而bar目标文件所引发的规则中$(CFLAGS)值为-Wall -g。</p>
+<h3 id="模式指定变量"><a class="markdownIt-Anchor" href="#模式指定变量"></a> 模式指定变量</h3>
+<p>makefile中的规则可以使用模式字符以匹配任何非空字符串，模式字符%也可以用在目标指定变量中，此时称为模式指定变量。模式指定变量的好处在于可以给定一种模式，把变量定义在符合这种模式的所有目标上。模式指定变量的语法与目标指定变量一致，唯一区别是这里的目标是一个或者多个模式目标，比如可以如下方式给所有以[.o]结尾的目标文件定义目标变量：</p>
+<blockquote>
+<p>%.o : CFLAGS = -O</p>
+</blockquote>
+<p>对于同一个目标指定变量，如果使用追加方式赋值，它的局部变量值是：为所有规则定义的全局值+引发它所在规则被执行的目标所指定的值+它所符合的模式指定值+此目标所指定的值。</p>
+<h2 id="多行变量"><a class="markdownIt-Anchor" href="#多行变量"></a> 多行变量</h2>
+<p>还有一种设置变量值的方法是使用define关键字，使用define关键字设置变量值可以包含换行符，这样打包起来的变量可以称为宏包，命令包的实现其实就是一个这样的变量。define指示符后面跟的是变量的名字，然后重起一行定义变量的值，定义是以endef关键字结束，其工作方式和=操作符一样。变量的值可以包含函数、命令、文字，或是其它变量。因为命令需要以[Tab]键开头，所以用define定义的多行变量中没有以[Tab]键开头，那么make就不会把其认为是命令，下面的这个示例展示了define的用法：</p>
+<pre class="line-numbers language-none"><code class="language-none">define two-lines
+    echo foo
+    echo $(bar)
+endef<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>对于多行变量定义，同样可以使用override指示符，如：</p>
+<pre class="line-numbers language-none"><code class="language-none">override define foo
+bar
+endef<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io">hetumessi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io/posts/a441fae22eb2">http://hetumessi.github.io/posts/a441fae22eb2</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://hetumessi.github.io" target="_blank">hetumessi's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/">工具使用</a><a class="post-meta__tags" href="/tags/makefile/">makefile</a><a class="post-meta__tags" href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AE%9E%E4%BE%8B/">编译原理实例</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechatpay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/wechatpay.png"/></a><div class="post-qr-code-desc"></div></li><li class="reward-item"><a href="/img/alipay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/alipay.png"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-18</div><div class="title">makefile编写(3)：条件执行和函数</div></div></a></div><div><a href="/posts/9372e87b32cb" title="makefile编写(1)：规则"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-14</div><div class="title">makefile编写(1)：规则</div></div></a></div><div><a href="/posts/2ea9a24cd534" title="makefile介绍"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-09</div><div class="title">makefile介绍</div></div></a></div><div><a href="/posts/de15e3343b28" title="GNU工具集术语介绍"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/20/DN2IQhgnSfjBOc9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-10</div><div class="title">GNU工具集术语介绍</div></div></a></div><div><a href="/posts/d0ab9fa78862" title="Qt开发环境和编译工具介绍及相关基本概念"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/20/WcagXUICOvfuBxD.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-10</div><div class="title">Qt开发环境和编译工具介绍及相关基本概念</div></div></a></div><div><a href="/posts/9456e876aa66" title="Ethereum入门了解"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/w6pOHIGoFMxrTEa.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-03</div><div class="title">Ethereum入门了解</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Gitalk</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/author.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">hetumessi</div><div class="author-info__description">个人博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">96</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hetumessi"><i class="fab fa-github"></i><span>要来gayhub瞧瞧嘛🤡</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/hetumessi" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/392384886@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/sitemap.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="/404/" target="_blank" title="commonweal"><i class="fa fa-heartbeat"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！有任何问题或者意见，还请QQ：392384886，或者致信QQ邮箱：392384886@qq.com</div></div><div class="card-widget card-pixiv"><div class="card-content"><div class="item-headline"><i class="fa fa-image" aria-hidden="true"></i><span>Pixiv日榜Top50</span></div><iframe src="https://cloud.mokeyjay.com/pixiv" frameborder="0" style="width:99%;height:380px;margin:0;"></iframe></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#makefile%E5%8F%98%E9%87%8F"><span class="toc-number">1.</span> <span class="toc-text"> makefile变量</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#makefile%E5%8F%98%E9%87%8F%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text"> makefile变量的基本语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#makefile%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC"><span class="toc-number">1.2.</span> <span class="toc-text"> makefile变量赋值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E6%9B%BF%E6%8D%A2%E5%BC%95%E7%94%A8"><span class="toc-number">1.3.</span> <span class="toc-text"> 变量替换引用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E5%B5%8C%E5%A5%97%E5%BC%95%E7%94%A8"><span class="toc-number">1.4.</span> <span class="toc-text"> 变量嵌套引用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">1.5.</span> <span class="toc-text"> 环境变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#override%E6%8C%87%E7%A4%BA%E7%AC%A6"><span class="toc-number">1.5.1.</span> <span class="toc-text"> override指示符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87%E6%8C%87%E5%AE%9A%E5%8F%98%E9%87%8F"><span class="toc-number">1.6.</span> <span class="toc-text"> 目标指定变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%BC%8F%E6%8C%87%E5%AE%9A%E5%8F%98%E9%87%8F"><span class="toc-number">1.6.1.</span> <span class="toc-text"> 模式指定变量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%A1%8C%E5%8F%98%E9%87%8F"><span class="toc-number">1.7.</span> <span class="toc-text"> 多行变量</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/2ea785cf45aa" title="【转】X86 CPU发展历史"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/20/OsLqfdaU2StnWG8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】X86 CPU发展历史"/></a><div class="content"><a class="title" href="/posts/2ea785cf45aa" title="【转】X86 CPU发展历史">【转】X86 CPU发展历史</a><time datetime="2022-05-19T16:00:27.690Z" title="发表于 2022-05-20 00:00:27">2022-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/05415c493fc8" title="【转】世界双雄：微软和苹果"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/19/lyTsozY2SiWcvMe.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】世界双雄：微软和苹果"/></a><div class="content"><a class="title" href="/posts/05415c493fc8" title="【转】世界双雄：微软和苹果">【转】世界双雄：微软和苹果</a><time datetime="2022-05-18T16:16:50.160Z" title="发表于 2022-05-19 00:16:50">2022-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="makefile编写(3)：条件执行和函数"/></a><div class="content"><a class="title" href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数">makefile编写(3)：条件执行和函数</a><time datetime="2022-05-18T13:06:08.000Z" title="发表于 2022-05-18 21:06:08">2022-05-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9296819e5610" title="【转】PowerPC、X86和ARM架构区别"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/18/c6Edr87qlROypvP.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】PowerPC、X86和ARM架构区别"/></a><div class="content"><a class="title" href="/posts/9296819e5610" title="【转】PowerPC、X86和ARM架构区别">【转】PowerPC、X86和ARM架构区别</a><time datetime="2022-05-17T16:25:36.305Z" title="发表于 2022-05-18 00:25:36">2022-05-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/433fc2487d31" title="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/17/k3B7vgj6TtNsGx1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？"/></a><div class="content"><a class="title" href="/posts/433fc2487d31" title="【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？">【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？</a><time datetime="2022-05-16T16:29:30.424Z" title="发表于 2022-05-17 00:29:30">2022-05-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 By hetumessi</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">欢迎光临小站！🎉</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.css"><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'kT5o8xhcPPtpRHJzj2KnqvTV-MdYXbMMI',
+      appKey: 'TuUTMrUqindtbui5wMvhOsX7',
+      avatar: 'monsterid',
+      serverURLs: 'https://kT5o8xhc.api.lncldglobal.com',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'facd33fa531a29d93105',
+      clientSecret: '7c0e063309085031b84369f86c21bbbee8e77c64',
+      repo: 'blog_comments',
+      owner: 'hetumessi',
+      admin: ['hetumessi'],
+      id: '857bc9c897269573b9749e9a11539ad6',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Valine' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><div class="aplayer no-destroy" data-id="3180545941" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><script defer src="/live2d-widget/autoload.js"></script><script src="//code.tidio.co/msomj1dsaggz8vkbdv2pvnur4efns1ot.js" async></script><script defer src="https://cdn.jsdelivr.net/gh/graingert/wow@1.3.0/dist/wow.min.js"></script><script defer data-pjax src="/js/wow_init.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/null.js" async="async"></script><script>function onTidioChatApiReady() {
+  window.tidioChatApi.hide();
+  window.tidioChatApi.on("close", function() {
+    window.tidioChatApi.hide();
+  });
+}
+if (window.tidioChatApi) {
+  window.tidioChatApi.on("ready", onTidioChatApiReady);
+} else {
+  document.addEventListener("tidioChat-ready", onTidioChatApiReady);
+}
+
+var chatBtnFn = () => {
+  document.getElementById("chat_btn").addEventListener("click", function(){
+    window.tidioChatApi.show();
+    window.tidioChatApi.open();
+  });
+}
+chatBtnFn()
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?hetumessi";
+            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
+            var git_user ="hetumessi";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style></style><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-clock/clock/images/weather/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><script data-pjax>
+  function card_artitalk_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-shuo"><div class="card-content" style="height:auto;min-height:280px;"><div class="item-headline"><i class="fas fa-comments"></i><span><a href="/artitalk/" title="artitalk page link">碎碎念</a></span><a id="cardVisual" style="cursor:pointer;float:right" onclick="cardVisual()">编辑</a></div><div id="artitalk_main" style="width:100%;height:100%;padding:1px"></div></div></div>';
+    console.log('已挂载card_artitalk');
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html);
+    (()=>{
+      const init = () => {
+        new Artitalk(Object.assign({
+          appId: 'YEOLrzwYnNrDKjqYp6sWyxrg-MdYXbMMI',
+          appKey: 'QQNS7Wswk8Aqw6i94V3iVGyY',
+        }, {"serverURL":"https://YEOLrzwY.api.lncldglobal.com","lang":"zh","pageSize":1,"color1":"#89b1f5","color2":"#70c4b6","atEmoji":{"Mafumafu1":"https://cdn.jsdelivr.net/gh/GamerNoTitle/ValineCDN@master/Mafumafu/199749454.png","Mafumafu2":"https://cdn.jsdelivr.net/gh/GamerNoTitle/ValineCDN@master/Mafumafu/199749455.png"}} ))
+      }
+      if (typeof Artitalk === 'function') {
+        init()
+      } else {
+        getScript('https://npm.elemecdn.com/artitalk').then(init)
+      }
+    })()
+    }
+  var elist = '/artitalk/,/posts/'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    card_artitalk_injector_config();
+  }
+  else if (epage === cpage){
+    card_artitalk_injector_config();
+  }
+  </script><script async src="https://npm.elemecdn.com/hexo-butterfly-artitalk-pro/lib/card_visual.js"></script><!-- hexo injector body_end end --></body></html>

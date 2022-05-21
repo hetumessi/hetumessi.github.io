@@ -6,7 +6,7 @@
   <link href="http://hetumessi.github.io/atom.xml" rel="self"/>
   
   <link href="http://hetumessi.github.io/"/>
-  <updated>2022-05-18T16:57:08.853Z</updated>
+  <updated>2022-05-20T16:43:58.391Z</updated>
   <id>http://hetumessi.github.io/</id>
   
   <author>
@@ -17,11 +17,38 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>【转】X86 CPU发展历史</title>
+    <link href="http://hetumessi.github.io/posts/2ea785cf45aa"/>
+    <id>http://hetumessi.github.io/posts/2ea785cf45aa</id>
+    <published>2022-05-19T16:00:27.690Z</published>
+    <updated>2022-05-20T16:43:58.391Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;转自&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="杂记" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/"/>
+    
+    <category term="转载" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+    <category term="计算机小知识" scheme="http://hetumessi.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%B0%8F%E7%9F%A5%E8%AF%86/"/>
+    
+  </entry>
+  
+  <entry>
     <title>【转】世界双雄：微软和苹果</title>
-    <link href="http://hetumessi.github.io/2022/05/19/%E5%BE%AE%E8%BD%AFvs%E8%8B%B9%E6%9E%9C/"/>
-    <id>http://hetumessi.github.io/2022/05/19/%E5%BE%AE%E8%BD%AFvs%E8%8B%B9%E6%9E%9C/</id>
+    <link href="http://hetumessi.github.io/posts/05415c493fc8"/>
+    <id>http://hetumessi.github.io/posts/05415c493fc8</id>
     <published>2022-05-18T16:16:50.160Z</published>
-    <updated>2022-05-18T16:57:08.853Z</updated>
+    <updated>2022-05-20T04:00:13.769Z</updated>
     
     
       
@@ -38,15 +65,19 @@
     
     <category term="杂记" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/"/>
     
+    <category term="转载" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+    <category term="商业小知识" scheme="http://hetumessi.github.io/tags/%E5%95%86%E4%B8%9A%E5%B0%8F%E7%9F%A5%E8%AF%86/"/>
     
   </entry>
   
   <entry>
     <title>makefile编写(3)：条件执行和函数</title>
-    <link href="http://hetumessi.github.io/2022/05/18/makefile%E8%BF%9B%E9%98%B62/"/>
-    <id>http://hetumessi.github.io/2022/05/18/makefile%E8%BF%9B%E9%98%B62/</id>
+    <link href="http://hetumessi.github.io/posts/b643bd4a1cb0"/>
+    <id>http://hetumessi.github.io/posts/b643bd4a1cb0</id>
     <published>2022-05-18T13:06:08.000Z</published>
-    <updated>2022-05-19T15:28:18.703Z</updated>
+    <updated>2022-05-20T14:54:17.388Z</updated>
     
     
       
@@ -75,10 +106,10 @@
   
   <entry>
     <title>【转】PowerPC、X86和ARM架构区别</title>
-    <link href="http://hetumessi.github.io/2022/05/18/powerpc%E3%80%81x86%E3%80%81arm/"/>
-    <id>http://hetumessi.github.io/2022/05/18/powerpc%E3%80%81x86%E3%80%81arm/</id>
+    <link href="http://hetumessi.github.io/posts/9296819e5610"/>
+    <id>http://hetumessi.github.io/posts/9296819e5610</id>
     <published>2022-05-17T16:25:36.305Z</published>
-    <updated>2022-05-17T17:58:05.171Z</updated>
+    <updated>2022-05-20T04:05:09.732Z</updated>
     
     
       
@@ -94,6 +125,8 @@
     
     <category term="杂记" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/"/>
     
+    <category term="转载" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/%E8%BD%AC%E8%BD%BD/"/>
+    
     
     <category term="计算机小知识" scheme="http://hetumessi.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%B0%8F%E7%9F%A5%E8%AF%86/"/>
     
@@ -101,10 +134,10 @@
   
   <entry>
     <title>【转】Explorer.exe到底是什么？为什么从Windows 95开始一直传承至今？</title>
-    <link href="http://hetumessi.github.io/2022/05/17/windows%20shell/"/>
-    <id>http://hetumessi.github.io/2022/05/17/windows%20shell/</id>
+    <link href="http://hetumessi.github.io/posts/433fc2487d31"/>
+    <id>http://hetumessi.github.io/posts/433fc2487d31</id>
     <published>2022-05-16T16:29:30.424Z</published>
-    <updated>2022-05-16T17:18:52.596Z</updated>
+    <updated>2022-05-20T04:05:26.538Z</updated>
     
     
       
@@ -120,6 +153,8 @@
     
     <category term="杂记" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/"/>
     
+    <category term="转载" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/%E8%BD%AC%E8%BD%BD/"/>
+    
     
     <category term="计算机小知识" scheme="http://hetumessi.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%B0%8F%E7%9F%A5%E8%AF%86/"/>
     
@@ -127,10 +162,10 @@
   
   <entry>
     <title>makefile编写(2)：变量</title>
-    <link href="http://hetumessi.github.io/2022/05/16/makefile%E7%BC%96%E5%86%99/"/>
-    <id>http://hetumessi.github.io/2022/05/16/makefile%E7%BC%96%E5%86%99/</id>
+    <link href="http://hetumessi.github.io/posts/a441fae22eb2"/>
+    <id>http://hetumessi.github.io/posts/a441fae22eb2</id>
     <published>2022-05-16T08:53:33.554Z</published>
-    <updated>2022-05-19T08:53:18.492Z</updated>
+    <updated>2022-05-20T07:42:57.086Z</updated>
     
     
       
@@ -159,10 +194,10 @@
   
   <entry>
     <title>【转】命令行界面(CLI)、终端(Terminal)、Shell、TTY的区别</title>
-    <link href="http://hetumessi.github.io/2022/05/15/shell%E3%80%81terminal/"/>
-    <id>http://hetumessi.github.io/2022/05/15/shell%E3%80%81terminal/</id>
+    <link href="http://hetumessi.github.io/posts/05eccd173a33"/>
+    <id>http://hetumessi.github.io/posts/05eccd173a33</id>
     <published>2022-05-14T16:26:10.857Z</published>
-    <updated>2022-05-16T04:48:16.559Z</updated>
+    <updated>2022-05-20T04:04:57.650Z</updated>
     
     
       
@@ -178,6 +213,8 @@
     
     <category term="杂记" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/"/>
     
+    <category term="转载" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/%E8%BD%AC%E8%BD%BD/"/>
+    
     
     <category term="计算机小知识" scheme="http://hetumessi.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%B0%8F%E7%9F%A5%E8%AF%86/"/>
     
@@ -185,8 +222,8 @@
   
   <entry>
     <title>makefile编写(1)：规则</title>
-    <link href="http://hetumessi.github.io/2022/05/14/makefile%E8%BF%9B%E9%98%B6/"/>
-    <id>http://hetumessi.github.io/2022/05/14/makefile%E8%BF%9B%E9%98%B6/</id>
+    <link href="http://hetumessi.github.io/posts/9372e87b32cb"/>
+    <id>http://hetumessi.github.io/posts/9372e87b32cb</id>
     <published>2022-05-13T17:05:05.000Z</published>
     <updated>2022-05-19T04:37:53.370Z</updated>
     
@@ -217,10 +254,10 @@
   
   <entry>
     <title>【转】好好地做一万个小时比看起来更难完成</title>
-    <link href="http://hetumessi.github.io/2022/05/13/%E9%B8%A1%E6%B1%A46/"/>
-    <id>http://hetumessi.github.io/2022/05/13/%E9%B8%A1%E6%B1%A46/</id>
+    <link href="http://hetumessi.github.io/posts/010e578ad717"/>
+    <id>http://hetumessi.github.io/posts/010e578ad717</id>
     <published>2022-05-13T15:19:34.925Z</published>
-    <updated>2022-05-13T16:15:35.159Z</updated>
+    <updated>2022-05-20T04:04:40.483Z</updated>
     
     
       
@@ -235,6 +272,8 @@
     
     <category term="杂记" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/"/>
     
+    <category term="转载" scheme="http://hetumessi.github.io/categories/%E6%9D%82%E8%AE%B0/%E8%BD%AC%E8%BD%BD/"/>
+    
     
     <category term="鸡汤" scheme="http://hetumessi.github.io/tags/%E9%B8%A1%E6%B1%A4/"/>
     
@@ -242,8 +281,8 @@
   
   <entry>
     <title>毕业论文-开题报告篇</title>
-    <link href="http://hetumessi.github.io/2022/05/13/%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87%E4%B8%93%E9%A2%98/"/>
-    <id>http://hetumessi.github.io/2022/05/13/%E6%AF%95%E4%B8%9A%E8%AE%BA%E6%96%87%E4%B8%93%E9%A2%98/</id>
+    <link href="http://hetumessi.github.io/posts/3aee3b98bbe7"/>
+    <id>http://hetumessi.github.io/posts/3aee3b98bbe7</id>
     <published>2022-05-13T04:31:09.713Z</published>
     <updated>2022-05-13T16:41:03.078Z</updated>
     
@@ -267,8 +306,8 @@
   
   <entry>
     <title>18.Document Distance</title>
-    <link href="http://hetumessi.github.io/2022/05/12/Document%20Distance/"/>
-    <id>http://hetumessi.github.io/2022/05/12/Document%20Distance/</id>
+    <link href="http://hetumessi.github.io/posts/41d64c1efff2"/>
+    <id>http://hetumessi.github.io/posts/41d64c1efff2</id>
     <published>2022-05-12T13:51:42.965Z</published>
     <updated>2022-05-12T14:56:27.844Z</updated>
     
@@ -294,8 +333,8 @@
   
   <entry>
     <title>17.Color the tree、Self-printable B+ Tree</title>
-    <link href="http://hetumessi.github.io/2022/05/12/color%20the%20tree/"/>
-    <id>http://hetumessi.github.io/2022/05/12/color%20the%20tree/</id>
+    <link href="http://hetumessi.github.io/posts/beb87d22ffa2"/>
+    <id>http://hetumessi.github.io/posts/beb87d22ffa2</id>
     <published>2022-05-12T13:41:35.099Z</published>
     <updated>2022-05-12T13:51:20.290Z</updated>
     
@@ -322,8 +361,8 @@
   
   <entry>
     <title>16.hashing简单版、hashing复杂版、串的模式匹配</title>
-    <link href="http://hetumessi.github.io/2022/05/12/hashing/"/>
-    <id>http://hetumessi.github.io/2022/05/12/hashing/</id>
+    <link href="http://hetumessi.github.io/posts/362db4955964"/>
+    <id>http://hetumessi.github.io/posts/362db4955964</id>
     <published>2022-05-12T11:05:14.003Z</published>
     <updated>2022-05-12T11:18:54.128Z</updated>
     
@@ -350,8 +389,8 @@
   
   <entry>
     <title>【转】对话Linus Torvalds：大多黑客甚至连指针都未理解</title>
-    <link href="http://hetumessi.github.io/2022/05/12/%E5%AF%B9%E8%AF%9Dlinus/"/>
-    <id>http://hetumessi.github.io/2022/05/12/%E5%AF%B9%E8%AF%9Dlinus/</id>
+    <link href="http://hetumessi.github.io/posts/12becdf9bb70"/>
+    <id>http://hetumessi.github.io/posts/12becdf9bb70</id>
     <published>2022-05-12T03:39:27.023Z</published>
     <updated>2022-05-12T10:06:21.549Z</updated>
     
@@ -375,8 +414,8 @@
   
   <entry>
     <title>15.Insert or Merge、Insertion or Heap Sort、Sort with Swap(0, i)</title>
-    <link href="http://hetumessi.github.io/2022/05/11/Sort%20with%20Swap(0,%20i)/"/>
-    <id>http://hetumessi.github.io/2022/05/11/Sort%20with%20Swap(0,%20i)/</id>
+    <link href="http://hetumessi.github.io/posts/1c0e07d7660d"/>
+    <id>http://hetumessi.github.io/posts/1c0e07d7660d</id>
     <published>2022-05-11T10:24:30.529Z</published>
     <updated>2022-05-12T08:45:46.020Z</updated>
     
@@ -403,8 +442,8 @@
   
   <entry>
     <title>14.公路村村通、关键活动、How Long Does It Take</title>
-    <link href="http://hetumessi.github.io/2022/05/11/%E5%85%AC%E8%B7%AF%E6%9D%91%E6%9D%91%E9%80%9A/"/>
-    <id>http://hetumessi.github.io/2022/05/11/%E5%85%AC%E8%B7%AF%E6%9D%91%E6%9D%91%E9%80%9A/</id>
+    <link href="http://hetumessi.github.io/posts/fb2aa5920eaa"/>
+    <id>http://hetumessi.github.io/posts/fb2aa5920eaa</id>
     <published>2022-05-11T10:01:41.503Z</published>
     <updated>2022-05-12T09:23:50.165Z</updated>
     
@@ -430,8 +469,8 @@
   
   <entry>
     <title>13.Subway Map、Public Bike Management</title>
-    <link href="http://hetumessi.github.io/2022/05/11/Subway%20Map/"/>
-    <id>http://hetumessi.github.io/2022/05/11/Subway%20Map/</id>
+    <link href="http://hetumessi.github.io/posts/46af663a24e4"/>
+    <id>http://hetumessi.github.io/posts/46af663a24e4</id>
     <published>2022-05-11T09:45:54.813Z</published>
     <updated>2022-05-12T08:45:00.157Z</updated>
     
@@ -458,8 +497,8 @@
   
   <entry>
     <title>12.救邦德复杂版、Gas Station、条条大路通罗马</title>
-    <link href="http://hetumessi.github.io/2022/05/11/%E6%95%91%E9%82%A6%E5%BE%B7%E5%A4%8D%E6%9D%82%E7%89%88/"/>
-    <id>http://hetumessi.github.io/2022/05/11/%E6%95%91%E9%82%A6%E5%BE%B7%E5%A4%8D%E6%9D%82%E7%89%88/</id>
+    <link href="http://hetumessi.github.io/posts/77fbe98da0de"/>
+    <id>http://hetumessi.github.io/posts/77fbe98da0de</id>
     <published>2022-05-11T09:25:31.677Z</published>
     <updated>2022-05-12T09:16:27.101Z</updated>
     
@@ -485,8 +524,8 @@
   
   <entry>
     <title>11.列出连通集、Forwards on Weibo、旅游规划</title>
-    <link href="http://hetumessi.github.io/2022/05/11/%E5%88%97%E5%87%BA%E8%BF%9E%E9%80%9A%E9%9B%86%E3%80%81Forward%20in%20weibo/"/>
-    <id>http://hetumessi.github.io/2022/05/11/%E5%88%97%E5%87%BA%E8%BF%9E%E9%80%9A%E9%9B%86%E3%80%81Forward%20in%20weibo/</id>
+    <link href="http://hetumessi.github.io/posts/731ce70d9f1f"/>
+    <id>http://hetumessi.github.io/posts/731ce70d9f1f</id>
     <published>2022-05-11T09:10:16.848Z</published>
     <updated>2022-05-12T09:26:37.774Z</updated>
     
@@ -512,8 +551,8 @@
   
   <entry>
     <title>10.Huffman Codes、PAT Judge</title>
-    <link href="http://hetumessi.github.io/2022/05/11/Huffman%20Codes/"/>
-    <id>http://hetumessi.github.io/2022/05/11/Huffman%20Codes/</id>
+    <link href="http://hetumessi.github.io/posts/d675f3d012cb"/>
+    <id>http://hetumessi.github.io/posts/d675f3d012cb</id>
     <published>2022-05-11T08:45:22.928Z</published>
     <updated>2022-05-12T08:48:13.585Z</updated>
     
@@ -524,34 +563,6 @@
         
     <summary type="html">&lt;h1 id=&quot;huffman-codes&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#huffman-codes&quot;&gt;&lt;/a&gt; Huffman Codes&lt;/h1&gt;
 &lt;p&gt;In 1953, David A. Huffman published</summary>
-        
-      
-    
-    
-    
-    <category term="数据结构实例运用" scheme="http://hetumessi.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E4%BE%8B%E8%BF%90%E7%94%A8/"/>
-    
-    
-    <category term="数据结构与算法" scheme="http://hetumessi.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
-    
-    <category term="PTA" scheme="http://hetumessi.github.io/tags/PTA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>9.List leaves、Tree Traversals Again、</title>
-    <link href="http://hetumessi.github.io/2022/05/11/%20List%20Leaves/"/>
-    <id>http://hetumessi.github.io/2022/05/11/%20List%20Leaves/</id>
-    <published>2022-05-11T08:37:20.251Z</published>
-    <updated>2022-05-12T08:35:05.191Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;list-leaves&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#list-leaves&quot;&gt;&lt;/a&gt; List Leaves&lt;/h1&gt;
-&lt;p&gt;Given a tree, you are supposed to list all</summary>
         
       
     
