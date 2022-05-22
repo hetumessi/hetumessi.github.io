@@ -77,7 +77,7 @@
     <link href="http://hetumessi.github.io/posts/b643bd4a1cb0"/>
     <id>http://hetumessi.github.io/posts/b643bd4a1cb0</id>
     <published>2022-05-18T13:06:08.000Z</published>
-    <updated>2022-05-20T14:54:17.388Z</updated>
+    <updated>2022-05-21T07:31:59.055Z</updated>
     
     
       
@@ -87,7 +87,7 @@
     <summary type="html">&lt;p&gt;&lt;strong&gt;注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
-&lt;a href=&quot;/2022/05/09/makefile/&quot;</summary>
+&lt;a href=&quot;/posts/2ea9a24cd534&quot;</summary>
         
       
     
@@ -96,11 +96,11 @@
     <category term="应用程序开发" scheme="http://hetumessi.github.io/categories/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/"/>
     
     
-    <category term="工具使用" scheme="http://hetumessi.github.io/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"/>
-    
     <category term="makefile" scheme="http://hetumessi.github.io/tags/makefile/"/>
     
-    <category term="编译原理实例" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AE%9E%E4%BE%8B/"/>
+    <category term="程序编译链接构建" scheme="http://hetumessi.github.io/tags/%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%9E%84%E5%BB%BA/"/>
+    
+    <category term="GNU工具集" scheme="http://hetumessi.github.io/tags/GNU%E5%B7%A5%E5%85%B7%E9%9B%86/"/>
     
   </entry>
   
@@ -165,7 +165,7 @@
     <link href="http://hetumessi.github.io/posts/a441fae22eb2"/>
     <id>http://hetumessi.github.io/posts/a441fae22eb2</id>
     <published>2022-05-16T08:53:33.554Z</published>
-    <updated>2022-05-20T07:42:57.086Z</updated>
+    <updated>2022-05-21T07:32:09.875Z</updated>
     
     
       
@@ -175,7 +175,7 @@
     <summary type="html">&lt;p&gt;&lt;strong&gt;注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
-&lt;a href=&quot;/2022/05/09/makefile/&quot;</summary>
+&lt;a href=&quot;/posts/2ea9a24cd534&quot;</summary>
         
       
     
@@ -184,11 +184,11 @@
     <category term="应用程序开发" scheme="http://hetumessi.github.io/categories/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/"/>
     
     
-    <category term="工具使用" scheme="http://hetumessi.github.io/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"/>
-    
     <category term="makefile" scheme="http://hetumessi.github.io/tags/makefile/"/>
     
-    <category term="编译原理实例" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AE%9E%E4%BE%8B/"/>
+    <category term="程序编译链接构建" scheme="http://hetumessi.github.io/tags/%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%9E%84%E5%BB%BA/"/>
+    
+    <category term="GNU工具集" scheme="http://hetumessi.github.io/tags/GNU%E5%B7%A5%E5%85%B7%E9%9B%86/"/>
     
   </entry>
   
@@ -225,7 +225,7 @@
     <link href="http://hetumessi.github.io/posts/9372e87b32cb"/>
     <id>http://hetumessi.github.io/posts/9372e87b32cb</id>
     <published>2022-05-13T17:05:05.000Z</published>
-    <updated>2022-05-19T04:37:53.370Z</updated>
+    <updated>2022-05-21T07:34:43.882Z</updated>
     
     
       
@@ -235,7 +235,7 @@
     <summary type="html">&lt;p&gt;&lt;strong&gt;注：本系列内容大部分是基于GNU make的标准，其中cc命令默认调用Linux自带的c编译器程序&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
-&lt;a href=&quot;/2022/05/09/makefile/&quot;</summary>
+&lt;a href=&quot;/posts/2ea9a24cd534&quot;</summary>
         
       
     
@@ -244,11 +244,11 @@
     <category term="应用程序开发" scheme="http://hetumessi.github.io/categories/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/"/>
     
     
-    <category term="工具使用" scheme="http://hetumessi.github.io/tags/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"/>
-    
     <category term="makefile" scheme="http://hetumessi.github.io/tags/makefile/"/>
     
-    <category term="编译原理实例" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E5%AE%9E%E4%BE%8B/"/>
+    <category term="程序编译链接构建" scheme="http://hetumessi.github.io/tags/%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%9E%84%E5%BB%BA/"/>
+    
+    <category term="GNU工具集" scheme="http://hetumessi.github.io/tags/GNU%E5%B7%A5%E5%85%B7%E9%9B%86/"/>
     
   </entry>
   
