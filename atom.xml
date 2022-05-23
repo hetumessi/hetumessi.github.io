@@ -6,7 +6,7 @@
   <link href="http://hetumessi.github.io/atom.xml" rel="self"/>
   
   <link href="http://hetumessi.github.io/"/>
-  <updated>2022-05-20T16:43:58.391Z</updated>
+  <updated>2022-05-22T17:35:02.296Z</updated>
   <id>http://hetumessi.github.io/</id>
   
   <author>
@@ -15,6 +15,63 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>语言和文法</title>
+    <link href="http://hetumessi.github.io/posts/2d82b007cf4f"/>
+    <id>http://hetumessi.github.io/posts/2d82b007cf4f</id>
+    <published>2022-05-22T09:58:13.038Z</published>
+    <updated>2022-05-22T17:35:02.296Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;本节前言&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#本节前言&quot;&gt;&lt;/a&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="编译原理" scheme="http://hetumessi.github.io/categories/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+    
+    <category term="程序编译链接构建" scheme="http://hetumessi.github.io/tags/%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%9E%84%E5%BB%BA/"/>
+    
+    <category term="编译原理" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>编译原理引论</title>
+    <link href="http://hetumessi.github.io/posts/13d50d848371"/>
+    <id>http://hetumessi.github.io/posts/13d50d848371</id>
+    <published>2022-05-22T08:38:22.311Z</published>
+    <updated>2022-05-22T09:57:51.512Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;什么是编译&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#什么是编译&quot;&gt;&lt;/a&gt; 什么是编译？&lt;/h1&gt;
+&lt;p&gt;计算机程序语言可以分为：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;机器语言(Machine</summary>
+        
+      
+    
+    
+    
+    <category term="编译原理" scheme="http://hetumessi.github.io/categories/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+    
+    <category term="程序编译链接构建" scheme="http://hetumessi.github.io/tags/%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%9E%84%E5%BB%BA/"/>
+    
+    <category term="编译原理" scheme="http://hetumessi.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
+    
+  </entry>
   
   <entry>
     <title>【转】X86 CPU发展历史</title>
@@ -165,7 +222,7 @@
     <link href="http://hetumessi.github.io/posts/a441fae22eb2"/>
     <id>http://hetumessi.github.io/posts/a441fae22eb2</id>
     <published>2022-05-16T08:53:33.554Z</published>
-    <updated>2022-05-21T07:32:09.875Z</updated>
+    <updated>2022-05-23T08:35:15.485Z</updated>
     
     
       
@@ -225,7 +282,7 @@
     <link href="http://hetumessi.github.io/posts/9372e87b32cb"/>
     <id>http://hetumessi.github.io/posts/9372e87b32cb</id>
     <published>2022-05-13T17:05:05.000Z</published>
-    <updated>2022-05-21T07:34:43.882Z</updated>
+    <updated>2022-05-23T08:28:08.412Z</updated>
     
     
       
@@ -508,61 +565,6 @@
         
         
     <summary type="html">&lt;h1 id=&quot;saving-james-bond-hard-version&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#saving-james-bond-hard-version&quot;&gt;&lt;/a&gt; Saving James Bond - Hard</summary>
-        
-      
-    
-    
-    
-    <category term="数据结构实例运用" scheme="http://hetumessi.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E4%BE%8B%E8%BF%90%E7%94%A8/"/>
-    
-    
-    <category term="数据结构与算法" scheme="http://hetumessi.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
-    
-    <category term="PTA" scheme="http://hetumessi.github.io/tags/PTA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>11.列出连通集、Forwards on Weibo、旅游规划</title>
-    <link href="http://hetumessi.github.io/posts/731ce70d9f1f"/>
-    <id>http://hetumessi.github.io/posts/731ce70d9f1f</id>
-    <published>2022-05-11T09:10:16.848Z</published>
-    <updated>2022-05-12T09:26:37.774Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;列出连通集&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#列出连通集&quot;&gt;&lt;/a&gt;</summary>
-        
-      
-    
-    
-    
-    <category term="数据结构实例运用" scheme="http://hetumessi.github.io/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9E%E4%BE%8B%E8%BF%90%E7%94%A8/"/>
-    
-    
-    <category term="数据结构与算法" scheme="http://hetumessi.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/"/>
-    
-    <category term="PTA" scheme="http://hetumessi.github.io/tags/PTA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>10.Huffman Codes、PAT Judge</title>
-    <link href="http://hetumessi.github.io/posts/d675f3d012cb"/>
-    <id>http://hetumessi.github.io/posts/d675f3d012cb</id>
-    <published>2022-05-11T08:45:22.928Z</published>
-    <updated>2022-05-12T08:48:13.585Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;huffman-codes&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#huffman-codes&quot;&gt;&lt;/a&gt; Huffman Codes&lt;/h1&gt;
-&lt;p&gt;In 1953, David A. Huffman published</summary>
         
       
     

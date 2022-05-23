@@ -1,0 +1,847 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>编译原理引论 | hetumessi's Blog</title><meta name="keywords" content="程序编译链接构建,编译原理"><meta name="author" content="hetumessi"><meta name="copyright" content="hetumessi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="什么是编译？ 计算机程序语言可以分为：  机器语言(Machine Language)：  特点：可以被计算机直接理解 与人类表达习惯相去甚远 难记忆、编写、阅读，易写错   汇编语言(Assembly Language)：  特点：在机器语言的基础上引入助记符 依赖于特定机器，非专业人员使用受限制 编写效率依然很低   高级语言(High Level Language)：  特点：类似于数学定">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译原理引论">
+<meta property="og:url" content="http://hetumessi.github.io/posts/13d50d848371">
+<meta property="og:site_name" content="hetumessi&#39;s Blog">
+<meta property="og:description" content="什么是编译？ 计算机程序语言可以分为：  机器语言(Machine Language)：  特点：可以被计算机直接理解 与人类表达习惯相去甚远 难记忆、编写、阅读，易写错   汇编语言(Assembly Language)：  特点：在机器语言的基础上引入助记符 依赖于特定机器，非专业人员使用受限制 编写效率依然很低   高级语言(High Level Language)：  特点：类似于数学定">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2022/05/22/pjxLdC6XN82e7BM.jpg">
+<meta property="article:published_time" content="2022-05-22T08:38:22.311Z">
+<meta property="article:modified_time" content="2022-05-22T09:57:51.512Z">
+<meta property="article:author" content="hetumessi">
+<meta property="article:tag" content="程序编译链接构建">
+<meta property="article:tag" content="编译原理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2022/05/22/pjxLdC6XN82e7BM.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://hetumessi.github.io/posts/13d50d848371"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":"flase","highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '编译原理引论',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-05-22 17:57:51'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/mouse.css"><link rel="stylesheet" href="/css/scroll.css"><link rel="stylesheet" href="/css/footer.css"><link rel="stylesheet" href="/css/custom.css"><link rel="stylesheet" href="https://npm.elemecdn.com/animate.css@4.1.1/animate.min.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-artitalk-pro/lib/card.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="hetumessi's Blog" type="application/atom+xml">
+</head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/author.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">98</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-th"></i><span> article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> entertainment</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> Books</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> Game</span></a></li><li><a class="site-page child" href="/bangumi/"><i class="fa-fw iconfont icon-bilibili-line"></i><span> Bangumi</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-user"></i><span> guys</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></li><li><a class="site-page child" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://s2.loli.net/2022/05/22/pjxLdC6XN82e7BM.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">hetumessi's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-th"></i><span> article</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> entertainment</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/books/"><i class="fa-fw fas fa-book"></i><span> Books</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li><li><a class="site-page child" href="/games/"><i class="fa-fw fas fa-gamepad"></i><span> Game</span></a></li><li><a class="site-page child" href="/bangumi/"><i class="fa-fw iconfont icon-bilibili-line"></i><span> Bangumi</span></a></li><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> Gallery</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-user"></i><span> guys</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></li><li><a class="site-page child" href="/comments/"><i class="fa-fw fa fa-paper-plane"></i><span> comments</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">编译原理引论</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-05-22T08:38:22.311Z" title="发表于 2022-05-22 16:38:22">2022-05-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-05-22T09:57:51.512Z" title="更新于 2022-05-22 17:57:51">2022-05-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/">编译原理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="编译原理引论"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="什么是编译"><a class="markdownIt-Anchor" href="#什么是编译"></a> 什么是编译？</h1>
+<p>计算机程序语言可以分为：</p>
+<ul>
+<li>机器语言(Machine Language)：
+<ul>
+<li>特点：可以被计算机直接理解</li>
+<li>与人类表达习惯相去甚远</li>
+<li>难记忆、编写、阅读，易写错</li>
+</ul>
+</li>
+<li>汇编语言(Assembly Language)：
+<ul>
+<li>特点：在机器语言的基础上引入助记符</li>
+<li>依赖于特定机器，非专业人员使用受限制</li>
+<li>编写效率依然很低</li>
+</ul>
+</li>
+<li>高级语言(High Level Language)：
+<ul>
+<li>特点：类似于数学定义或自然语言的简洁形式</li>
+<li>接近人类表达习惯</li>
+<li>不依赖于特定机器</li>
+<li>编写效率高</li>
+</ul>
+</li>
+</ul>
+<p>一个例子：人工英汉翻译</p>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/22/yYvN7eViHF8skWP.png" width="50%" height="50%">
+<p>编译(Compiling)：将高级语言(源语言)翻译为汇编语言或机器语言(目标语言)的过程</p>
+<ul>
+<li>即：高级语言-&gt;编译-&gt;汇编语言-&gt;汇编-&gt;机器语言</li>
+<li>或：高级语言-&gt;编译-&gt;机器语言</li>
+<li>例：x=2 -&gt; MOV x,2 -&gt; C706 0000 0002(用十六进制表示的二进制数)</li>
+</ul>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/22/TcF9MufJP671Hyh.png" width="50%" height="50%">
+<h1 id="编译器在语言处理系统中的位置"><a class="markdownIt-Anchor" href="#编译器在语言处理系统中的位置"></a> 编译器在语言处理系统中的位置</h1>
+<p>为了建立可执行目标程序，除编译器还需要一些其他工具进行配合：</p>
+<ul>
+<li>预处理器(Preprocessor)：
+<ul>
+<li>一个源程序可能分成几个模块存放在不同的文件里，需要预处理器把存储在不同文件中的源程序聚合在一起</li>
+<li>把称为宏的缩写语句转换为原始语句</li>
+</ul>
+</li>
+<li>编译器(Compiler)：
+<ul>
+<li>将高级语言翻译成汇编语言或机器语言</li>
+</ul>
+</li>
+<li>汇编器(Assembler)：
+<ul>
+<li>将汇编语言翻译成可重定位的机器语言</li>
+<li>若在编译器阶段已经直接将高级语言翻译成机器语言，则可以省略汇编器</li>
+<li>可重定位(Relocatable)/可再装配
+<ul>
+<li>数据在内存存放的起始位置L不是固定的，起始位置+相对地址=绝对地址)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>链接器(Linker)：
+<ul>
+<li>将多个可重定位的机器代码文件(包括库文件)连接到一起</li>
+<li>解决外部内存地址问题(一个文件中的代码可能指向另一个文件中的位置)</li>
+</ul>
+</li>
+<li>加载器(Loader)：
+<ul>
+<li>修改可重定位地址</li>
+<li>将修改后的指令和数据放到内存中适当的位置(然后执行)</li>
+</ul>
+</li>
+</ul>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/22/srkCcbKd192mlIX.png" width="50%" height="50%">
+<h1 id="编译器结构分析部分前端综合部分后端"><a class="markdownIt-Anchor" href="#编译器结构分析部分前端综合部分后端"></a> 编译器结构：分析部分(前端)+综合部分(后端)</h1>
+<ul>
+<li>前端(front end)：与源语言相关
+<ul>
+<li>字符流——词法分析器——词法单元流——语法分析器——语法树——语义分析器——语法树——中间代码生成器</li>
+</ul>
+</li>
+<li>前端——中间表示形式——机器无关代码优化器——中间表示形式——后端</li>
+<li>后端(back end)：与目标语言相关
+<ul>
+<li>中间表示形式——目标代码生成器——目标机器语言——机器相关代码优化器——目标机器语言</li>
+</ul>
+</li>
+</ul>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/22/PitBTsY6KIMfdVb.png" width="50%" height="50%">
+<p>在分析过程中需要收集标识符的属性信息，使用符号表(Symbol Table)存放属性信息，生成的符号表可供编译的各个步骤使用</p>
+<ul>
+<li>符号表是用于存放标识符的属性信息的数据结构
+<ul>
+<li>名字(name)：字段以字符串表形式存储
+<ul>
+<li>将所有name字段组织成一个长的字符串，符号表中存储指向其起始位置的字符即可</li>
+<li>name=标识符在字符串表中的起始位置+长度</li>
+</ul>
+</li>
+<li>种属(Kind)：简单变量、复合变量(数组、记录、…)、过程、…</li>
+<li>类型(Type)：整型、实数型、字符型、布尔型、指针型、…</li>
+<li>存储位置、长度</li>
+<li>值</li>
+<li>作用域(实际上是访问链的嵌套关系)</li>
+<li>参数和返回值信息：参数个数、参数类型、参数传递方式、返回值类型、…</li>
+</ul>
+</li>
+<li>符号表的作用
+<ul>
+<li>辅助代码生成</li>
+<li>一致性检查</li>
+</ul>
+</li>
+</ul>
+<h1 id="词法分析"><a class="markdownIt-Anchor" href="#词法分析"></a> 词法分析</h1>
+<p>主要任务：从左向右逐行扫描源程序字符，识别出各个单词，确定单词的类型，将识别出的单词转成统一的机内表示——词法单元(token)形式</p>
+<blockquote>
+<p>token：&lt;种别码，属性值&gt;</p>
+</blockquote>
+<p>种别码由语法分析部分使用，属性值为指向符号表中关于此词法单元的条目(不是指单词对应的实际存储的值)</p>
+<ul>
+<li>在上下文无关文法中，种别码一般是一个终结符号</li>
+<li>种别码：
+<ul>
+<li>可以使用抽象符号作为种别码的名字，也可以使用单词本身</li>
+<li>属性值可以为空</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">序号</th>
+<th style="text-align:center">单词类型</th>
+<th style="text-align:center">种别码</th>
+<th style="text-align:center">token类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">关键字</td>
+<td style="text-align:center">programme,if,else,then,…</td>
+<td style="text-align:center">一词一码</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">标识符</td>
+<td style="text-align:center">变量名,数组名,记录名,过程名,…</td>
+<td style="text-align:center">多词一码</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">常量</td>
+<td style="text-align:center">整型,浮点型,字符型,布尔型,…</td>
+<td style="text-align:center">一型一码</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">运算符</td>
+<td style="text-align:center">算术、关系、逻辑…</td>
+<td style="text-align:center">一型一码/一词一码</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">界限符</td>
+<td style="text-align:center">;,(),{},…</td>
+<td style="text-align:center">一词一码</td>
+</tr>
+</tbody>
+</table>
+<p>例：程序中语句经词法分析后得到的token序列</p>
+<blockquote>
+<p>输入：while(value!=100){num++;}<br>
+输出：</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">序号</th>
+<th style="text-align:center">程序符号</th>
+<th style="text-align:center">token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">while</td>
+<td style="text-align:center">&lt; WHILE, - &gt;</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">(</td>
+<td style="text-align:center">&lt; SLP, - &gt;</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">value</td>
+<td style="text-align:center">&lt; IDN, value &gt;</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">!=</td>
+<td style="text-align:center">&lt; NE, - &gt;</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">100</td>
+<td style="text-align:center">&lt; CONST, 100 &gt;</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">)</td>
+<td style="text-align:center">&lt; SRP, - &gt;</td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">{</td>
+<td style="text-align:center">&lt; LP, - &gt;</td>
+</tr>
+<tr>
+<td style="text-align:center">8</td>
+<td style="text-align:center">num</td>
+<td style="text-align:center">&lt; IDN, num &gt;</td>
+</tr>
+<tr>
+<td style="text-align:center">9</td>
+<td style="text-align:center">++</td>
+<td style="text-align:center">&lt; INC, - &gt;</td>
+</tr>
+<tr>
+<td style="text-align:center">10</td>
+<td style="text-align:center">;</td>
+<td style="text-align:center">&lt; SEMI, - &gt;</td>
+</tr>
+<tr>
+<td style="text-align:center">11</td>
+<td style="text-align:center">}</td>
+<td style="text-align:center">&lt; RP, - &gt;</td>
+</tr>
+</tbody>
+</table>
+<h1 id="语法分析"><a class="markdownIt-Anchor" href="#语法分析"></a> 语法分析</h1>
+<p>主要任务：从词法分析器输出的token序列中识别出的token，通过token中的第一个分量(种别码)构造语法分析树(parse tree)，语法分析树描述句子的语法结构</p>
+<p>例：赋值语句的分析树</p>
+<blockquote>
+<p>position = initial + rate * 60<br>
+token序列：<br>
+&lt;id,1&gt; &lt;=&gt; &lt;id,2&gt; &lt;+&gt; &lt;id,3&gt; &lt;*&gt; &lt;\number,4&gt;</p>
+</blockquote>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/22/OEcsPMeyp4LIzj8.png">
+<p>例：变量声明语句的分析树<br>
+文法：</p>
+<blockquote>
+<p>&lt;D&gt; -&gt; &lt;T&gt; &lt;IDS&gt;;<br>
+&lt;T&gt; -&gt; int|real|char|bool;<br>
+&lt;IDS&gt; -&gt; id|&lt;IDS&gt;,id</p>
+</blockquote>
+<blockquote>
+<p>输入：int a,b,c;</p>
+</blockquote>
+<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/22/dWGeoyP3954EXVv.png">
+<h1 id="语义分析"><a class="markdownIt-Anchor" href="#语义分析"></a> 语义分析</h1>
+<p>主要任务：进一步收集类型信息，将这些信息放入语法树或符号表</p>
+<p>语义检查</p>
+<ul>
+<li>变量或过程是否未经声明就使用</li>
+<li>变量或过程名是否重复声明</li>
+<li>运算分量类型是否匹配</li>
+<li>操作符与操作数之间的类型是否匹配
+<ul>
+<li>数组下标是否为整数</li>
+<li>是否对非数组变量使用数组访问操作符</li>
+<li>是否对非过程名使用过程调用标识符</li>
+<li>过程调用的参数类型或数目是否匹配</li>
+<li>函数返回类型是否正确</li>
+</ul>
+</li>
+</ul>
+<h1 id="中间代码生成及编译器后端"><a class="markdownIt-Anchor" href="#中间代码生成及编译器后端"></a> 中间代码生成及编译器后端</h1>
+<p>常用中间表示形式</p>
+<ul>
+<li>
+<p>三地址码(Three-address Code)</p>
+<ul>
+<li>三地址码由类似于汇编语言的指令序列组成，每个指令最多有三个操作数(operand)</li>
+<li>可唯一确定运算完成的顺序(右部至多只有一个运算符)</li>
+</ul>
+</li>
+<li>
+<p>语法结构树/语法树(Syntax Trees)</p>
+<ul>
+<li>注意这里的语法格式树(AST)和语法分析阶段的语法分析树不同</li>
+</ul>
+</li>
+<li>
+<p>三地址码中地址的形式可能是：</p>
+<ul>
+<li>源程序中的名字(name)</li>
+<li>常量(constant)</li>
+<li>编译器生成的临时变量(temporary)</li>
+</ul>
+</li>
+<li>
+<p>三地址指令的表示</p>
+<ul>
+<li>四元式(Quadruples)
+<ul>
+<li>(op,y,z,x)</li>
+<li>四元式之间的联系是通过临时变量实现的(注意是四元式之间)</li>
+<li>四元式的优点是便于优化处理和表的变动</li>
+</ul>
+</li>
+<li>三元式(Triples)</li>
+<li>间接三元式(Indirect triples)</li>
+</ul>
+</li>
+</ul>
+<p>常见的三地址指令</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">序号</th>
+<th style="text-align:center">指令类型</th>
+<th style="text-align:center">指令形式</th>
+<th style="text-align:center">四元式表示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">赋值指令</td>
+<td style="text-align:center">x = y op z</td>
+<td style="text-align:center">(op,y,z,x)</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">复制指令</td>
+<td style="text-align:center">x = y</td>
+<td style="text-align:center">(=,y,-,x)</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">条件跳转</td>
+<td style="text-align:center">if x relop y goto n</td>
+<td style="text-align:center">(relop,x,y,n)</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">非条件跳转</td>
+<td style="text-align:center">goto n</td>
+<td style="text-align:center">(goto,-,-,n)</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">参数传递</td>
+<td style="text-align:center">param x</td>
+<td style="text-align:center">(param,-,-,x)</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">过程调用</td>
+<td style="text-align:center">call p,n</td>
+<td style="text-align:center">(call,p,n,-)</td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">过程返回</td>
+<td style="text-align:center">return x</td>
+<td style="text-align:center">(return,-,-,x)</td>
+</tr>
+<tr>
+<td style="text-align:center">8</td>
+<td style="text-align:center">数组引用</td>
+<td style="text-align:center">x = y[i]</td>
+<td style="text-align:center">(=[],y,i,x)</td>
+</tr>
+<tr>
+<td style="text-align:center">9</td>
+<td style="text-align:center">数组赋值</td>
+<td style="text-align:center">x[i] = y</td>
+<td style="text-align:center">([]=,y,x,i)</td>
+</tr>
+<tr>
+<td style="text-align:center">10</td>
+<td style="text-align:center">地址及指针操作</td>
+<td style="text-align:center">x = &amp; y</td>
+<td style="text-align:center">(&amp;,y,-,x)</td>
+</tr>
+<tr>
+<td style="text-align:center">10</td>
+<td style="text-align:center">地址及指针操作</td>
+<td style="text-align:center">x = *y</td>
+<td style="text-align:center">(=*,y,-,x)</td>
+</tr>
+<tr>
+<td style="text-align:center">10</td>
+<td style="text-align:center">地址及指针操作</td>
+<td style="text-align:center">*x = y</td>
+<td style="text-align:center">(*=,y,-,x)</td>
+</tr>
+</tbody>
+</table>
+<p>例：中间代码生成</p>
+<pre class="line-numbers language-none"><code class="language-none">while a&lt;b do
+    if c&lt;5 then
+        while x&gt;y do
+            z&#x3D;x+1;
+    else x&#x3D;y;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>100:(j&lt;,a,b,102)<br>
+101:(j,-,-,112)<br>
+102:(j&amp;lt;,c,5,104)<br>
+103:(j,-,-,110)<br>
+104:(j&gt;,a,b,102)<br>
+105:(j,-,-,100)<br>
+106:(+,x,1,t1)<br>
+107:(=,t1,-,z)<br>
+108:(j,-,-,104)<br>
+109:(j,-,-,100)<br>
+110:(=,y,-,x)<br>
+111:(j,-,-,100)<br>
+112:</p>
+</blockquote>
+<h1 id="编译器后端"><a class="markdownIt-Anchor" href="#编译器后端"></a> 编译器后端</h1>
+<p>目标代码生成器以源程序的中间表示形式作为输入，并将其映射到目标语言</p>
+<ul>
+<li>目标代码生成的一个重要任务是为程序中使用的变量合理分配寄存器</li>
+<li>代码优化
+<ul>
+<li>为改进代码所进行的等价程序交换，使其运行得更快一些，占用空间更少一些，或二者兼顾</li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io">hetumessi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://hetumessi.github.io/posts/13d50d848371">http://hetumessi.github.io/posts/13d50d848371</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://hetumessi.github.io" target="_blank">hetumessi's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%A8%8B%E5%BA%8F%E7%BC%96%E8%AF%91%E9%93%BE%E6%8E%A5%E6%9E%84%E5%BB%BA/">程序编译链接构建</a><a class="post-meta__tags" href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/">编译原理</a></div><div class="post_share"><div class="social-share" data-image="https://s2.loli.net/2022/05/22/pjxLdC6XN82e7BM.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/gh/overtrue/share.js@master/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechatpay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/wechatpay.png"/></a><div class="post-qr-code-desc"></div></li><li class="reward-item"><a href="/img/alipay.png" target="_blank"><img class="post-qr-code-img" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/alipay.png"/></a><div class="post-qr-code-desc"></div></li></ul></div></div><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/2d82b007cf4f" title="语言和文法"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/22/pjxLdC6XN82e7BM.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-22</div><div class="title">语言和文法</div></div></a></div><div><a href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-18</div><div class="title">makefile编写(3)：条件执行和函数</div></div></a></div><div><a href="/posts/a441fae22eb2" title="makefile编写(2)：变量"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-16</div><div class="title">makefile编写(2)：变量</div></div></a></div><div><a href="/posts/9372e87b32cb" title="makefile编写(1)：规则"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-14</div><div class="title">makefile编写(1)：规则</div></div></a></div><div><a href="/posts/de15e3343b28" title="GNU工具链术语介绍"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/20/DN2IQhgnSfjBOc9.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-10</div><div class="title">GNU工具链术语介绍</div></div></a></div><div><a href="/posts/2ea9a24cd534" title="makefile介绍"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-05-09</div><div class="title">makefile介绍</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div><div id="comment-switch"><span class="first-comment">Valine</span><span class="switch-btn"></span><span class="second-comment">Gitalk</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/author.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">hetumessi</div><div class="author-info__description">个人博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">98</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hetumessi"><i class="fab fa-github"></i><span>要来gayhub瞧瞧嘛🤡</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/hetumessi" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="/392384886@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/sitemap.xml" target="_blank" title="RSS"><i class="fas fa-rss"></i></a><a class="social-icon" href="/404/" target="_blank" title="commonweal"><i class="fa fa-heartbeat"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客！有任何问题或者意见，还请QQ：392384886，或者致信QQ邮箱：392384886@qq.com</div></div><div class="card-widget card-pixiv"><div class="card-content"><div class="item-headline"><i class="fa fa-image" aria-hidden="true"></i><span>Pixiv日榜Top50</span></div><iframe src="https://cloud.mokeyjay.com/pixiv" frameborder="0" style="width:99%;height:380px;margin:0;"></iframe></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%96%E8%AF%91"><span class="toc-number">1.</span> <span class="toc-text"> 什么是编译？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8%E5%9C%A8%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text"> 编译器在语言处理系统中的位置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90%E9%83%A8%E5%88%86%E5%89%8D%E7%AB%AF%E7%BB%BC%E5%90%88%E9%83%A8%E5%88%86%E5%90%8E%E7%AB%AF"><span class="toc-number">3.</span> <span class="toc-text"> 编译器结构：分析部分(前端)+综合部分(后端)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text"> 词法分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90"><span class="toc-number">5.</span> <span class="toc-text"> 语法分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90"><span class="toc-number">6.</span> <span class="toc-text"> 语义分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%8F%8A%E7%BC%96%E8%AF%91%E5%99%A8%E5%90%8E%E7%AB%AF"><span class="toc-number">7.</span> <span class="toc-text"> 中间代码生成及编译器后端</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8%E5%90%8E%E7%AB%AF"><span class="toc-number">8.</span> <span class="toc-text"> 编译器后端</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/2d82b007cf4f" title="语言和文法"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/22/pjxLdC6XN82e7BM.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="语言和文法"/></a><div class="content"><a class="title" href="/posts/2d82b007cf4f" title="语言和文法">语言和文法</a><time datetime="2022-05-22T09:58:13.038Z" title="发表于 2022-05-22 17:58:13">2022-05-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/13d50d848371" title="编译原理引论"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/22/pjxLdC6XN82e7BM.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="编译原理引论"/></a><div class="content"><a class="title" href="/posts/13d50d848371" title="编译原理引论">编译原理引论</a><time datetime="2022-05-22T08:38:22.311Z" title="发表于 2022-05-22 16:38:22">2022-05-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/2ea785cf45aa" title="【转】X86 CPU发展历史"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/20/OsLqfdaU2StnWG8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】X86 CPU发展历史"/></a><div class="content"><a class="title" href="/posts/2ea785cf45aa" title="【转】X86 CPU发展历史">【转】X86 CPU发展历史</a><time datetime="2022-05-19T16:00:27.690Z" title="发表于 2022-05-20 00:00:27">2022-05-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/05415c493fc8" title="【转】世界双雄：微软和苹果"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/19/lyTsozY2SiWcvMe.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【转】世界双雄：微软和苹果"/></a><div class="content"><a class="title" href="/posts/05415c493fc8" title="【转】世界双雄：微软和苹果">【转】世界双雄：微软和苹果</a><time datetime="2022-05-18T16:16:50.160Z" title="发表于 2022-05-19 00:16:50">2022-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://s2.loli.net/2022/05/12/gDQhnWpEFXS1yuB.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="makefile编写(3)：条件执行和函数"/></a><div class="content"><a class="title" href="/posts/b643bd4a1cb0" title="makefile编写(3)：条件执行和函数">makefile编写(3)：条件执行和函数</a><time datetime="2022-05-18T13:06:08.000Z" title="发表于 2022-05-18 21:06:08">2022-05-18</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022/04/21 - 2022 By hetumessi</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">欢迎光临小站！🎉</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat_btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.css"><script>(() => {
+  document.querySelectorAll('#article-container span.katex-display').forEach(item => {
+    btf.wrap(item, 'div', { class: 'katex-wrap'})
+  })
+})()</script><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'kT5o8xhcPPtpRHJzj2KnqvTV-MdYXbMMI',
+      appKey: 'TuUTMrUqindtbui5wMvhOsX7',
+      avatar: 'monsterid',
+      serverURLs: 'https://kT5o8xhc.api.lncldglobal.com',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script>function addGitalkSource () {
+  const ele = document.createElement('link')
+  ele.rel = 'stylesheet'
+  ele.href= 'https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css'
+  document.getElementsByTagName('head')[0].appendChild(ele)
+}
+
+function loadGitalk () {
+  function initGitalk () {
+    var gitalk = new Gitalk(Object.assign({
+      clientID: 'facd33fa531a29d93105',
+      clientSecret: '7c0e063309085031b84369f86c21bbbee8e77c64',
+      repo: 'blog_comments',
+      owner: 'hetumessi',
+      admin: ['hetumessi'],
+      id: 'bfb721fa61736d54d44518d01b56ffe1',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  if (typeof Gitalk === 'function') initGitalk()
+  else {
+    addGitalkSource()
+    getScript('https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js').then(initGitalk)
+  }
+}
+
+function commentCount(n){
+  let isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+  if (isCommentCount) {
+    isCommentCount.innerHTML= n
+  }
+}
+
+if ('Valine' === 'Gitalk' || !true) {
+  if (true) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+  else loadGitalk()
+} else {
+  function loadOtherComment () {
+    loadGitalk()
+  }
+}</script></div><div class="aplayer no-destroy" data-id="3180545941" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><script defer src="/live2d-widget/autoload.js"></script><script src="//code.tidio.co/msomj1dsaggz8vkbdv2pvnur4efns1ot.js" async></script><script defer src="https://cdn.jsdelivr.net/gh/graingert/wow@1.3.0/dist/wow.min.js"></script><script defer data-pjax src="/js/wow_init.js"></script><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script src="//code.tidio.co/null.js" async="async"></script><script>function onTidioChatApiReady() {
+  window.tidioChatApi.hide();
+  window.tidioChatApi.on("close", function() {
+    window.tidioChatApi.hide();
+  });
+}
+if (window.tidioChatApi) {
+  window.tidioChatApi.on("ready", onTidioChatApiReady);
+} else {
+  document.addEventListener("tidioChat-ready", onTidioChatApiReady);
+}
+
+var chatBtnFn = () => {
+  document.getElementById("chat_btn").addEventListener("click", function(){
+    window.tidioChatApi.show();
+    window.tidioChatApi.open();
+  });
+}
+chatBtnFn()
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start -->
+  <script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/hexo-github-calendar@1.21/hexo_githubcalendar.js"></script>
+  <script data-pjax>
+        function GithubCalendarConfig(){
+            var git_githubapiurl ="https://python-github-calendar-api.vercel.app/api?hetumessi";
+            var git_color =['#ebedf0', '#fdcdec', '#fc9bd9', '#fa6ac5', '#f838b2', '#f5089f', '#c4067e', '#92055e', '#540336', '#48022f', '#30021f'];
+            var git_user ="hetumessi";
+            var parent_div_git = document.getElementById('recent-posts');
+            var git_div_html = '<div class="recent-post-item" style="width:100%;height:auto;padding:10px;"><div id="github_loading" style="width:10%;height:100%;margin:0 auto;display: block"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  viewBox="0 0 50 50" style="enable-background:new 0 0 50 50" xml:space="preserve"><path fill="#d0d0d0" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z" transform="rotate(275.098 25 25)"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></div><div id="github_container"></div></div>';
+            if(parent_div_git && location.pathname =='/'){
+                console.log('已挂载github calendar')
+                // parent_div_git.innerHTML=git_div_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",git_div_html) // 有报错，但不影响使用(支持pjax跳转)
+            };
+            GithubCalendar(git_githubapiurl,git_color,git_user)
+        }
+        if(document.getElementById('recent-posts')){
+            GithubCalendarConfig()
+        }
+    </script>
+    <style>#github_container{min-height:280px}@media screen and (max-width:650px) {#github_container{background-image:;min-height:0px}}</style>
+    <style></style><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-clock/clock/images/weather/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><script data-pjax>
+  function card_artitalk_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-shuo"><div class="card-content" style="height:auto;min-height:280px;"><div class="item-headline"><i class="fas fa-comments"></i><span><a href="/artitalk/" title="artitalk page link">碎碎念</a></span><a id="cardVisual" style="cursor:pointer;float:right" onclick="cardVisual()">编辑</a></div><div id="artitalk_main" style="width:100%;height:100%;padding:1px"></div></div></div>';
+    console.log('已挂载card_artitalk');
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html);
+    (()=>{
+      const init = () => {
+        new Artitalk(Object.assign({
+          appId: 'YEOLrzwYnNrDKjqYp6sWyxrg-MdYXbMMI',
+          appKey: 'QQNS7Wswk8Aqw6i94V3iVGyY',
+        }, {"serverURL":"https://YEOLrzwY.api.lncldglobal.com","lang":"zh","pageSize":1,"color1":"#89b1f5","color2":"#70c4b6","atEmoji":{"Mafumafu1":"https://cdn.jsdelivr.net/gh/GamerNoTitle/ValineCDN@master/Mafumafu/199749454.png","Mafumafu2":"https://cdn.jsdelivr.net/gh/GamerNoTitle/ValineCDN@master/Mafumafu/199749455.png"}} ))
+      }
+      if (typeof Artitalk === 'function') {
+        init()
+      } else {
+        getScript('https://npm.elemecdn.com/artitalk').then(init)
+      }
+    })()
+    }
+  var elist = '/artitalk/,/posts/'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    card_artitalk_injector_config();
+  }
+  else if (epage === cpage){
+    card_artitalk_injector_config();
+  }
+  </script><script async src="https://npm.elemecdn.com/hexo-butterfly-artitalk-pro/lib/card_visual.js"></script><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v5.4.0" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v3.8.2" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://www.jsdelivr.com/" style="margin-inline:5px" data-title="本站使用JsDelivr为静态资源提供CDN加速" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&amp;logo=jsDelivr" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><!-- hexo injector body_end end --></body></html>
